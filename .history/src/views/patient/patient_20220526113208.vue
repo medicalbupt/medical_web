@@ -63,9 +63,9 @@
           label="创建时间"
           width="150"
         ></el-table-column> -->
-        <el-table-column prop="modifiedTime" label="修改时间" width="200">
+        <el-table-column prop="modifiedTime" label="修改时间" width="150">
           <template slot-scope="scope">
-            <span>{{ scope.row.modifiedTime | formatDate3 }}</span>
+            <span>{{ scope.row.modifiedTime | formatDate }}</span>
           </template>
         </el-table-column>
         <el-table-column label="查看诊断信息" width="120">
@@ -105,7 +105,7 @@
         :current-page="queryInfo.currentPage"
         @size-change="handleSizeChange"
         :page-size="queryInfo.pageSize"
-        :page-sizes="[10, 20, 50]"
+        :page-sizes="[5, 8, 10, 15]"
         layout="total,sizes, prev, pager, next, jumper"
         :total="this.patientData.total"
       >
@@ -153,28 +153,12 @@
         <el-form-item label="身份证号">
           <el-input v-model="addForm.idCard"></el-input>
         </el-form-item>
-        <el-form-item label="主述">
-          <el-input
-            type="textarea"
-            :rows="5"
-            placeholder="请输入内容"
-            v-model="addForm.mainComplaint"
-          ></el-input>
-        </el-form-item>
         <el-form-item label="现病史">
           <el-input
             v-model="addForm.curMedicalRecord"
             :rows="5"
             placeholder="请输入内容"
             type="textarea"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="刻下症">
-          <el-input
-            type="textarea"
-            :rows="5"
-            placeholder="请输入内容"
-            v-model="addForm.engravedDisease"
           ></el-input>
         </el-form-item>
         <el-form-item label="既往史">
@@ -250,62 +234,26 @@
         <el-form-item label="姓名">
           <el-input v-model="patinenteditform.patientName" disabled></el-input>
         </el-form-item>
-        <!-- <el-form-item label="性别">
+        <el-form-item label="性别">
           <el-input v-model="patinenteditform.gender" disabled></el-input>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item label="身份证号">
           <el-input v-model="patinenteditform.idCard" disabled></el-input>
         </el-form-item>
         <el-form-item label="手机号">
           <el-input v-model="patinenteditform.telephone"></el-input>
         </el-form-item>
-        <el-form-item label="主述">
-          <el-input
-            type="textarea"
-            :rows="5"
-            placeholder="请输入内容"
-            v-model="patinenteditform.mainComplaint"
-          ></el-input>
-        </el-form-item>
         <el-form-item label="现病史">
-          <el-input
-            type="textarea"
-            :rows="5"
-            placeholder="请输入内容"
-            v-model="patinenteditform.curMedicalRecord"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="刻下症">
-          <el-input
-            type="textarea"
-            :rows="5"
-            placeholder="请输入内容"
-            v-model="patinenteditform.engravedDisease"
-          ></el-input>
+          <el-input v-model="patinenteditform.curMedicalRecord"></el-input>
         </el-form-item>
         <el-form-item label="家族史">
-          <el-input
-            type="textarea"
-            :rows="5"
-            placeholder="请输入内容"
-            v-model="patinenteditform.familyHistory"
-          ></el-input>
+          <el-input v-model="patinenteditform.familyHistory"></el-input>
         </el-form-item>
         <el-form-item label="既往史">
-          <el-input
-            type="textarea"
-            :rows="5"
-            placeholder="请输入内容"
-            v-model="patinenteditform.pastHistory"
-          ></el-input>
+          <el-input v-model="patinenteditform.pastHistory"></el-input>
         </el-form-item>
         <el-form-item label="个人史">
-          <el-input
-            type="textarea"
-            :rows="5"
-            placeholder="请输入内容"
-            v-model="patinenteditform.personalHistory"
-          ></el-input>
+          <el-input v-model="patinenteditform.personalHistory"></el-input>
         </el-form-item>
       </el-form>
 
@@ -355,7 +303,7 @@ export default {
         // 当前的页数
         currentPage: 1,
         // 当前每次显示多少条数据
-        pageSize: 10,
+        pageSize: 5,
       },
       // 存放用户的数据和数量
       patientData: {
@@ -383,8 +331,6 @@ export default {
         birthday: "",
         createTinme: "",
         curMedicalRecord: "",
-        engravedDisease: "",
-        mainComplaint: "",
         familyHistory: "",
         gender: "",
         idCard: "",
@@ -397,12 +343,6 @@ export default {
       },
       // 查询到的用户信息对象
       patinenteditform: {
-        birthday: "",
-        createTinme: "",
-        engravedDisease: "",
-        mainComplaint: "",
-        modifiedTime: "",
-        status: 1,
         id: "",
         patientName: "",
         gender: "",
@@ -418,12 +358,7 @@ export default {
   filters: {
     formatDate(time) {
       let date = new Date(time);
-      return formatDate(date, "yyyy-MM-dd");
-    },
-    formatDate3(time) {
-      let date = new Date(time);
-      // return formatDate(date, "yyyy年MM月dd日 hh:mm:ss");
-      return formatDate(date, "yyyy-MM-dd hh:mm:ss");
+      return formatDate(date, "yyyy年MM月dd日");
     },
   },
   created() {
@@ -509,7 +444,6 @@ export default {
       // console.log("nowTime", this.nowTime);
       this.addForm.createTinme = this.nowTime;
       this.addForm.modifiedTime = this.nowTime;
-      console.log("打印this.addForm", this.addForm);
       addPatient(this.addForm).then((res) => {
         console.log("添加实现的res", res);
 
@@ -521,30 +455,12 @@ export default {
           this.addDialogVisible = false;
           this.getPatientList();
         }
-        this.addForm = {
-          birthday: "",
-          createTinme: "",
-          curMedicalRecord: "",
-          engravedDisease: "",
-          mainComplaint: "",
-          familyHistory: "",
-          gender: "",
-          idCard: "",
-          modifiedTime: "",
-          pastHistory: "",
-          patientName: "",
-          personalHistory: "",
-          status: 1,
-          telephone: "",
-        };
+        this.addForm = {};
       });
     },
 
     // 提交修改患者
     editPatientSubmit() {
-      this.nowTime = new Date().valueOf();
-      this.patinenteditform.modifiedTime = this.nowTime;
-      console.log("打印this.patinenteditform", this.patinenteditform);
       patientUpdate(this.patinenteditform).then((response) => {
         console.log("editUserInfo的response", response);
         if (response.data.respCode == "0000") {

@@ -105,7 +105,7 @@
         :current-page="queryInfo.currentPage"
         @size-change="handleSizeChange"
         :page-size="queryInfo.pageSize"
-        :page-sizes="[10, 20, 50]"
+        :page-sizes="[5, 8, 10, 15]"
         layout="total,sizes, prev, pager, next, jumper"
         :total="this.patientData.total"
       >
@@ -153,28 +153,12 @@
         <el-form-item label="身份证号">
           <el-input v-model="addForm.idCard"></el-input>
         </el-form-item>
-        <el-form-item label="主述">
-          <el-input
-            type="textarea"
-            :rows="5"
-            placeholder="请输入内容"
-            v-model="addForm.mainComplaint"
-          ></el-input>
-        </el-form-item>
         <el-form-item label="现病史">
           <el-input
             v-model="addForm.curMedicalRecord"
             :rows="5"
             placeholder="请输入内容"
             type="textarea"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="刻下症">
-          <el-input
-            type="textarea"
-            :rows="5"
-            placeholder="请输入内容"
-            v-model="addForm.engravedDisease"
           ></el-input>
         </el-form-item>
         <el-form-item label="既往史">
@@ -263,7 +247,6 @@
           <el-input
             type="textarea"
             :rows="5"
-            placeholder="请输入内容"
             v-model="patinenteditform.mainComplaint"
           ></el-input>
         </el-form-item>
@@ -271,7 +254,6 @@
           <el-input
             type="textarea"
             :rows="5"
-            placeholder="请输入内容"
             v-model="patinenteditform.curMedicalRecord"
           ></el-input>
         </el-form-item>
@@ -279,7 +261,6 @@
           <el-input
             type="textarea"
             :rows="5"
-            placeholder="请输入内容"
             v-model="patinenteditform.engravedDisease"
           ></el-input>
         </el-form-item>
@@ -287,7 +268,6 @@
           <el-input
             type="textarea"
             :rows="5"
-            placeholder="请输入内容"
             v-model="patinenteditform.familyHistory"
           ></el-input>
         </el-form-item>
@@ -295,7 +275,6 @@
           <el-input
             type="textarea"
             :rows="5"
-            placeholder="请输入内容"
             v-model="patinenteditform.pastHistory"
           ></el-input>
         </el-form-item>
@@ -303,7 +282,6 @@
           <el-input
             type="textarea"
             :rows="5"
-            placeholder="请输入内容"
             v-model="patinenteditform.personalHistory"
           ></el-input>
         </el-form-item>
@@ -355,7 +333,7 @@ export default {
         // 当前的页数
         currentPage: 1,
         // 当前每次显示多少条数据
-        pageSize: 10,
+        pageSize: 5,
       },
       // 存放用户的数据和数量
       patientData: {
@@ -397,12 +375,21 @@ export default {
       },
       // 查询到的用户信息对象
       patinenteditform: {
-        birthday: "",
-        createTinme: "",
-        engravedDisease: "",
-        mainComplaint: "",
-        modifiedTime: "",
-        status: 1,
+        "birthday": "2022-05-26T11:25:33.699Z",
+  "createTinme": "2022-05-26T11:25:33.699Z",
+  "curMedicalRecord": "string",
+  "engravedDisease": "string",
+  "familyHistory": "string",
+  "gender": 1,
+  "id": 1,
+  "idCard": "string",
+  "mainComplaint": "string",
+  "modifiedTime": "2022-05-26T11:25:33.699Z",
+  "pastHistory": "string",
+  "patientName": "string",
+  "personalHistory": "string",
+  "status": 1,
+  "telephone": "string"
         id: "",
         patientName: "",
         gender: "",
@@ -418,12 +405,11 @@ export default {
   filters: {
     formatDate(time) {
       let date = new Date(time);
-      return formatDate(date, "yyyy-MM-dd");
+      return formatDate(date, "yyyy年MM月dd日");
     },
     formatDate3(time) {
       let date = new Date(time);
-      // return formatDate(date, "yyyy年MM月dd日 hh:mm:ss");
-      return formatDate(date, "yyyy-MM-dd hh:mm:ss");
+      return formatDate(date, "yyyy年MM月dd日 hh:mm:ss");
     },
   },
   created() {
@@ -509,7 +495,6 @@ export default {
       // console.log("nowTime", this.nowTime);
       this.addForm.createTinme = this.nowTime;
       this.addForm.modifiedTime = this.nowTime;
-      console.log("打印this.addForm", this.addForm);
       addPatient(this.addForm).then((res) => {
         console.log("添加实现的res", res);
 
@@ -521,30 +506,14 @@ export default {
           this.addDialogVisible = false;
           this.getPatientList();
         }
-        this.addForm = {
-          birthday: "",
-          createTinme: "",
-          curMedicalRecord: "",
-          engravedDisease: "",
-          mainComplaint: "",
-          familyHistory: "",
-          gender: "",
-          idCard: "",
-          modifiedTime: "",
-          pastHistory: "",
-          patientName: "",
-          personalHistory: "",
-          status: 1,
-          telephone: "",
-        };
+        this.addForm = {};
       });
     },
 
     // 提交修改患者
     editPatientSubmit() {
       this.nowTime = new Date().valueOf();
-      this.patinenteditform.modifiedTime = this.nowTime;
-      console.log("打印this.patinenteditform", this.patinenteditform);
+      this.addForm.modifiedTime = this.nowTime;
       patientUpdate(this.patinenteditform).then((response) => {
         console.log("editUserInfo的response", response);
         if (response.data.respCode == "0000") {

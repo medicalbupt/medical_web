@@ -27,16 +27,9 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      // const hasGetUserInfo = store.getters.name
-      // 解决刷新完回登录页问题
-      let hasGetUserInfo=''
-      if (sessionStorage.getItem("userreallyname")!= null) {
-        hasGetUserInfo= sessionStorage.getItem("userreallyname")
-        console.log("sessionStorage的userreallyname",sessionStorage.getItem("userreallyname"));
-      }
-
-      // console.log("hasGetUserInfo",store.getters.name)
-      // console.log("phonenumber",store.getters.phonenumber)
+      const hasGetUserInfo = store.getters.name
+      console.log("hasGetUserInfo",store.getters.name)
+      console.log("phonenumber",store.getters.phonenumber)
       if (hasGetUserInfo) {
         next()
       } else {

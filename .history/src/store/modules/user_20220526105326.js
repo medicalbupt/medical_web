@@ -79,9 +79,6 @@ const actions = {
         // const { token,expireTime } = response
         //把后端返回的token存到vuex中
         commit('SET_TOKEN', response.headers['x-access-token'])
-        // 解决刷新回到登录页的问题
-        sessionStorage.setItem("usertoken",response.headers['x-access-token']);
-
         // commit('SET_TOKEN', token)
         //把后端返回的token存到cookies里面
         setToken(response.headers['x-access-token'])
@@ -89,10 +86,6 @@ const actions = {
         // 把后端返回的userid存在vuex中
         console.log("response.data.id",response.data.id) 
         commit('SET_USERUID', response.data.id)
-        
-        // 解决刷新回到登录页的问题
-        sessionStorage.setItem("userid",response.data.id);
-
         console.log("state.userId",state.userId) 
         
         resolve()
@@ -123,50 +116,41 @@ const actions = {
     // console.log("this.state.userId",state.userId)
     return new Promise((resolve, reject) => {
       console.log("getinfo的state.userId",state.userId);
-      if(state.userId){
-        getInfo(state.userId).then(response => {
-          const { data } = response
-          console.log("getinfo",data)
-  
-          if (!data) {
-            return reject('Verification failed, please Login again.')
-          }
-  
-          // const { reallyname, avatar } = data
-          const reallyname=data.reallyname 
-          // console.log("reallyname",reallyname)
-          commit('SET_NAME', reallyname)
-  
-          // 解决刷新回到登录页的问题
-          sessionStorage.setItem("userreallyname",reallyname);
-          sessionStorage.setItem("userid",state.userId);
-          
-          // const userCreateTime=data.createTinme 
-          // commit('SET_USERCREATETIME', userCreateTime)
-  
-          // const userModifyTime=data.modifiedTime 
-          // commit('SET_USERMODIFYTIME', userCreateTime)
-  
-          // const userRole=data.roleName 
-          // commit('SET_USERROLE', userRole)
-  
-          // const userPhone=data.telephone 
-          // commit('SET_USERPHONE', userPhone)
-  
-          // const userName=data.username 
-          // commit('SET_USERNAME', userName)
-  
-  
-          // commit('SET_AVATAR', avatar)
-          resolve(data)
-        }).catch(error => {
-          // reject(error)\
-          console.log(error, 'error ')
-        })
-      }else {
-        next({ path: '/' })
-      }
+      getInfo(state.userId).then(response => {
+        const { data } = response
+        console.log("getinfo",data)
 
+        if (!data) {
+          return reject('Verification failed, please Login again.')
+        }
+
+        // const { reallyname, avatar } = data
+        const reallyname=data.reallyname 
+        // console.log("reallyname",reallyname)
+        commit('SET_NAME', reallyname)
+
+        // const userCreateTime=data.createTinme 
+        // commit('SET_USERCREATETIME', userCreateTime)
+
+        // const userModifyTime=data.modifiedTime 
+        // commit('SET_USERMODIFYTIME', userCreateTime)
+
+        // const userRole=data.roleName 
+        // commit('SET_USERROLE', userRole)
+
+        // const userPhone=data.telephone 
+        // commit('SET_USERPHONE', userPhone)
+
+        // const userName=data.username 
+        // commit('SET_USERNAME', userName)
+
+
+        // commit('SET_AVATAR', avatar)
+        resolve(data)
+      }).catch(error => {
+        // reject(error)\
+        console.log(error, 'error ')
+      })
     })
   },
 

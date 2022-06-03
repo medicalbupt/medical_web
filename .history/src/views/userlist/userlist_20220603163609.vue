@@ -169,12 +169,6 @@
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="用户电话号码" :label-width="formLabelWidth">
-          <el-input
-            v-model="userinsertform.telephone"
-            autocomplete="off"
-          ></el-input>
-        </el-form-item>
         <el-form-item label="用户角色名称" :label-width="formLabelWidth">
           <el-input
             v-model="userinsertform.roleName"
@@ -193,6 +187,12 @@
             autocomplete="off"
           ></el-input>
         </el-form-item> -->
+        <el-form-item label="用户电话号码" :label-width="formLabelWidth">
+          <el-input
+            v-model="userinsertform.telephone"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="adduserdialogFormVisible = false">取 消</el-button>
@@ -239,7 +239,7 @@ export default {
         reallyname: "",
         roleName: "",
         rolePriority: "",
-        status: 1,
+        status: "",
         telephone: "",
         username: "",
       },
@@ -297,17 +297,7 @@ export default {
           this.adduserdialogFormVisible = false;
           this.getUserList();
         }
-        this.userinsertform = {
-          createTinme: "",
-          modifiedTime: "",
-          password: "",
-          reallyname: "",
-          roleName: "operator",
-          rolePriority: 1,
-          status: 1,
-          telephone: "",
-          username: "",
-        };
+        this.userinsertform = "";
       });
     },
     // 提交修改用户
@@ -384,8 +374,6 @@ export default {
       getInfo2(id).then((response) => {
         console.log("showEditDialog的getInfo2的response", response);
         this.editForm = response.data;
-        this.nowTime = new Date().valueOf();
-        this.editForm.modifiedTime = this.nowTime;
         console.log("this.editForm", this.editForm);
         this.editDialogVisible = true;
       });

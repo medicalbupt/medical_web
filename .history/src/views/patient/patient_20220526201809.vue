@@ -105,7 +105,7 @@
         :current-page="queryInfo.currentPage"
         @size-change="handleSizeChange"
         :page-size="queryInfo.pageSize"
-        :page-sizes="[10, 20, 50]"
+        :page-sizes="[5, 8, 10, 15]"
         layout="total,sizes, prev, pager, next, jumper"
         :total="this.patientData.total"
       >
@@ -355,7 +355,7 @@ export default {
         // 当前的页数
         currentPage: 1,
         // 当前每次显示多少条数据
-        pageSize: 10,
+        pageSize: 5,
       },
       // 存放用户的数据和数量
       patientData: {
@@ -418,12 +418,11 @@ export default {
   filters: {
     formatDate(time) {
       let date = new Date(time);
-      return formatDate(date, "yyyy-MM-dd");
+      return formatDate(date, "yyyy年MM月dd日");
     },
     formatDate3(time) {
       let date = new Date(time);
-      // return formatDate(date, "yyyy年MM月dd日 hh:mm:ss");
-      return formatDate(date, "yyyy-MM-dd hh:mm:ss");
+      return formatDate(date, "yyyy年MM月dd日 hh:mm:ss");
     },
   },
   created() {
@@ -521,22 +520,7 @@ export default {
           this.addDialogVisible = false;
           this.getPatientList();
         }
-        this.addForm = {
-          birthday: "",
-          createTinme: "",
-          curMedicalRecord: "",
-          engravedDisease: "",
-          mainComplaint: "",
-          familyHistory: "",
-          gender: "",
-          idCard: "",
-          modifiedTime: "",
-          pastHistory: "",
-          patientName: "",
-          personalHistory: "",
-          status: 1,
-          telephone: "",
-        };
+        this.addForm = {};
       });
     },
 
@@ -544,7 +528,10 @@ export default {
     editPatientSubmit() {
       this.nowTime = new Date().valueOf();
       this.patinenteditform.modifiedTime = this.nowTime;
-      console.log("打印this.patinenteditform", this.patinenteditform);
+      this.patinenteditform.birthday = console.log(
+        "打印this.patinenteditform",
+        this.patinenteditform
+      );
       patientUpdate(this.patinenteditform).then((response) => {
         console.log("editUserInfo的response", response);
         if (response.data.respCode == "0000") {

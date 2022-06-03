@@ -79,9 +79,6 @@ const actions = {
         // const { token,expireTime } = response
         //把后端返回的token存到vuex中
         commit('SET_TOKEN', response.headers['x-access-token'])
-        // 解决刷新回到登录页的问题
-        sessionStorage.setItem("usertoken",response.headers['x-access-token']);
-
         // commit('SET_TOKEN', token)
         //把后端返回的token存到cookies里面
         setToken(response.headers['x-access-token'])
@@ -90,8 +87,8 @@ const actions = {
         console.log("response.data.id",response.data.id) 
         commit('SET_USERUID', response.data.id)
         
-        // 解决刷新回到登录页的问题
-        sessionStorage.setItem("userid",response.data.id);
+          // 解决刷新回到登录页的问题
+          sessionStorage.setItem("userid",response.data.id);
 
         console.log("state.userId",state.userId) 
         
@@ -139,7 +136,6 @@ const actions = {
   
           // 解决刷新回到登录页的问题
           sessionStorage.setItem("userreallyname",reallyname);
-          sessionStorage.setItem("userid",state.userId);
           
           // const userCreateTime=data.createTinme 
           // commit('SET_USERCREATETIME', userCreateTime)

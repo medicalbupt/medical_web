@@ -297,17 +297,7 @@ export default {
           this.adduserdialogFormVisible = false;
           this.getUserList();
         }
-        this.userinsertform = {
-          createTinme: "",
-          modifiedTime: "",
-          password: "",
-          reallyname: "",
-          roleName: "operator",
-          rolePriority: 1,
-          status: 1,
-          telephone: "",
-          username: "",
-        };
+        this.userinsertform = "";
       });
     },
     // 提交修改用户

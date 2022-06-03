@@ -297,17 +297,7 @@ export default {
           this.adduserdialogFormVisible = false;
           this.getUserList();
         }
-        this.userinsertform = {
-          createTinme: "",
-          modifiedTime: "",
-          password: "",
-          reallyname: "",
-          roleName: "operator",
-          rolePriority: 1,
-          status: 1,
-          telephone: "",
-          username: "",
-        };
+        this.userinsertform = "";
       });
     },
     // 提交修改用户
@@ -385,7 +375,7 @@ export default {
         console.log("showEditDialog的getInfo2的response", response);
         this.editForm = response.data;
         this.nowTime = new Date().valueOf();
-        this.editForm.modifiedTime = this.nowTime;
+        this.editForm.createTinme = this.nowTime;
         console.log("this.editForm", this.editForm);
         this.editDialogVisible = true;
       });

@@ -86,13 +86,6 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
-          <i class="el-icon-notebook-1"></i>
-          刻下症
-        </template>
-        {{ patinentform.engravedDisease }}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
           <i class="el-icon-notebook-2"></i>
           患者既往史
         </template>
@@ -204,20 +197,15 @@
               <span>{{ props.row.otherTreatment }}</span>
             </el-form-item>
             <el-form-item label="修改时间">
-              <span>{{ props.row.modifiedTime | formatDate3 }}</span>
+              <span>{{ props.row.modifiedTime }}</span>
             </el-form-item>
-         
           </el-form>
         </template>
       </el-table-column>
       <el-table-column label="患者诊次" prop="consultNum"> </el-table-column>
       <el-table-column label="就诊地点" prop="medicalLocId"> </el-table-column>
       <el-table-column label="患者就诊时间" prop="consultTime">
-          <template slot-scope="scope">
-            <span>{{ scope.row.consultTime | formatDate3 }}</span>
-          </template>
       </el-table-column>
-     
     </el-table>
 
     <!-- 分页 -->
@@ -354,22 +342,13 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="就诊时间" :label-width="formLabelWidth">
-          <!-- <el-input
+          <el-input
             type="date"
             placeholder="选择就诊日期"
             v-model="addconsultform.consultTime"
             autocomplete="off"
-          ></el-input> -->
-          <el-date-picker
-            v-model="addconsultform.consultTime"
-            type="date"
-            placeholder="选择就诊日期"
-          >
-          </el-date-picker>
+          ></el-input>
         </el-form-item>
-          
-          
-     
         <!-- <el-form-item label="创建时间" :label-width="formLabelWidth">
           <el-input
             v-model="addconsultform.createTinme"
@@ -388,7 +367,6 @@
         <el-form-item label="主病诊断" :label-width="formLabelWidth">
           <el-select
             v-model="addconsultform.mainDiseaseDiagnosisId"
-            filterable
             placeholder="请选择"
           >
             <el-option
@@ -401,7 +379,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="就诊地点" :label-width="formLabelWidth">
-          <el-select v-model="addconsultform.medicalLocId" filterable placeholder="请选择">
+          <el-select v-model="addconsultform.medicalLocId" placeholder="请选择">
             <el-option
               v-for="item in locallist"
               :key="item.dataCode"
@@ -414,7 +392,6 @@
         <el-form-item label="证候分类" :label-width="formLabelWidth">
           <el-select
             v-model="addconsultform.symptomCategoriesId"
-            filterable
             placeholder="请选择"
           >
             <el-option
@@ -435,7 +412,6 @@
         <el-form-item label="其他诊断" :label-width="formLabelWidth">
           <el-select
             v-model="addconsultform.otherDiagnosisId"
-            filterable
             placeholder="请选择"
           >
             <el-option
@@ -616,11 +592,11 @@ export default {
   filters: {
     formatDate(time) {
       let date = new Date(time);
-      return formatDate(date, "yyyy-MM-dd");
+      return formatDate(date, "yyyy年MM月dd日");
     },
     formatDate3(time) {
       let date = new Date(time);
-      return formatDate(date, "yyyy-MM-dd hh:mm:ss");
+      return formatDate(date, "yyyy年MM月dd日 hh:mm:ss");
     },
   },
   created() {
