@@ -60,7 +60,21 @@ export const constantRoutes = [
       meta: { title: "个人信息", icon: "form" },
       hidden: true,
     }
-  ]
+    ]
+  },
+
+  {
+    path: '/commondata',
+    component: Layout,
+    // redirect: '/commondata',
+    children: [{
+      path: 'commondata',
+      name: 'Commondata',
+      component: () => import('@/views/commondata/commondata.vue'),
+      meta: { title: '基础数据库', icon: 'clipboard', affix: true }
+    },
+
+    ]
   },
 
   {
@@ -69,36 +83,37 @@ export const constantRoutes = [
     redirect: "/patient-infomation",
     name: "TestDemo2",
     children: [
-    // {
-    //   path: "patient-infomation",
-    //   component: () => import("@/views/patient/patient-infomation.vue"),
-    //   name: "patient-infomation",
-    //   meta: { title: "用户信息列表", icon: "excel" },
-    // },
-    {
-      path: "patient",
-      component: () => import("@/views/patient/patient.vue"),
-      name: "patient",
-      meta: { title: "患者库", icon: "form" },
-    },
+      // {
+      //   path: "patient-infomation",
+      //   component: () => import("@/views/patient/patient-infomation.vue"),
+      //   name: "patient-infomation",
+      //   meta: { title: "用户信息列表", icon: "excel" },
+      // },
+      {
+        path: "patient",
+        component: () => import("@/views/patient/patient.vue"),
+        name: "patient",
+        meta: { title: "患者库", icon: "form" },
+      },
 
-    // {
-    //   path: '/patient/add',
-    //   component: () => import("@/views/patient/ch/Add.vue")
-    // }
-    {
-      path: 'add',
-      component: () => import("@/views/patient/Add.vue"),
-      name: "patient_add",
-      hidden: true,
-      meta: { title: "患者录入", icon: "form" },
-    },{
-      path: 'patientmation',
-      component: () => import("@/views/patient/patientmation.vue"),
-      name: "patientmation",
-      hidden: true,
-      meta: { title: "患者详细信息", icon: "form" },
-    },
+      // {
+      //   path: '/patient/add',
+      //   component: () => import("@/views/patient/ch/Add.vue")
+      // }
+      {
+        path: 'add',
+        component: () => import("@/views/patient/Add.vue"),
+        name: "patient_add",
+        hidden: true,
+        meta: { title: "患者录入", icon: "form" },
+      },
+      {
+        path: 'patientmation',
+        component: () => import("@/views/patient/patientmation.vue"),
+        name: "patientmation",
+        hidden: true,
+        meta: { title: "患者详细信息", icon: "form" },
+      },
     ]
 
   },
@@ -110,20 +125,20 @@ export const constantRoutes = [
     redirect: "user-infomation",
     name: "Example1",
     children: [
-    {
-      path: "userlist",
-      component: () => import("@/views/userlist/userlist.vue"),
-      name: "userlist",
-      meta: { title: "用户列表", icon: "list" },
-    },
-    {
-      path: "testview",
-      component: () => import("@/views/userlist/children/test.vue"),
-      name: "userlist2",
-      meta: { title: "test页面", icon: "list" },
-      hidden: true,
-    }
-  ]
+      {
+        path: "userlist",
+        component: () => import("@/views/userlist/userlist.vue"),
+        name: "userlist",
+        meta: { title: "用户列表", icon: "list" },
+      },
+      {
+        path: "testview",
+        component: () => import("@/views/userlist/children/test.vue"),
+        name: "userlist2",
+        meta: { title: "test页面", icon: "list" },
+        hidden: true,
+      }
+    ]
 
   },
 
