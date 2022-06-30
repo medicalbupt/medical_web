@@ -22,6 +22,15 @@
   left: 0;
   position: relative;
   margin: 0 auto;
+
+  .el-dialog__body {
+    padding: 0;
+    .dialog-content {
+      max-height: calc(95vh - 200px);
+      overflow-y: auto;
+      padding: 20px 40px;
+    }
+  }
 }
 
 // refine element ui upload

@@ -289,11 +289,13 @@
 
     <el-dialog
       title="添加患者就诊信息"
-      top="6vh"
+      top="5vh"
       :visible.sync="dialogFormVisible"
+      width="1000px"
     >
       <!-- <TinymceEditor /> -->
-      <el-form :model="addconsultform">
+      <div class="dialog-content">
+      <el-form :model="addconsultform" label-position="top">
         <el-form-item label="腹诊" :label-width="formLabelWidth">
           <el-input
             type="textarea"
@@ -388,219 +390,24 @@
           ></el-input> -->
         </el-form-item>
         <el-form-item label="症状" :label-width="formLabelWidth">
-          <span>:</span>
-          <div
-            v-for="symtom in addconsultform.symptom.symtomList"
-            :key="symtom.typeId"
-          >
-            <!-- <span v-if="symtom.typeName == 3">全身: </span> -->
-            <el-collapse v-model="activeNames" accordion>
-              <el-collapse-item
-                v-if="symtom.typeName == 3"
-                title="全身"
-                name="1"
-              >
-                <div>
+          <div class="symtom-type">
+            <el-collapse v-model="symtomActiveNames">
+              <el-collapse-item v-for="(symtom, index) in addconsultform.symptom.symtomList" :key="symtom.typeId" :name="symtom.typeId">
+                <template #title>
+                  <span style="padding-left: 12px;">{{typeNameList[symtom.typeId]}}</span>
+                </template>
+                <div class="symtom-type-block">
                   <div
-                    v-for="subSymtom in symtom.children"
+                    v-for="(subSymtom, subIndex) in symtom.children"
                     :key="symtom.typeId + '-' + subSymtom.id"
+                    class="symtom-type-block-item"
                   >
-                    <span>{{ subSymtom.dataName }}</span>
-                    <select class="select1" v-model="subSymtom.score">
-                      <option :value="0">无</option>
-                      <option :value="1">轻症</option>
-                      <option :value="2">重症</option>
-                    </select>
-                  </div>
-                </div>
-              </el-collapse-item>
-              <el-collapse-item
-                v-if="symtom.typeName == 4"
-                title="头面"
-                name="2"
-              >
-                <div>
-                  <div
-                    v-for="subSymtom in symtom.children"
-                    :key="symtom.typeId + '-' + subSymtom.id"
-                  >
-                    <span>{{ subSymtom.dataName }}</span>
-                    <select class="select1" v-model="subSymtom.score">
-                      <option :value="0">无</option>
-                      <option :value="1">轻症</option>
-                      <option :value="2">重症</option>
-                    </select>
-                  </div>
-                </div>
-              </el-collapse-item>
-              <el-collapse-item
-                v-if="symtom.typeName == 5"
-                title="四肢"
-                name="3"
-              >
-                <div>
-                  <div
-                    v-for="subSymtom in symtom.children"
-                    :key="symtom.typeId + '-' + subSymtom.id"
-                  >
-                    <span>{{ subSymtom.dataName }}</span>
-                    <select class="select1" v-model="subSymtom.score">
-                      <option :value="0">无</option>
-                      <option :value="1">轻症</option>
-                      <option :value="2">重症</option>
-                    </select>
-                  </div>
-                </div>
-              </el-collapse-item>
-              <el-collapse-item
-                v-if="symtom.typeName == 6"
-                title="心胸"
-                name="4"
-              >
-                <div>
-                  <div
-                    v-for="subSymtom in symtom.children"
-                    :key="symtom.typeId + '-' + subSymtom.id"
-                  >
-                    <span>{{ subSymtom.dataName }}</span>
-                    <select class="select1" v-model="subSymtom.score">
-                      <option :value="0">无</option>
-                      <option :value="1">轻症</option>
-                      <option :value="2">重症</option>
-                    </select>
-                  </div>
-                </div>
-              </el-collapse-item>
-              <el-collapse-item
-                v-if="symtom.typeName == 7"
-                title="脘腹"
-                name="5"
-              >
-                <div>
-                  <div
-                    v-for="subSymtom in symtom.children"
-                    :key="symtom.typeId + '-' + subSymtom.id"
-                  >
-                    <span>{{ subSymtom.dataName }}</span>
-                    <select class="select1" v-model="subSymtom.score">
-                      <option :value="0">无</option>
-                      <option :value="1">轻症</option>
-                      <option :value="2">重症</option>
-                    </select>
-                  </div>
-                </div>
-              </el-collapse-item>
-              <el-collapse-item
-                v-if="symtom.typeName == 8"
-                title="饮食"
-                name="6"
-              >
-                <div>
-                  <div
-                    v-for="subSymtom in symtom.children"
-                    :key="symtom.typeId + '-' + subSymtom.id"
-                  >
-                    <span>{{ subSymtom.dataName }}</span>
-                    <select class="select1" v-model="subSymtom.score">
-                      <option :value="0">无</option>
-                      <option :value="1">轻症</option>
-                      <option :value="2">重症</option>
-                    </select>
-                  </div>
-                </div>
-              </el-collapse-item>
-              <el-collapse-item
-                v-if="symtom.typeName == 9"
-                title="睡眠"
-                name="7"
-              >
-                <div>
-                  <div
-                    v-for="subSymtom in symtom.children"
-                    :key="symtom.typeId + '-' + subSymtom.id"
-                  >
-                    <span>{{ subSymtom.dataName }}</span>
-                    <select class="select1" v-model="subSymtom.score">
-                      <option :value="0">无</option>
-                      <option :value="1">轻症</option>
-                      <option :value="2">重症</option>
-                    </select>
-                  </div>
-                </div>
-              </el-collapse-item>
-              <el-collapse-item
-                v-if="symtom.typeName == 10"
-                title="二便"
-                name="8"
-              >
-                <div>
-                  <div
-                    v-for="subSymtom in symtom.children"
-                    :key="symtom.typeId + '-' + subSymtom.id"
-                  >
-                    <span>{{ subSymtom.dataName }}</span>
-                    <select class="select1" v-model="subSymtom.score">
-                      <option :value="0">无</option>
-                      <option :value="1">轻症</option>
-                      <option :value="2">重症</option>
-                    </select>
-                  </div>
-                </div>
-              </el-collapse-item>
-              <el-collapse-item
-                v-if="symtom.typeName == 11"
-                title="生殖"
-                name="9"
-              >
-                <div>
-                  <div
-                    v-for="subSymtom in symtom.children"
-                    :key="symtom.typeId + '-' + subSymtom.id"
-                  >
-                    <span>{{ subSymtom.dataName }}</span>
-                    <select class="select1" v-model="subSymtom.score">
-                      <option :value="0">无</option>
-                      <option :value="1">轻症</option>
-                      <option :value="2">重症</option>
-                    </select>
-                  </div>
-                </div>
-              </el-collapse-item>
-              <el-collapse-item
-                v-if="symtom.typeName == 12"
-                title="舌"
-                name="10"
-              >
-                <div>
-                  <div
-                    v-for="subSymtom in symtom.children"
-                    :key="symtom.typeId + '-' + subSymtom.id"
-                  >
-                    <span>{{ subSymtom.dataName }}</span>
-                    <select class="select1" v-model="subSymtom.score">
-                      <option :value="0">无</option>
-                      <option :value="1">轻症</option>
-                      <option :value="2">重症</option>
-                    </select>
-                  </div>
-                </div>
-              </el-collapse-item>
-              <el-collapse-item
-                v-if="symtom.typeName == 13"
-                title="脉"
-                name="11"
-              >
-                <div>
-                  <div
-                    v-for="subSymtom in symtom.children"
-                    :key="symtom.typeId + '-' + subSymtom.id"
-                  >
-                    <span>{{ subSymtom.dataName }}</span>
-                    <select class="select1" v-model="subSymtom.score">
-                      <option :value="0">无</option>
-                      <option :value="1">轻症</option>
-                      <option :value="2">重症</option>
-                    </select>
+                    <div class="symtom-type-block-item-title">{{ subSymtom.dataName }}</div>
+                    <el-select v-model="addconsultform.symptom.symtomList[index].children[subIndex].score" class="symtom-type-block-item-select" @change="symtomSelectChange(index, subIndex)">
+                      <el-option :value="0" label="无"></el-option>
+                      <el-option :value="1" label="轻症"></el-option>
+                      <el-option :value="2" label="重症"></el-option>
+                    </el-select>
                   </div>
                 </div>
               </el-collapse-item>
@@ -672,18 +479,18 @@
         </el-form-item>
         <el-form-item label="风邪" :label-width="formLabelWidth">
           <el-card class="box-card" shadow="never">
-            <el-collapse v-model="activeNames">
-              <el-collapse-item title="风邪（肾病填写）:">
-                <div v-for="item in newfengxielist" :key="item.id">
-                  <span class="demonstration">{{ item.dataName }}</span>
-                  <select class="select1" v-model="item.value">
-                    <option :value="0">无</option>
-                    <option :value="1">轻</option>
-                    <option :value="2">重</option>
-                  </select>
+            <div class="symtom-type">
+              <div class="symtom-type-block">
+                <el-divider content-position="left">风邪（肾病填写）:</el-divider>
+                <div v-for="(item, index) in newfengxielist" :key="item.id" class="symtom-type-block-item">
+                  <div class="symtom-type-block-item-title">{{ item.dataName }}</div>
+                  <el-select v-model="newfengxielist[index].value" class="symtom-type-block-item-select">
+                    <el-option :value="0" label="无"></el-option>
+                    <el-option :value="1" label="轻症"></el-option>
+                    <el-option :value="2" label="重症"></el-option>
+                  </el-select>
                 </div>
-              </el-collapse-item>
-              <el-collapse-item title="是否诊断为风邪证">
+                <el-divider content-position="left">是否诊断为风邪证</el-divider>
                 <el-radio
                   v-model="addconsultform.windEvil.diagnosticResult"
                   label="1"
@@ -694,8 +501,8 @@
                   label="0"
                   >否</el-radio
                 >
-              </el-collapse-item>
-            </el-collapse>
+              </div>
+            </div>
           </el-card>
         </el-form-item>
         <el-form-item label="辩证" :label-width="formLabelWidth">
@@ -937,6 +744,7 @@
           ></el-cascader>
         </el-form-item> -->
       </el-form>
+      </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="addconsult">确 定</el-button>
@@ -963,12 +771,15 @@ export default {
   },
   data() {
     return {
+      score: 0,
+      typeNameList: ['', '', '', '全身', '头面', '四肢', '心胸', '脘腹', '饮食', '睡眠', '二便', '生殖', '舌', '脉'],
       // 现在时间
       nowTime: "",
       //风邪证单选框
       radio: "0",
       // 折叠框的选择
       activeNames: "1",
+      symtomActiveNames: 3,
       // 医嘱相应的数据
       doctorcommonDataEntityList: [],
       //症状相应的数据
@@ -1553,6 +1364,13 @@ export default {
         }
       }
     },
+    // 症状的select的change事件监听，解决for循环赋值不生效问题
+    symtomSelectChange(index, subIndex) {
+      // 深拷贝一份数据
+      const subItemList = JSON.parse(JSON.stringify(this.addconsultform.symptom.symtomList[index].children[subIndex]));
+      // 用vue的splice方法触发更新
+      this.addconsultform.symptom.symtomList[index].children.splice(subIndex, 1, subItemList);
+    }
   },
   computed: {
     // 个人史信息展示
@@ -1580,12 +1398,11 @@ export default {
       } else if (this.patinentform.familyHistoryList.includes(3)) {
         return vaiue3;
       }
-    },
-    
+    }
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 /* .collapse {
   margin: 20px;
 } */
@@ -1629,6 +1446,27 @@ export default {
 }
 .select1 {
   margin-left: 40px;
+}
+.symtom-type {
+  .symtom-type-block {
+    margin-bottom: 12px;
+    .symtom-type-block-item{
+      display: inline-block;
+      vertical-align: middle;
+      align-items: center;
+      margin-right: 8px;
+      margin-bottom: 8px;
+      .symtom-type-block-item-title {
+        width: 150px;
+        display: inline-block;
+        text-align: right;
+        padding-right: 8px;
+      }
+      .symtom-type-block-item-select {
+        width: 80px;
+      }
+    }
+  }
 }
 </style>
 
