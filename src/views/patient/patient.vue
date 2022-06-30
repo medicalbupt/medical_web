@@ -162,20 +162,20 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="手机号">
+       <el-form-item label="身高">
+          <el-input  type="number" v-model="addForm.height" placeholder="单位：cm"></el-input>
+        </el-form-item>
+        <el-form-item label="体重">
+          <el-input type="number" v-model="addForm.weight" placeholder="单位：kg"></el-input>
+        </el-form-item>
+        <el-form-item label="体质">
+          <el-input type="number" v-model="addForm.physiqueId"></el-input>
+        </el-form-item>
+        <el-form-item label="联系方式">
           <el-input v-model="addForm.telephone"></el-input>
         </el-form-item>
         <el-form-item label="身份证号">
           <el-input v-model="addForm.idCard"></el-input>
-        </el-form-item>
-        <el-form-item label="身高">
-          <el-input v-model="addForm.height" placeholder="单位：cm"></el-input>
-        </el-form-item>
-        <el-form-item label="体重">
-          <el-input v-model="addForm.weight" placeholder="单位：kg"></el-input>
-        </el-form-item>
-        <el-form-item label="体质">
-          <el-input v-model="addForm.physiqueId"></el-input>
         </el-form-item>
         <el-form-item label="主述">
           <el-input
@@ -186,10 +186,129 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="现病史">
-          <el-input
+          <!-- <el-input
             v-model="addForm.curMedicalRecordList"
             :rows="5"
             placeholder="请输入内容"
+            type="textarea"
+          ></el-input> -->
+        <el-tag >西医诊断及病程</el-tag>
+          <!-- <el-radio-group v-model="addForm.curMedicalRecord.Westernmedicine">
+              <el-radio 
+              v-for="item in curMedicalRecordListOptions"
+              :label="item.dataName"
+              :key="item.id">
+              </el-radio>
+          </el-radio-group> -->
+
+          <label v-for="item in curMedicalRecordListOptions" v-bind:key="item.id" >
+             <input type="radio" name="item.dataName" :value="item.id" v-model="addForm.curMedicalRecord.Westernmedicine.list"><label>{{item.dataName}}</label>
+          </label>
+
+
+          <div >确诊时间</div>
+          <div>
+            <el-date-picker
+           v-model="addForm.curMedicalRecord.confirmTime.time"
+            type="date"
+            placeholder="选择日期">
+           </el-date-picker>
+          </div>
+
+
+            <el-tag >糖尿病并发症</el-tag>
+          <!-- <el-checkbox-group v-model="addForm.curMedicalRecord.DMcomplications">
+            <el-checkbox
+              v-for="item in curMedicalRecordListOptions"
+              :label="item.dataName"
+              :key="item.id"     
+              ></el-checkbox>
+          </el-checkbox-group> -->
+
+          <label v-for="item in curMedicalRecordListOptions" v-bind:key="item.id" >
+             <input type="checkbox" name="item.dataName" :value="item.id" v-model="addForm.curMedicalRecord.DMcomplications.list"><label>{{item.dataName}}</label>
+          </label>
+
+
+         
+
+
+          <el-tag >慢性肾脏病病因</el-tag>
+          <!-- <el-checkbox-group v-model="addForm.curMedicalRecord.CKDreason">
+            <el-checkbox
+              v-for="item in curMedicalRecordListOptions"
+              :label="item.dataName"
+              :key="item.id" 
+              >
+              </el-checkbox>
+          </el-checkbox-group> -->
+          <label v-for="item in curMedicalRecordListOptions" v-bind:key="item.id" >
+             <input type="checkbox" name="item.dataName" :value="item.id" v-model="addForm.curMedicalRecord.CKDreason.list"><label>{{item.dataName}}</label>
+          </label>
+
+        </el-form-item>
+        <el-form-item label="既往史" >
+          <!-- <el-checkbox-group v-model="addForm.pastHistoryList">
+            <el-checkbox
+              v-for="item in pastHistoryListOptions"
+              :label="item.dataName"
+              :key="item.id"
+             
+              >
+              </el-checkbox>
+          </el-checkbox-group> -->
+
+          <label v-for="item in pastHistoryListOptions" v-bind:key="item.id" >
+             <input type="checkbox" name="item.dataName" :value="item.id" v-model="addForm.pastHistoryList"><label>{{item.dataName}}</label>
+          </label>
+        </el-form-item>
+
+        <el-form-item label="个人史">
+          <div class="div1">
+            <el-tag class="tag1">吸烟数量（支/天）</el-tag>
+            <el-input-number
+              v-model="addForm.personalHistory.smoke.amount"
+              :max="50"
+            ></el-input-number>
+          </div>
+          <div class="div1">
+            <el-tag class="tag1">啤酒数量（瓶/天）</el-tag>
+            <el-input-number
+              v-model="addForm.personalHistory.beer.amount"
+              :max="50"
+            ></el-input-number>
+          </div>
+          <div class="div1">
+            <el-tag class="tag1">白酒数量（两/天）</el-tag>
+            <el-input-number
+              v-model="addForm.personalHistory.whiteWine.amount"
+              :max="50"
+            ></el-input-number>
+          </div>
+        </el-form-item>
+        <el-form-item label="家族史">
+          <!-- <el-checkbox-group v-model="addForm.familyHistoryList">
+            <el-checkbox
+              v-for="item in familyHistoryListOptions"
+              :label="item.dataName"
+              :key="item.id"
+              >
+              </el-checkbox>
+          </el-checkbox-group> -->
+
+          <label v-for="item in familyHistoryListOptions" v-bind:key="item.id" >
+             <input type="checkbox" name="item.dataName" :value="item.id" v-model="addForm.familyHistoryList"><label>{{item.dataName}}</label>
+          </label>
+      
+        </el-form-item>
+
+
+        <el-form-item label="过敏史">
+          <el-input
+            :rows="5"
+            placeholder="请输入内容"
+            auto-complete=""
+            v-model="addForm.allergyHistory"
             type="textarea"
           ></el-input>
         </el-form-item>
@@ -201,66 +320,10 @@
             v-model="addForm.engravedDisease"
           ></el-input>
         </el-form-item>
-        <el-form-item label="既往史">
-          <!-- <el-checkbox-group v-model="addForm.pastHistoryList">
-            <el-checkbox
-              v-for="item in pastHistoryListOptions"
-              :label="item"
-              :key="item"
-              >{{ item }}</el-checkbox
-            >
-          </el-checkbox-group> -->
-          <el-checkbox-group v-model="addForm.pastHistoryList">
-            <el-checkbox
-              v-for="item in pastHistoryListOptions"
-              :label="item"
-              :key="item"
-              >{{ item }}</el-checkbox
-            >
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="个人史">
-          <div class="div1">
-            <el-tag class="tag1">吸烟数量（支/天）</el-tag>
-            <el-input-number
-              v-model="addForm.personalHistory[0].amount"
-              :max="50"
-            ></el-input-number>
-          </div>
-          <div class="div1">
-            <el-tag class="tag1">啤酒数量（瓶/天）</el-tag>
-            <el-input-number
-              v-model="addForm.personalHistory[1].amount"
-              :max="50"
-            ></el-input-number>
-          </div>
-          <div class="div1">
-            <el-tag class="tag1">白酒数量（两/天）</el-tag>
-            <el-input-number
-              v-model="addForm.personalHistory[2].amount"
-              :max="50"
-            ></el-input-number>
-          </div>
-        </el-form-item>
-        <el-form-item label="家族史">
-          <el-checkbox-group v-model="addForm.familyHistoryList">
-            <el-checkbox
-              v-for="item in familyHistoryListOptions"
-              :label="item"
-              :key="item"
-              >{{ item }}</el-checkbox
-            >
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="过敏史">
-          <el-input
-            :rows="5"
-            placeholder="请输入内容"
-            auto-complete=""
-            v-model="addForm.allergyHistory"
-            type="textarea"
-          ></el-input>
-        </el-form-item>
+        
+        
+        
+        
         <!-- <el-form-item label="患者创建时间">
           <el-input v-model="addForm.createTinme"></el-input>
         </el-form-item>
@@ -379,11 +442,14 @@
 <script>
 import { formatDate } from "@/common/date.js";
 // import patientInfo from "./patientInfo.vue";
+
 import {
   addPatient,
   getPatientList,
   patientDelete,
   patientUpdate,
+  // getAllSameData,
+  getcommonlist,
 } from "@/api/patient";
 
 export default {
@@ -393,6 +459,8 @@ export default {
   name: "patient",
   data() {
     return {
+      
+    
       // 当前时间
       nowTime: "",
 
@@ -441,13 +509,67 @@ export default {
       // 开启多选
       props: { multiple: true },
       // 家族史多选
-      familyHistoryListOptions: ["糖尿病", "高血压", "冠心病"], // 既往史多选
-      pastHistoryListOptions: ["冠心病", "脑血管病", "高血压", "慢性肾脏病"],
+      // familyHistoryListOptions: [
+      //   {
+      //     key: "0",
+      //     label:  "糖尿病",
+      //    },
+      //   {
+      //     key: "1",
+      //     label: "高血压",
+      //   },
+      //   {
+      //     key: "2",
+      //     label: "冠心病",
+      //   },
+      //   ], 
+      familyHistoryListOptions: [],
+      // 既往史多选
+  //     pastHistoryListOptions: [
+  //       {
+  //         key: "0",
+  //         label:  "冠心病",
+  //        },
+  //       {
+  //         key: "1",
+  //         label:  "脑血管病",
+  //       },
+  //       {
+  //         key: "2",
+  //         label: "高血压",
+  //       },
+  //       {
+  //         key: "3",
+  //         label: "慢性肾脏病",
+  //       },
+  //  ],
+      //既往史选择的数据
+      pastHistoryListOptions: [],
+      //现病史选择的数据
+      curMedicalRecordListOptions: [],
       // 添加用户数据的对象
       addForm: {
         birthday: "",
         createTinme: "",
-        curMedicalRecordList: [1, 2, 3],
+        curMedicalRecord: 
+        {
+          Westernmedicine : {
+            list:"",
+          },
+          confirmTime:{
+            time:"",
+
+          },
+          DMcomplications:{
+            list:"",
+
+          },
+          CKDreason:{
+            list:"",
+
+          },
+
+        },
         engravedDisease: "",
         mainComplaint: "",
         familyHistoryList: [],
@@ -456,20 +578,34 @@ export default {
         modifiedTime: "",
         pastHistoryList: [],
         patientName: "",
-        personalHistory: [
-          {
-            amount: 0,
-            personalType: "1",
+        personalHistory:{
+          smoke: {
+           amount: 0,
           },
-          {
-            amount: 0,
-            personalType: "3",
+          whiteWine: {
+           amount: 0,
           },
-          {
-            amount: 0,
-            personalType: "2",
+          beer: {
+           amount: 0,
           },
-        ],
+      },
+        // personalHistory:{
+
+          
+        //    personalType: "1",
+        //    amount: 0,
+         
+        //    personalType: "3",
+        //    amount: 0,
+          
+        //    personalType: "2",
+        //    amount: 0,
+        
+
+      
+
+        // },
+          
         status: 1,
         telephone: "",
         allergyHistory: "",
@@ -510,10 +646,62 @@ export default {
   },
   created() {
     this.getPatientList();
+    //拿到主病诊断全部数据
+    // this.getAllSameData();
+    // 拿到所有的既往史选项
+    this.getPasthistoryList();
+    // 拿到所有的家族史选项
+    this.getFamilyhistoryList();
+    // 拿到所有的现病史选项
+    this.getCurmedicalrecordList();
   },
   methods: {
-    // 添加复诊信息事件
-    // addrepatient() {},
+    // 拿到所有的现病史数据
+    getCurmedicalrecordList() {
+      var typeList = [1];
+      var committypeList = typeList + "";
+      getcommonlist(committypeList).then((res) => {
+        //console.log("获取病症的基本数据", res.data);
+        // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
+        //   this.$message({
+        //     message: "获取医嘱的基本数据成功",
+        //     type: "success",
+        //   });
+        // }
+        this.curMedicalRecordListOptions = res.data.commonDataEntityList;
+      });
+    },
+    // 拿到所有的既往史数据
+    getPasthistoryList() {
+      var typeList = [1];
+      var committypeList = typeList + "";
+      getcommonlist(committypeList).then((res) => {
+        console.log("获取病症的基本数据", res.data);
+        // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
+        //   this.$message({
+        //     message: "获取医嘱的基本数据成功",
+        //     type: "success",
+        //   });
+        // }
+        this.pastHistoryListOptions = res.data.commonDataEntityList;
+      });
+    },
+    // 拿到所有的既往史数据
+    getFamilyhistoryList() {
+      var typeList = [1];
+      var committypeList = typeList + "";
+      getcommonlist(committypeList).then((res) => {
+        //console.log("获取病症的基本数据", res.data);
+        // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
+        //   this.$message({
+        //     message: "获取医嘱的基本数据成功",
+        //     type: "success",
+        //   });
+        // }
+        this.familyHistoryListOptions = res.data.commonDataEntityList;
+      });
+    },
+    //获取患者信息列表
     getPatientList() {
       // const { data: res } = await this.$http.get('users', {
       //   params: this.queryInfo
@@ -603,22 +791,22 @@ export default {
           this.addDialogVisible = false;
           this.getPatientList();
         }
-        this.addForm = {
-          birthday: "",
-          createTinme: "",
-          curMedicalRecord: "",
-          engravedDisease: "",
-          mainComplaint: "",
-          familyHistory: "",
-          gender: "",
-          idCard: "",
-          modifiedTime: "",
-          pastHistory: "",
-          patientName: "",
-          personalHistory: "",
-          status: 1,
-          telephone: "",
-        };
+        // this.addForm = {
+        //   birthday: "",
+        //   createTinme: "",
+        //   curMedicalRecord: "",
+        //   engravedDisease: "",
+        //   mainComplaint: "",
+        //   familyHistory: "",
+        //   gender: "",
+        //   idCard: "",
+        //   modifiedTime: "",
+        //   pastHistory: "",
+        //   patientName: "",
+        //   personalHistory: "",
+        //   status: 1,
+        //   telephone: "",
+        // };
       });
     },
 
