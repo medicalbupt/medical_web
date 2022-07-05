@@ -1,0 +1,78 @@
+@import './variables.scss';
+
+.medical-form {
+  .el-form-item__label {
+    position: relative;
+    padding-left: 12px;
+    font-weight: 500;
+    font-size: 16px;
+
+    &::before {
+      content: " ";
+      width: 3px;
+      height: 10px;
+      background: $activeBlockColor;
+      position: absolute;
+      left: 0;
+      top: 8px;
+    }
+  }
+
+  .block-title {
+    margin-top: 16px;
+    margin-bottom: 8px;
+    display: block;
+    color: $fontColor;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  .el-radio {
+    margin-bottom: 12px;
+  }
+
+  .el-input-number.is-controls-right {
+    .el-input-number__decrease,
+    .el-input-number__increase {
+        width: 20px;
+        height: 13px;
+        right: 3px;
+        background: #f2f3f5;
+        border: none;
+        top: auto;
+        bottom: 3px;
+        color: #c4c4c4;
+        border-radius: 0 0 2px 2px;
+
+        i::before {
+            content: '\e790';
+        }
+
+        &.is-disabled {
+            background: #fafafa !important;
+            color: #f2f3f5;
+        }
+
+        &:hover {
+            background: #e5e6eb;
+        }
+    }
+
+    .el-input-number__increase {
+        top: 3px;
+        bottom: auto;
+        border-radius: 2px 2px 0 0;
+
+        i::before {
+            content: '\e78f';
+        }
+    }
+  }
+
+  .el-input-number__decrease:hover:not(.is-disabled) ~ .el-input .el-input__inner:not(.is-disabled),
+  .el-input-number__increase:hover:not(.is-disabled) ~ .el-input .el-input__inner:not(.is-disabled) {
+    border-color: #474d57;
+  }
+}

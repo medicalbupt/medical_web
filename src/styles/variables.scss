@@ -1,0 +1,69 @@
+// sidebar
+$menuText:#bfcbd9;
+$menuActiveText:#409EFF;
+$subMenuActiveText:#f4f4f5; //https://github.com/ElemeFE/element/issues/12951
+$dangerColor: #ff4d4f;
+
+$menuBg:#304156;
+$menuHover:#263445;
+
+$subMenuBg:#1f2d3d;
+$subMenuHover:#001528;
+
+$sideBarWidth: 210px;
+
+// system
+$fontSize: 14px;
+$fontColor: #1d1d29;
+$backgroundColor: #f7f8f9;
+$activeColor: #185cf6;
+$commonHoverBgColor: #f2f3f5;
+
+// button
+$activeBlockColor: #1873fc; // 按钮等蓝色块颜色
+
+// sidebar
+$menuHoverText: #777788;
+$subMenuActiveText: #f4f4f5; //https://github.com/ElemeFE/element/issues/12951
+
+$menuHoverBg: rgba(232, 243, 255, 0.5); // 菜单悬停背景色
+$menuActiveBlock: $activeBlockColor;
+
+// topbar
+$topBarHeight: 58px;
+$topBarFontSize: 16px;
+$topBarIconFontSize: 22px;
+
+$subMenuBg: #ffffff;
+$subMenuHover: $menuHoverBg;
+
+$sideBarHeight: 42px;
+$sideBarWidth: 198px;
+$sideBarCollapseWidth: 64px;
+$sideBarWidthPercent: 100%;
+$sideBarFontSize: 14px;
+$sideBarSubFontSize: 14px;
+$sideBarIconFontSize: 18px;
+
+$navBarFontSize: 16px;
+
+// form
+$inputHeight: 32px;
+$inputLineHeight: 32px;
+
+// the :export directive is the magic sauce for webpack
+// https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
+:export {
+    menuText: $menuText;
+    menuActiveText: $menuActiveText;
+    menuHoverText: $menuHoverText;
+    subMenuActiveText: $subMenuActiveText;
+    menuBg: $menuBg;
+    menuHover: $menuHover;
+    subMenuBg: $subMenuBg;
+    subMenuHover: $subMenuHover;
+    sideBarWidth: $sideBarWidth;
+    fontSize: $fontSize;
+    fontColor: $fontColor;
+}
+
