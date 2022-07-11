@@ -1,5 +1,16 @@
 <template>
   <div>
+    <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+      <el-tab-pane label="基本信息" name="1">基本信息</el-tab-pane>
+      <el-tab-pane label="疾病资料" name="2">疾病资料</el-tab-pane>
+      <el-tab-pane label="辅助检查" name="3">辅助检查</el-tab-pane>
+      <el-tab-pane label="中医四诊" name="4">中医四诊</el-tab-pane>
+      <el-tab-pane label="量表评分" name="5">量表评分</el-tab-pane>
+      <el-tab-pane label="诊断记录" name="6">诊断记录</el-tab-pane>
+      <el-tab-pane label="治疗信息" name="7">治疗信息</el-tab-pane>
+      <el-tab-pane label="复诊信息" name="8">复诊信息</el-tab-pane>
+    </el-tabs>
+
     <el-descriptions
       class="margin-top"
       title="该患者信息"
@@ -921,6 +932,8 @@ export default {
   },
   data() {
     return {
+      // 选项卡列表
+      activeName: "1",
       // 描述列表
       size: "",
       score: 0,
@@ -993,11 +1006,11 @@ export default {
       // 三焦相应数据
       sanjiaolist: [],
 
-      // CKD相应数据
+      // 风邪相应数据
       fengxielist: [],
       newfengxielist: [],
 
-      // 风邪相应数据
+      // CKD相应数据
       CKDlist: [],
       newCKDlist: [],
 
@@ -1364,12 +1377,12 @@ export default {
         console.log("this.shilist", this.shilist);
       });
     },
-    // 拿到所有的风邪
-    getfengxie() {
-      var typeList = [17];
+    // 拿到所有的CKD
+    getCKD() {
+      var typeList = [16];
       var committypeList = typeList + "";
       getcommonlist(committypeList).then((res) => {
-        console.log("获取风邪基本数据", res.data);
+        console.log("获取CKD基本数据", res.data);
         // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
         //   this.$message({
         //     message: "获取风邪基本数据成功",
@@ -1389,12 +1402,12 @@ export default {
         console.log("newCKDlist", this.newCKDlist);
       });
     },
-    // 拿到所有的CKD
-    getCKD() {
-      var typeList = [16];
+    // 拿到所有的风邪
+    getfengxie() {
+      var typeList = [17];
       var committypeList = typeList + "";
       getcommonlist(committypeList).then((res) => {
-        console.log("获取CKD的基本数据", res.data);
+        console.log("获取风邪的基本数据", res.data);
         // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
         //   this.$message({
         //     message: "获取CKD的基本数据成功",

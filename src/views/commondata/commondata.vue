@@ -364,7 +364,7 @@ export default {
             "response.data.mainTypeEntityList",
             response.data.mainTypeEntityList
           );
-          return this.$message.success("获取所有数据类型成功！");
+          // return this.$message.success("获取所有数据类型成功！");
         } else {
           this.$message.error("获取所有数据类型失败！");
         }

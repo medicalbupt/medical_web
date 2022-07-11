@@ -137,7 +137,7 @@
       title="添加用户信息"
       :visible.sync="adduserdialogFormVisible"
     >
-      <el-form :model="userinsertform" size="medium">
+      <el-form :model="userinsertform" size="medium" :rules="addRules">
         <!-- <el-form-item label="创建用户时间" :label-width="formLabelWidth">
           <el-input
             v-model="userinsertform.createTinme"
@@ -168,7 +168,7 @@
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="用户电话号码" :label-width="formLabelWidth">
+        <el-form-item label="用户电话号码" :label-width="formLabelWidth" prop="telephone">
           <el-input
             v-model="userinsertform.telephone"
             autocomplete="off"
@@ -213,7 +213,24 @@ import {
 export default {
   name: "userlist",
   data() {
+    const validatePhone = (rule, value, cb) => {
+      let regphone =
+        /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
+      if (regphone.test(value)) {
+        return cb();
+      }
+      cb(new Error("请输入合法的手机号"));
+    };
     return {
+      addRules: {
+        telephone: [
+          {
+            validator: validatePhone,
+            message: "请输入正确的手机号",
+            trigger: "blur",
+          },
+        ],
+      },
       // 当前时间
       nowTime: "",
       // 用户删除的form
@@ -396,10 +413,10 @@ export default {
         // resolve();
         // console.log("response.data.respCode", response.data.respCode);
         if (response.data.respCode == "0000") {
-          this.$message({
-            message: "用户列表查询成功",
-            type: "success",
-          });
+          // this.$message({
+          //   message: "用户列表查询成功",
+          //   type: "success",
+          // });
           this.userlist = response.data.userEntities;
           console.log("userlist", this.userlist);
           this.totalCount = response.data.totalCount;
