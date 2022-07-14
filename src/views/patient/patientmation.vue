@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+    <!-- <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
       <el-tab-pane label="基本信息" name="1">基本信息</el-tab-pane>
       <el-tab-pane label="疾病资料" name="2">疾病资料</el-tab-pane>
       <el-tab-pane label="辅助检查" name="3">辅助检查</el-tab-pane>
@@ -9,7 +9,7 @@
       <el-tab-pane label="诊断记录" name="6">诊断记录</el-tab-pane>
       <el-tab-pane label="治疗信息" name="7">治疗信息</el-tab-pane>
       <el-tab-pane label="复诊信息" name="8">复诊信息</el-tab-pane>
-    </el-tabs>
+    </el-tabs> -->
 
     <el-descriptions
       class="margin-top"
@@ -196,12 +196,7 @@
     </el-descriptions>
 
     <h4 class="h3">该患者诊断信息:</h4>
-    <el-button
-      class="but1"
-      round
-      type="primary"
-      size="small"
-      @click="dialogFormVisible = true"
+    <el-button class="but1" round type="primary" size="small" @click="gopage"
       >添加复诊</el-button
     >
 
@@ -225,8 +220,47 @@
         >江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item
       >
     </el-descriptions> -->
+    <el-table
+      :data="patientconsultData.patientconsultList"
+      class="table1"
+      stripe
+      style="width: 90%"
+    >
+      <el-table-column prop="consultNum" label="患者诊次" width="180">
+      </el-table-column>
+      <el-table-column prop="outpatNum" label="门诊号" width="180">
+      </el-table-column>
+      <el-table-column prop="consultTime" label="患者就诊时间">
+        <template slot-scope="scope">
+          <span>{{ scope.row.consultTime | formatDate3 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <div>
+            <el-button
+              type="primary"
+              size="small"
+              @click="gotoDetail(scope.row.id)"
+              >详情</el-button
+            >
+            <el-button
+              type="danger"
+              size="small"
+              @click="deleteconsult(scope.row.id)"
+              >删除</el-button
+            >
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
 
-    <el-table :data="patientconsultData.patientconsultList" class="table1">
+    <!-- 注释掉了原来的复诊信息列表 -->
+    <el-table
+      v-if="0"
+      :data="patientconsultData.patientconsultList"
+      class="table1"
+    >
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-descriptions
@@ -444,8 +478,9 @@
     </el-pagination>
 
     <!-- 新增患者就诊的弹窗 -->
-
+    <!-- 注释掉了原来的新增患者就诊的弹窗,换为新的添加复诊页面 -->
     <el-dialog
+      v-if="0"
       title="添加患者就诊信息"
       top="5vh"
       :visible.sync="dialogFormVisible"
@@ -513,6 +548,14 @@
                   placeholder="选择就诊日期"
                 >
                 </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="门诊号" :label-width="formLabelWidth">
+                <el-input
+                  v-model="addconsultform.outpatNum"
+                  autocomplete="off"
+                ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -932,6 +975,8 @@ export default {
   },
   data() {
     return {
+      // 存储患者id参数
+      refid: "",
       // 选项卡列表
       activeName: "1",
       // 描述列表
@@ -1200,6 +1245,8 @@ export default {
     },
   },
   created() {
+    // 存储患者id参数
+    this.refid = this.$route.query.index;
     this.patienttotal = this.$route.query.total;
     this.queryInfo.pageSize = this.patienttotal;
     // console.log("进入patientmation");
@@ -1264,6 +1311,17 @@ export default {
     },
   },
   methods: {
+    // 跳转详情页面
+    gotoDetail(id) {
+      this.$router.push({
+        name: "consultmation",
+        query: { consultationId: id, patientId: this.refid },
+      });
+    },
+    // 跳转新增就诊页面
+    gopage() {
+      this.$router.push("/addconsultation");
+    },
     // 删除诊断信息
     deleteconsult(id) {
       this.$confirm("此操作将永久删除该就诊信息, 是否继续?", "提示", {

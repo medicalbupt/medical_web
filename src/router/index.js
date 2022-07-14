@@ -31,243 +31,260 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 export const constantRoutes = [{
-        path: '/login',
+    path: '/login',
+    component: () =>
+        import('@/views/login/index'),
+    hidden: true
+},
+
+{
+    path: '/404',
+    component: () =>
+        import('@/views/404'),
+    hidden: true
+},
+
+{
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [{
+        path: 'dashboard',
+        name: 'Dashboard',
         component: () =>
-            import ('@/views/login/index'),
-        hidden: true
+            import('@/views/dashboard/dashboard.vue'),
+        meta: { title: '门户', icon: 'dashboard', affix: true }
     },
-
     {
-        path: '/404',
+        path: "myinfomation",
         component: () =>
-            import ('@/views/404'),
-        hidden: true
-    },
+            import("@/views/userlist/myinfomation/mylist.vue"),
+        name: "myinfomation",
+        meta: { title: "个人信息", icon: "form" },
+        hidden: true,
+    }
+    ]
+},
 
+
+
+{
+    path: "",
+    component: Layout,
+    redirect: "/patient-infomation",
+    name: "TestDemo2",
+    children: [
+        // {
+        //   path: "patient-infomation",
+        //   component: () => import("@/views/patient/patient-infomation.vue"),
+        //   name: "patient-infomation",
+        //   meta: { title: "用户信息列表", icon: "excel" },
+        // },
+        {
+            path: "patient",
+            component: () =>
+                import("@/views/patient/patient.vue"),
+            name: "patient",
+            meta: { title: "患者库", icon: "form" },
+        },
+
+        // {
+        //   path: '/patient/add',
+        //   component: () => import("@/views/patient/ch/Add.vue")
+        // }
+        {
+            path: 'add',
+            component: () =>
+                import("@/views/patient/Add.vue"),
+            name: "patient_add",
+            hidden: true,
+            meta: { title: "患者录入", icon: "form" },
+        },
+        {
+            path: 'patientmation',
+            component: () =>
+                import("@/views/patient/patientmation.vue"),
+            name: "patientmation",
+            hidden: true,
+            meta: { title: "患者详细信息", icon: "form" },
+        },
+        {
+            path: 'quickadd',
+            component: () =>
+                import("@/views/patient/quickadd.vue"),
+            name: "quickadd",
+            hidden: true,
+            meta: { title: "快速录入", icon: "form" },
+        },
+        {
+            path: 'addconsultation',
+            component: () =>
+                import("@/views/patient/addconsultation.vue"),
+            name: "addconsultation",
+            hidden: true,
+            meta: { title: "添加复诊", icon: "form" },
+        }
+        ,
+        {
+            path: 'consultmation',
+            component: () =>
+                import("@/views/patient/consultmation.vue"),
+            name: "consultmation",
+            hidden: true,
+            meta: { title: "复诊详情", icon: "form" },
+        }
+    ]
+
+},
+
+
+{
+    path: "/user",
+    component: Layout,
+    redirect: "user-infomation",
+    name: "Example1",
+    children: [{
+        path: "userlist",
+        component: () =>
+            import("@/views/userlist/userlist.vue"),
+        name: "userlist",
+        meta: { title: "用户列表", icon: "list" },
+    },
     {
-        path: '/',
-        component: Layout,
-        redirect: '/dashboard',
-        children: [{
-                path: 'dashboard',
-                name: 'Dashboard',
-                component: () =>
-                    import ('@/views/dashboard/dashboard.vue'),
-                meta: { title: '门户', icon: 'dashboard', affix: true }
-            },
-            {
-                path: "myinfomation",
-                component: () =>
-                    import ("@/views/userlist/myinfomation/mylist.vue"),
-                name: "myinfomation",
-                meta: { title: "个人信息", icon: "form" },
-                hidden: true,
-            }
-        ]
+        path: "testview",
+        component: () =>
+            import("@/views/userlist/children/test.vue"),
+        name: "userlist2",
+        meta: { title: "test页面", icon: "list" },
+        hidden: true,
+    }
+    ]
+
+},
+
+{
+    path: '/commondata',
+    component: Layout,
+    // redirect: '/commondata',
+    children: [{
+        path: 'commondata',
+        name: 'Commondata',
+        component: () =>
+            import('@/views/commondata/commondata.vue'),
+        meta: { title: '自定义功能', icon: 'clipboard', affix: true }
     },
 
+    ]
+},
 
 
-    {
-        path: "",
-        component: Layout,
-        redirect: "/patient-infomation",
-        name: "TestDemo2",
-        children: [
-            // {
-            //   path: "patient-infomation",
-            //   component: () => import("@/views/patient/patient-infomation.vue"),
-            //   name: "patient-infomation",
-            //   meta: { title: "用户信息列表", icon: "excel" },
-            // },
-            {
-                path: "patient",
-                component: () =>
-                    import ("@/views/patient/patient.vue"),
-                name: "patient",
-                meta: { title: "患者库", icon: "form" },
-            },
+// {
+//   path: '/example',
+//   component: Layout,
+//   redirect: '/example/table',
+//   name: 'Example',
+//   meta: { title: 'Example', icon: 'el-icon-s-help' },
+//   children: [
+//     {
+//       path: 'table',
+//       name: 'Table',
+//       component: () => import('@/views/table/index'),
+//       meta: { title: 'Table', icon: 'table' }
+//     },
+//     {
+//       path: 'tree',
+//       name: 'Tree',
+//       component: () => import('@/views/tree/index'),
+//       meta: { title: 'Tree', icon: 'tree' }
+//     }
+//   ]
+// },
 
-            // {
-            //   path: '/patient/add',
-            //   component: () => import("@/views/patient/ch/Add.vue")
-            // }
-            {
-                path: 'add',
-                component: () =>
-                    import ("@/views/patient/Add.vue"),
-                name: "patient_add",
-                hidden: true,
-                meta: { title: "患者录入", icon: "form" },
-            },
-            {
-                path: 'patientmation',
-                component: () =>
-                    import ("@/views/patient/patientmation.vue"),
-                name: "patientmation",
-                hidden: true,
-                meta: { title: "患者详细信息", icon: "form" },
-            },
-            {
-                path: 'quickadd',
-                component: () =>
-                    import ("@/views/patient/quickadd.vue"),
-                name: "quickadd",
-                hidden: true,
-                meta: { title: "快速录入", icon: "form" },
-            }
-        ]
+// {
+//   path: '/form',
+//   component: Layout,
+//   children: [
+//     {
+//       path: 'index',
+//       name: 'Form',
+//       component: () => import('@/views/form/index'),
+//       meta: { title: 'Form', icon: 'form' }
+//     }
+//   ]
+// },
 
-    },
+// {
+//   path: '/nested',
+//   component: Layout,
+//   redirect: '/nested/menu1',
+//   name: 'Nested',
+//   meta: {
+//     title: 'Nested',
+//     icon: 'nested'
+//   },
+//   children: [
+//     {
+//       path: 'menu1',
+//       component: () => import('@/views/nested/menu1/index'), // Parent router-view
+//       name: 'Menu1',
+//       meta: { title: 'Menu1' },
+//       children: [
+//         {
+//           path: 'menu1-1',
+//           component: () => import('@/views/nested/menu1/menu1-1'),
+//           name: 'Menu1-1',
+//           meta: { title: 'Menu1-1' }
+//         },
+//         {
+//           path: 'menu1-2',
+//           component: () => import('@/views/nested/menu1/menu1-2'),
+//           name: 'Menu1-2',
+//           meta: { title: 'Menu1-2' },
+//           children: [
+//             {
+//               path: 'menu1-2-1',
+//               component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
+//               name: 'Menu1-2-1',
+//               meta: { title: 'Menu1-2-1' }
+//             },
+//             {
+//               path: 'menu1-2-2',
+//               component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
+//               name: 'Menu1-2-2',
+//               meta: { title: 'Menu1-2-2' }
+//             }
+//           ]
+//         },
+//         {
+//           path: 'menu1-3',
+//           component: () => import('@/views/nested/menu1/menu1-3'),
+//           name: 'Menu1-3',
+//           meta: { title: 'Menu1-3' }
+//         }
+//       ]
+//     },
+//     {
+//       path: 'menu2',
+//       component: () => import('@/views/nested/menu2/index'),
+//       name: 'Menu2',
+//       meta: { title: 'menu2' }
+//     }
+//   ]
+// },
 
+// {
+//   path: 'external-link',
+//   component: Layout,
+//   children: [
+//     {
+//       path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+//       meta: { title: 'External Link', icon: 'link' }
+//     }
+//   ]
+// },
 
-    {
-        path: "/user",
-        component: Layout,
-        redirect: "user-infomation",
-        name: "Example1",
-        children: [{
-                path: "userlist",
-                component: () =>
-                    import ("@/views/userlist/userlist.vue"),
-                name: "userlist",
-                meta: { title: "用户列表", icon: "list" },
-            },
-            {
-                path: "testview",
-                component: () =>
-                    import ("@/views/userlist/children/test.vue"),
-                name: "userlist2",
-                meta: { title: "test页面", icon: "list" },
-                hidden: true,
-            }
-        ]
-
-    },
-
-    {
-        path: '/commondata',
-        component: Layout,
-        // redirect: '/commondata',
-        children: [{
-                path: 'commondata',
-                name: 'Commondata',
-                component: () =>
-                    import ('@/views/commondata/commondata.vue'),
-                meta: { title: '自定义功能', icon: 'clipboard', affix: true }
-            },
-
-        ]
-    },
-
-
-    // {
-    //   path: '/example',
-    //   component: Layout,
-    //   redirect: '/example/table',
-    //   name: 'Example',
-    //   meta: { title: 'Example', icon: 'el-icon-s-help' },
-    //   children: [
-    //     {
-    //       path: 'table',
-    //       name: 'Table',
-    //       component: () => import('@/views/table/index'),
-    //       meta: { title: 'Table', icon: 'table' }
-    //     },
-    //     {
-    //       path: 'tree',
-    //       name: 'Tree',
-    //       component: () => import('@/views/tree/index'),
-    //       meta: { title: 'Tree', icon: 'tree' }
-    //     }
-    //   ]
-    // },
-
-    // {
-    //   path: '/form',
-    //   component: Layout,
-    //   children: [
-    //     {
-    //       path: 'index',
-    //       name: 'Form',
-    //       component: () => import('@/views/form/index'),
-    //       meta: { title: 'Form', icon: 'form' }
-    //     }
-    //   ]
-    // },
-
-    // {
-    //   path: '/nested',
-    //   component: Layout,
-    //   redirect: '/nested/menu1',
-    //   name: 'Nested',
-    //   meta: {
-    //     title: 'Nested',
-    //     icon: 'nested'
-    //   },
-    //   children: [
-    //     {
-    //       path: 'menu1',
-    //       component: () => import('@/views/nested/menu1/index'), // Parent router-view
-    //       name: 'Menu1',
-    //       meta: { title: 'Menu1' },
-    //       children: [
-    //         {
-    //           path: 'menu1-1',
-    //           component: () => import('@/views/nested/menu1/menu1-1'),
-    //           name: 'Menu1-1',
-    //           meta: { title: 'Menu1-1' }
-    //         },
-    //         {
-    //           path: 'menu1-2',
-    //           component: () => import('@/views/nested/menu1/menu1-2'),
-    //           name: 'Menu1-2',
-    //           meta: { title: 'Menu1-2' },
-    //           children: [
-    //             {
-    //               path: 'menu1-2-1',
-    //               component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-    //               name: 'Menu1-2-1',
-    //               meta: { title: 'Menu1-2-1' }
-    //             },
-    //             {
-    //               path: 'menu1-2-2',
-    //               component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-    //               name: 'Menu1-2-2',
-    //               meta: { title: 'Menu1-2-2' }
-    //             }
-    //           ]
-    //         },
-    //         {
-    //           path: 'menu1-3',
-    //           component: () => import('@/views/nested/menu1/menu1-3'),
-    //           name: 'Menu1-3',
-    //           meta: { title: 'Menu1-3' }
-    //         }
-    //       ]
-    //     },
-    //     {
-    //       path: 'menu2',
-    //       component: () => import('@/views/nested/menu2/index'),
-    //       name: 'Menu2',
-    //       meta: { title: 'menu2' }
-    //     }
-    //   ]
-    // },
-
-    // {
-    //   path: 'external-link',
-    //   component: Layout,
-    //   children: [
-    //     {
-    //       path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-    //       meta: { title: 'External Link', icon: 'link' }
-    //     }
-    //   ]
-    // },
-
-    // 404 page must be placed at the end !!!
-    { path: '*', redirect: '/404', hidden: true }
+// 404 page must be placed at the end !!!
+{ path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({

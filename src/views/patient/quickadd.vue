@@ -14,11 +14,12 @@
                       size="medium"
                       ref="addFormRef"
                       :model="addForm"
+                      :rules="addRules"
                     >
                     <el-row>
                         <el-col :span="18">
                           <div class="grid-content">
-                            <el-form-item label="患者姓名">
+                            <el-form-item label="患者姓名" prop="patientName">
                               <el-input
                                 class="input-style"
                                 v-model="addForm.patientName"
@@ -53,6 +54,16 @@
                 </el-form-item>
               </div>
             </el-col>
+            <!-- <el-col :span="18">
+              <div class="grid-content">
+                <el-form-item label="ID号">
+                  <el-input
+                    class="input-style"
+                    v-model="addForm.outpatientId"
+                  ></el-input>
+                </el-form-item>
+              </div>
+            </el-col> -->
             <el-col :span="18">
               <div class="grid-content">
                 <el-form-item label="身份证号">
@@ -241,15 +252,17 @@
                 <div slot="header" class="clearfix">
                   <span>辅助检查</span>  
                 </div>
-                <h4>辅助检查（未完成）</h4>
+                <TinymceEditor style="width: 70vw" />
             </el-card>
     </el-tab-pane>
     <el-tab-pane label="中医四诊" name="4">
          <el-card class="box-card">
                 <div slot="header" class="clearfix">
-                  <span>辅助检查</span>  
+                  <span>中医四诊</span>  
                 </div>
-                <h4>舌象（未完成）</h4>
+                <!-- <h4>舌象</h4>
+                <TinymceEditor style="width: 70vw; height: 400px" /> -->
+                 
                 <div class="dialog-content">
                     <el-form
                       class="medical-form"
@@ -259,6 +272,9 @@
                       ref="addFormRef"
                       :model="addForm"
                     >
+                <el-form-item label="舌象" :label-width="formLabelWidth">
+            <TinymceEditor style="width: 70vw" /> 
+          </el-form-item>
                 <el-form-item label="脉象" :label-width="formLabelWidth">
             <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addForm.pulsePattern"
               autocomplete="off"></el-input>
@@ -312,6 +328,7 @@
                     <span class="block-title">最不适症状程度:</span>
                     <el-slider
                       v-model="addForm.vasScore.degree"
+                       show-input
                     ></el-slider>
                   </div>
                 </el-col>
@@ -325,6 +342,7 @@
                       <el-slider
                         class="slider1"
                         v-model="item.score"
+                         show-input
                       ></el-slider>
                     </div>
                   </el-col>
@@ -335,7 +353,7 @@
                 <div v-for="item in newCKDlist" :key="item.id">
                   <el-col :span="8">
                     <span>{{ item.dataName }}程度:</span>
-                    <el-slider class="slider1" v-model="item.score"></el-slider>
+                    <el-slider class="slider1" v-model="item.score"  show-input></el-slider>
                   </el-col>
                 </div>
               </el-row>
@@ -345,6 +363,7 @@
                   <el-slider
                     v-model="addForm.vasScore.lifeQuality"
                     class="slider1"
+                     show-input
                   ></el-slider>
                 </el-col>
                 <el-col :span="8">
@@ -352,6 +371,7 @@
                   <el-slider
                     v-model="addForm.vasScore.healthyStatus"
                     class="slider1"
+                     show-input
                   ></el-slider>
                 </el-col>
               </el-row>
@@ -377,8 +397,8 @@
                       class="symtom-type-block-item-select"
                     >
                       <el-option :value="0" label="无"></el-option>
-                      <el-option :value="1" label="轻症"></el-option>
-                      <el-option :value="2" label="重症"></el-option>
+                      <el-option :value="1" label="偶尔"></el-option>
+                      <el-option :value="2" label="总是"></el-option>
                     </el-select>
                   </div>
                   <el-divider content-position="left"
@@ -503,8 +523,10 @@
                             class="symtom-type-block-item-select"
                             @change="symtomSelectChange(index, subIndex)"
                           >
-                            <el-option :value="1" label="轻症"></el-option>
-                            <el-option :value="2" label="重症"></el-option>
+                            <el-option :value="0" label="无"></el-option>
+                            <el-option :value="1" label="轻"></el-option>
+                            <el-option :value="2" label="中"></el-option>
+                            <el-option :value="3" label="重"></el-option>
                           </el-select>
                           <i
                             class="
@@ -552,8 +574,9 @@
                         @change="symtomSelectChange(index, subIndex)"
                       >
                         <el-option :value="0" label="无"></el-option>
-                        <el-option :value="1" label="轻症"></el-option>
-                        <el-option :value="2" label="重症"></el-option>
+                        <el-option :value="1" label="轻"></el-option>
+                        <el-option :value="2" label="中"></el-option>
+                        <el-option :value="3" label="重"></el-option>
                       </el-select>
                     </div>
                   </div>
@@ -660,7 +683,6 @@
             <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addForm.prescription"
               autocomplete="off"></el-input>
           </el-form-item>
-            <h4>调护（未完成）</h4>
             <el-form-item label="其他治疗" :label-width="formLabelWidth">
             <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addForm.otherTreatment"
               autocomplete="off"></el-input>
@@ -669,7 +691,8 @@
                 </div>
                 
             </el-card>
-             <el-button type="primary">提交录入</el-button>
+ <el-divider></el-divider>
+             <el-button type="primary" @click="addquick">提交录入</el-button>
     </el-tab-pane>
   </el-tabs>
     </div>
@@ -687,10 +710,48 @@ import {
   getcommonlist,
   patientUpdate,
   deleteconsult,
+  addquick,
 } from "@/api/patient";
+import TinymceEditor from "@/components/Tinymce";
 export default {
+  components: {
+    TinymceEditor,
+  },
   data() {
+    const validatePhone = (rule, value, cb) => {
+      let regphone =
+        /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
+      if (regphone.test(value)) {
+        return cb();
+      }
+      cb(new Error("请输入合法的手机号"));
+    };
     return {
+      addRules: {
+        patientName: [
+          { required: true, message: "请输入患者姓名", trigger: "blur" },
+        ],
+        telephone: [
+          { required: true, message: "请输入患者手机号", trigger: "blur" },
+          {
+            validator: validatePhone,
+            message: "请输入正确的手机号",
+            trigger: "blur",
+          },
+        ],
+        outpatientId: [
+          { required: true, message: "请输入患者门诊号", trigger: "blur" },
+        ],
+        // password: [
+        //   { required: true, message: "请输入密码", trigger: "blur" },
+        //   {
+        //     min: 3,
+        //     max: 15,
+        //     message: "长度在 3 到 15 个字符",
+        //     trigger: "blur",
+        //   },
+        // ],
+      },
       // 虚相应数据
       xulist: [],
       // 实相应数据
@@ -748,16 +809,27 @@ export default {
       CKDreasonOptions: [],
       //   快速增加患者表单
       addForm: {
+        // 腹诊
         abdominalExamination: "",
+        // 其他资料
         additionalInfo: "",
+        // 过敏史
         allergyHistory: "",
+        // 辅助检查
         auxiliaryExamination: "",
+        // 出生日期
         birthday: "",
+        // 基本查体
         bodyCheck: "",
+        // 病例特点
         caseFeature: "",
+        // 合并用药
         combinationTherapy: "",
+        // 就诊时间
         consultTime: "",
+        // 创建时间
         createTinme: "",
+        // 现病史
         curMedicalRecord: {
           Westernmedicine: {
             list: [],
@@ -772,12 +844,14 @@ export default {
             list: [],
           },
         },
+        // 病位
         diseaseLocation: {
           viscera: [],
           meridian: [],
           defender: [],
           tripleFocus: [],
         },
+        // 医嘱
         doctorOrder: [],
         engravedDisease: "",
         familyHistoryList: [],
@@ -794,7 +868,7 @@ export default {
         outpatNum: "",
         outpatientId: "",
         pastHistoryList: [],
-        patientId: "",
+        patientId: "1",
         patientName: "",
         personalHistory: {
           smoke: {
@@ -901,6 +975,11 @@ export default {
     },
   },
   methods: {
+    addquick() {
+      addquick(this.addForm).then((res) => {
+        console.log("新增快速录入", res.data);
+      });
+    },
     // 拿到所有的卫分
     getweifen() {
       var typeList = [22];

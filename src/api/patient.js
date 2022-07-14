@@ -161,3 +161,35 @@ export function deleteconsult(data) {
     data: data
   })
 }
+
+
+// 新增快速录入
+export function addquick(data) {
+  // console.log('params', params)
+  return request({
+    url: '/patient/quickInsert',
+    method: 'post',
+    // paramsSerializer:function(params) {
+    //   return Qs.stringify(params, {arrayFormat: 'indices'})
+    // }
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: data
+  })
+}
+
+// 获得类型的基本数据
+export function getConsultationInfo(consultationId, patientId) {
+  return request({
+    url: '/consultation/getConsultationInfo',
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    params: {
+      consultationId: consultationId,
+      patientId: patientId
+    }
+  })
+}
