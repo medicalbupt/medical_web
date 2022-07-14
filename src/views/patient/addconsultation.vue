@@ -230,7 +230,7 @@
                       v-for="(subSymtom, subIndex) in symtom.children"
                       :key="symtom.typeId + '-' + subSymtom.id"
                       :label="subSymtom.dataName"
-                      :disabled="subSymtom.score"
+                      :disabled="subSymtom.score === 0 ? false : true"
                       :value="
                         index +
                         '-' +
