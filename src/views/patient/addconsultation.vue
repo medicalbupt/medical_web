@@ -41,33 +41,8 @@
               </el-form-item>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="疾病资料" name="2">
-        <el-form
-          :model="addconsultform"
-          class="medical-form"
-          label-position="top"
-          size="medium"
-        >
-        <el-form-item label="医嘱" :label-width="formLabelWidth">
-            <el-checkbox-group v-model="addconsultform.doctorOrder">
-              <el-checkbox
-                v-for="symtom in doctorcommonDataEntityList"
-                :key="symtom.dataName"
-                :label="symtom.dataName"
-              >
-              </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item label="合并用药" :label-width="formLabelWidth">
-            <el-input
-              type="textarea"
-              :rows="5"
-              placeholder="请输入合并用药（格式为：化学名—剂量mg—频次）"
-              v-model="addconsultform.combinationTherapy"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-        </el-form>
+      <el-tab-pane v-if="0" label="疾病资料" name="2">
+        
       </el-tab-pane>
       <el-tab-pane label="辅助检查" name="3">
         <el-form
@@ -81,7 +56,7 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="中医四诊" name="4">中医四诊</el-tab-pane>
+      <el-tab-pane v-if="0" label="中医四诊" name="4">中医四诊</el-tab-pane>
       <el-tab-pane label="量表评分" name="5">
         <el-form
           :model="addconsultform"
@@ -398,12 +373,41 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="治疗信息" name="7">治疗信息</el-tab-pane>
-      <el-tab-pane label="复诊信息" name="8">
-         <el-divider></el-divider>
-      <el-button type="primary">提交复诊</el-button>
+      <el-tab-pane label="治疗信息" name="7">
+        <el-form
+          :model="addconsultform"
+          class="medical-form"
+          label-position="top"
+          size="medium"
+        >
+        <el-form-item label="医嘱" :label-width="formLabelWidth">
+            <el-checkbox-group v-model="addconsultform.doctorOrder">
+              <el-checkbox
+                v-for="symtom in doctorcommonDataEntityList"
+                :key="symtom.dataName"
+                :label="symtom.dataName"
+              >
+              </el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+          <el-form-item label="合并用药" :label-width="formLabelWidth">
+            <el-input
+              type="textarea"
+              :rows="5"
+              placeholder="请输入合并用药（格式为：化学名—剂量mg—频次）"
+              v-model="addconsultform.combinationTherapy"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+          <el-divider></el-divider>
+      <el-button type="primary" @click="addconsult">
+      提交复诊
+      </el-button>
       </el-tab-pane>
     </el-tabs>
+
+   
 
 
 
@@ -691,6 +695,8 @@ export default {
     },
   },
   created() {
+    // 放入患者id
+    this.addconsultform.patientId = this.$route.query.patientId;
     //拿到就诊地址
     this.getAllSameData0();
     //拿到主病诊断全部数据
@@ -745,6 +751,13 @@ export default {
     },
   },
   methods: {
+    // 提交复诊
+    addconsult() {
+      addconsult(this.addconsultform).then((res) => {
+        console.log("提交复诊", res.data);
+        // this.$router.push("/patientmation");
+      });
+    },
     // 拿到所有的卫分
     getweifen() {
       var typeList = [22];

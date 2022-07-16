@@ -193,3 +193,17 @@ export function getConsultationInfo(consultationId, patientId) {
     }
   })
 }
+
+// 获取患者个人信息和就诊信息
+export function getPatientInfo(id) {
+  return request({
+    url: '/patient/getPatientInfo',
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    params: {
+      id: id,
+    }
+  })
+}

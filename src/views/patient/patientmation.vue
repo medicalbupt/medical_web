@@ -1,22 +1,376 @@
 <template>
   <div>
-    <!-- <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
-      <el-tab-pane label="基本信息" name="1">基本信息</el-tab-pane>
-      <el-tab-pane label="疾病资料" name="2">疾病资料</el-tab-pane>
-      <el-tab-pane label="辅助检查" name="3">辅助检查</el-tab-pane>
-      <el-tab-pane label="中医四诊" name="4">中医四诊</el-tab-pane>
-      <el-tab-pane label="量表评分" name="5">量表评分</el-tab-pane>
-      <el-tab-pane label="诊断记录" name="6">诊断记录</el-tab-pane>
-      <el-tab-pane label="治疗信息" name="7">治疗信息</el-tab-pane>
-      <el-tab-pane label="复诊信息" name="8">复诊信息</el-tab-pane>
-    </el-tabs> -->
+    <el-tabs v-model="activeName" type="border-card">
+      <el-tab-pane label="该患者基本信息" name="1">
+        <el-descriptions title="基本信息" :column="2">
+          <el-descriptions-item label="姓名">{{
+            thispatientDto.patientName
+          }}</el-descriptions-item>
+          <el-descriptions-item label="性别">
+            <span v-if="thispatientDto.gender == 0">男</span>
+            <span v-if="thispatientDto.gender == 1">女</span>
+          </el-descriptions-item>
+          <el-descriptions-item label="出生日期">
+            {{ thispatientDto.birthday | formatDate }}
+          </el-descriptions-item>
+          <el-descriptions-item label="身份证号">
+            {{ thispatientDto.idCard }}
+          </el-descriptions-item>
+          <el-descriptions-item label="身高(cm)">
+            {{ thispatientDto.height }}
+          </el-descriptions-item>
+          <el-descriptions-item label="体重(kg)">
+            {{ thispatientDto.weight }}
+          </el-descriptions-item>
+          <el-descriptions-item label="BMI指数">
+            {{ thispatientDto.bmiIndex }}
+          </el-descriptions-item>
+          <el-descriptions-item label="门诊ID">
+            {{ thispatientDto.outpatientId }}
+          </el-descriptions-item>
+          <el-descriptions-item label="就诊地点">
+            {{ thisconsultationDto.medicalLoc }}</el-descriptions-item
+          >
+          <el-descriptions-item label="初诊时间">
+            {{ thisconsultationDto.consultTime | formatDate }}
+          </el-descriptions-item>
+        </el-descriptions>
+      </el-tab-pane>
+      <el-tab-pane label="该患者疾病资料" name="2">
+        <el-descriptions title="疾病资料" :column="2">
+          <el-descriptions-item label="主述">
+            {{ thisconsultationDto.mainComplaint }}
+          </el-descriptions-item>
+          <el-descriptions-item label="现病史">
+            <el-descriptions :column="1">
+              <el-descriptions-item label=" 西医诊断及病程">{{
+                manshenlist[
+                  thispatientDto.curMedicalRecord.Westernmedicine.list
+                ]
+              }}</el-descriptions-item>
+              <el-descriptions-item label=" 确诊时间">
+                {{
+                  thispatientDto.curMedicalRecord.confirmTime.time | formatDate
+                }}</el-descriptions-item
+              >
+              <el-descriptions-item label="  糖尿病并发症">{{
+                manshenlist[
+                  thispatientDto.curMedicalRecord.DMcomplications.list[0]
+                ]
+              }}</el-descriptions-item>
+              <el-descriptions-item label="慢性肾脏病病因">
+                {{
+                  manshenlist[thispatientDto.curMedicalRecord.CKDreason.list[0]]
+                }}
+              </el-descriptions-item>
+            </el-descriptions>
+          </el-descriptions-item>
+          <el-descriptions-item label="既往史">
+            <!-- {{ thispatientDto.pastHistoryList }} -->
+            高血压
+          </el-descriptions-item>
+          <el-descriptions-item label="个人史">
+            <el-descriptions :column="2">
+              <el-descriptions-item label=" 吸烟数量（支/天）">
+                {{
+                  thispatientDto.personalHistory.smoke.amount
+                }}</el-descriptions-item
+              >
+              <el-descriptions-item label="啤酒数量（瓶/天）">
+                {{
+                  thispatientDto.personalHistory.beer.amount
+                }}</el-descriptions-item
+              >
+              <el-descriptions-item label="白酒数量（两/天）">
+                {{ thispatientDto.personalHistory.whiteWine.amount }}
+              </el-descriptions-item>
+            </el-descriptions>
+          </el-descriptions-item>
+          <el-descriptions-item label="家族史">
+            <!-- {{ thispatientDto.familyHistoryList }} -->
+            脑血管病
+          </el-descriptions-item>
+          <el-descriptions-item label="过敏史">
+            {{ thispatientDto.allergyHistory }}
+          </el-descriptions-item>
+        </el-descriptions>
+      </el-tab-pane>
+      <el-tab-pane label="该患者辅助检查" name="3">
+        <el-descriptions title="辅助检查"> </el-descriptions>
+      </el-tab-pane>
+      <el-tab-pane label="该患者中医四诊" name="4">
+        <el-descriptions title="中医四诊" :column="2">
+          <el-descriptions-item label=" 舌象"></el-descriptions-item>
+          <el-descriptions-item label=" 脉象">
+            {{ thisconsultationDto.pulsePattern }}</el-descriptions-item
+          >
+          <el-descriptions-item label=" 基本查体">{{
+            thisconsultationDto.bodyCheck
+          }}</el-descriptions-item>
+          <el-descriptions-item label="腹证">
+            {{ thisconsultationDto.abdominalExamination }}
+          </el-descriptions-item>
+        </el-descriptions>
+      </el-tab-pane>
+      <el-tab-pane label="该患者量表评分" name="5">
+        <el-descriptions title="量表评分" :column="1">
+          <el-descriptions-item label="DM/CKD VAS评分">
+            <el-descriptions :column="1">
+              <el-descriptions-item label="最不适症状">{{
+                thisconsultationDto.vasScore.worstSymptom
+              }}</el-descriptions-item>
+              <el-descriptions-item label="程度">{{
+                thisconsultationDto.vasScore.degree
+              }}</el-descriptions-item>
+              <el-descriptions-item label="DM">
+                <span
+                  v-for="(item, index) in thisconsultationDto.vasScore.DM"
+                  :key="index"
+                >
+                  {{ " " + item.dataName + "-----" + "程度" + item.score + "" }}
+                </span>
+              </el-descriptions-item>
+              <el-descriptions-item label="CDK">
+                <span
+                  v-for="(item, index) in thisconsultationDto.vasScore.CKD"
+                  :key="index"
+                >
+                  {{ " " + item.dataName + "-----" + "程度" + item.score + "" }}
+                </span>
+              </el-descriptions-item>
+              <el-descriptions-item label="生活质量评分">{{
+                thisconsultationDto.vasScore.healthyStatus
+              }}</el-descriptions-item>
+              <el-descriptions-item label="健康状况评分">{{
+                thisconsultationDto.vasScore.lifeQuality
+              }}</el-descriptions-item>
+            </el-descriptions>
+          </el-descriptions-item>
+          <el-descriptions-item label="风邪">
+            <el-descriptions :column="1">
+              <el-descriptions-item label="是否诊断为风邪证">
+                <span v-if="thisconsultationDto.windEvil.diagnosticResult == 1"
+                  >是</span
+                >
+                <span v-if="thisconsultationDto.windEvil.diagnosticResult == 0"
+                  >否</span
+                ></el-descriptions-item
+              >
+              <el-descriptions-item label="风邪">
+                <span
+                  v-for="(item, index) in thisconsultationDto.windEvil.fengxie"
+                  :key="index"
+                >
+                  <span v-if="item.value == 0">
+                    {{ " " + item.dataName + "-----" + "程度:" + "无" }}</span
+                  >
+                  <span v-if="item.value == 1">
+                    {{ " " + item.dataName + "-----" + "程度:" + "轻" }}</span
+                  >
+                  <span v-if="item.value == 2">
+                    {{ " " + item.dataName + "-----" + "程度:" + "重" }}</span
+                  >
+                </span>
+              </el-descriptions-item>
+            </el-descriptions>
+          </el-descriptions-item>
+        </el-descriptions>
+      </el-tab-pane>
+      <el-tab-pane label="该患者诊断记录" name="6">
+        <el-descriptions title="诊断记录" :column="2">
+          <el-descriptions-item label="西医诊断">{{
+            manshenlist[thispatientDto.curMedicalRecord.Westernmedicine.list]
+          }}</el-descriptions-item>
+          <el-descriptions-item label="辩证">
+            <el-descriptions :column="1">
+              <el-descriptions-item label="实">{{
+                thisconsultationDto.symptomCategories.real
+              }}</el-descriptions-item>
+              <el-descriptions-item label="虚">{{
+                thisconsultationDto.symptomCategories.empty
+              }}</el-descriptions-item>
+            </el-descriptions>
+          </el-descriptions-item>
+          <el-descriptions-item label="体质诊断">{{
+            thispatientDto.physiqueId
+          }}</el-descriptions-item>
+          <el-descriptions-item label="症状">
+            <el-collapse v-model="activeNames">
+              <el-collapse-item title="展开折叠" name="0">
+                <h4
+                  v-for="(item, index) in thisconsultationDto.symptom
+                    .symtomList"
+                  :key="index"
+                >
+                  {{ typeNameList[item.typeName] }}
+                  <h5 v-for="item1 in item.children" :key="item1.id + '1231'">
+                    <span v-if="item1.score == 0">
+                      {{
+                        " " + item1.dataName + "-----" + "程度:" + "无"
+                      }}</span
+                    >
+                    <span v-if="item.score == 1">
+                      {{
+                        " " + item1.dataName + "-----" + "程度:" + "轻"
+                      }}</span
+                    >
+                    <span v-if="item1.score == 2">
+                      {{
+                        " " + item1.dataName + "-----" + "程度:" + "重"
+                      }}</span
+                    >
+                  </h5>
+                </h4>
+                <!-- <span>{{ props.row.symptom }}</span> -->
+              </el-collapse-item>
+            </el-collapse>
+          </el-descriptions-item>
+          <el-descriptions-item label="病位诊断">
+            <el-descriptions :column="1">
+              <el-descriptions-item label="脏腑">{{
+                thisconsultationDto.diseaseLocation.viscera
+              }}</el-descriptions-item>
+              <el-descriptions-item label="经脉">{{
+                thisconsultationDto.diseaseLocation.meridian
+              }}</el-descriptions-item>
+              <el-descriptions-item label="卫分">{{
+                thisconsultationDto.diseaseLocation.defender
+              }}</el-descriptions-item>
+              <el-descriptions-item label="三焦">{{
+                thisconsultationDto.diseaseLocation.tripleFocus
+              }}</el-descriptions-item>
+            </el-descriptions>
+          </el-descriptions-item>
+        </el-descriptions>
+      </el-tab-pane>
+      <el-tab-pane label="该患者治疗信息" name="7">
+        <el-descriptions title="治疗信息" :column="2">
+          <el-descriptions-item label="处方">
+            {{ thisconsultationDto.prescription }}
+          </el-descriptions-item>
+          <el-descriptions-item label="调护"></el-descriptions-item>
+          <el-descriptions-item label="其他治疗"></el-descriptions-item>
+        </el-descriptions>
+      </el-tab-pane>
+      <el-tab-pane label="该患者复诊信息" name="8">
+        <el-descriptions title="复诊信息" :column="2">
+          <el-descriptions-item label="其他资料">
+            {{ thisconsultationDto.additionalInfo }}
+          </el-descriptions-item>
+          <el-descriptions-item label="病例特点">
+            {{ thisconsultationDto.caseFeature }}
+          </el-descriptions-item>
+          <el-descriptions-item label="合并用药">
+            {{ thisconsultationDto.combinationTherapy }}
+          </el-descriptions-item>
+          <el-descriptions-item label="医嘱">
+            {{ thisconsultationDto.doctorOrder }}
+          </el-descriptions-item>
+          <el-descriptions-item label="其他诊断">
+            {{ thisconsultationDto.otherDiagnosisId }}
+          </el-descriptions-item>
+          <el-descriptions-item label="主病诊断">
+            {{ thisconsultationDto.mainDiseaseDiagnosisId }}
+          </el-descriptions-item>
+          <el-descriptions-item label="门诊号">
+            {{ thisconsultationDto.outpatNum }}
+          </el-descriptions-item>
+          <el-descriptions-item label="其他">
+            {{ thisconsultationDto.otherFeature }}
+          </el-descriptions-item>
+          <el-descriptions-item label="治法">
+            {{ thisconsultationDto.treatment }}
+          </el-descriptions-item>
+        </el-descriptions>
+        <el-divider></el-divider>
+        <el-button
+          class="but1"
+          round
+          type="primary"
+          size="small"
+          @click="gopage"
+          >添加复诊</el-button
+        >
 
+        <!-- 展示患者诊断信息 -->
+        <!-- <el-descriptions
+      class="margin-top"
+      title="无边框列表"
+      :column=3"
+      :size="size"
+    >
+      <template slot="extra">
+        <el-button type="primary" size="small">操作</el-button>
+      </template>
+      <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
+      <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
+      <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
+      <el-descriptions-item label="备注">
+        <el-tag size="small">学校</el-tag>
+      </el-descriptions-item>
+      <el-descriptions-item label="联系地址"
+        >江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item
+      >
+    </el-descriptions> -->
+        <el-table
+          :data="patientconsultData.patientconsultList"
+          class="table1"
+          stripe
+          style="width: 90%"
+        >
+          <el-table-column prop="consultNum" label="患者诊次" width="180">
+          </el-table-column>
+          <el-table-column prop="outpatNum" label="门诊号" width="180">
+          </el-table-column>
+          <el-table-column prop="consultTime" label="患者就诊时间">
+            <template slot-scope="scope">
+              <span>{{ scope.row.consultTime | formatDate3 }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <div>
+                <el-button
+                  type="primary"
+                  size="small"
+                  @click="gotoDetail(scope.row.id)"
+                  >详情</el-button
+                >
+                <el-button
+                  type="danger"
+                  size="small"
+                  @click="deleteconsult(scope.row.id)"
+                  >删除</el-button
+                >
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <!-- 分页 -->
+
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page="consultqueryInfo.currentPage"
+          @size-change="handleSizeChange"
+          :page-size="consultqueryInfo.pageSize"
+          :page-sizes="[10, 20, 50]"
+          layout="total,sizes, prev, pager, next, jumper"
+          :total="patientconsultData.total"
+          class="pagination"
+        >
+        </el-pagination>
+      </el-tab-pane>
+    </el-tabs>
+
+    <!-- 已注释 -->
     <el-descriptions
       class="margin-top"
       title="该患者信息"
       direction="vertical"
       :column="3"
       border
+      v-if="0"
     >
       <!-- <el-descriptions-item>
         <template slot="label">
@@ -194,66 +548,6 @@
         {{ patinentform.status }}
       </el-descriptions-item> -->
     </el-descriptions>
-
-    <h4 class="h3">该患者诊断信息:</h4>
-    <el-button class="but1" round type="primary" size="small" @click="gopage"
-      >添加复诊</el-button
-    >
-
-    <!-- 展示患者诊断信息 -->
-    <!-- <el-descriptions
-      class="margin-top"
-      title="无边框列表"
-      :column="3"
-      :size="size"
-    >
-      <template slot="extra">
-        <el-button type="primary" size="small">操作</el-button>
-      </template>
-      <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-      <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-      <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
-      <el-descriptions-item label="备注">
-        <el-tag size="small">学校</el-tag>
-      </el-descriptions-item>
-      <el-descriptions-item label="联系地址"
-        >江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item
-      >
-    </el-descriptions> -->
-    <el-table
-      :data="patientconsultData.patientconsultList"
-      class="table1"
-      stripe
-      style="width: 90%"
-    >
-      <el-table-column prop="consultNum" label="患者诊次" width="180">
-      </el-table-column>
-      <el-table-column prop="outpatNum" label="门诊号" width="180">
-      </el-table-column>
-      <el-table-column prop="consultTime" label="患者就诊时间">
-        <template slot-scope="scope">
-          <span>{{ scope.row.consultTime | formatDate3 }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <div>
-            <el-button
-              type="primary"
-              size="small"
-              @click="gotoDetail(scope.row.id)"
-              >详情</el-button
-            >
-            <el-button
-              type="danger"
-              size="small"
-              @click="deleteconsult(scope.row.id)"
-              >删除</el-button
-            >
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
 
     <!-- 注释掉了原来的复诊信息列表 -->
     <el-table
@@ -463,20 +757,6 @@
       </el-table-column>
     </el-table>
 
-    <!-- 分页 -->
-
-    <el-pagination
-      @current-change="handleCurrentChange"
-      :current-page="consultqueryInfo.currentPage"
-      @size-change="handleSizeChange"
-      :page-size="consultqueryInfo.pageSize"
-      :page-sizes="[10, 20, 50]"
-      layout="total,sizes, prev, pager, next, jumper"
-      :total="patientconsultData.total"
-      class="pagination"
-    >
-    </el-pagination>
-
     <!-- 新增患者就诊的弹窗 -->
     <!-- 注释掉了原来的新增患者就诊的弹窗,换为新的添加复诊页面 -->
     <el-dialog
@@ -607,7 +887,7 @@
                       v-for="(subSymtom, subIndex) in symtom.children"
                       :key="symtom.typeId + '-' + subSymtom.id"
                       :label="subSymtom.dataName"
-                      :disabled="subSymtom.score"
+                      :disabled="subSymtom.score === 0 ? false : true"
                       :value="
                         index +
                         '-' +
@@ -967,6 +1247,7 @@ import {
   getAllSameData2,
   getcommonlist,
   deleteconsult,
+  getPatientInfo,
 } from "@/api/patient";
 export default {
   name: "patientmation",
@@ -975,6 +1256,10 @@ export default {
   },
   data() {
     return {
+      // 查询该患者第一次就诊信息列表
+      thisconsultationDto: [],
+      // 查询该患者的基本信息列表
+      thispatientDto: [],
       // 存储患者id参数
       refid: "",
       // 选项卡列表
@@ -1245,6 +1530,8 @@ export default {
     },
   },
   created() {
+    //获取患者个人信息和就诊信息
+    this.getPatientInfo();
     // 存储患者id参数
     this.refid = this.$route.query.index;
     this.patienttotal = this.$route.query.total;
@@ -1320,7 +1607,10 @@ export default {
     },
     // 跳转新增就诊页面
     gopage() {
-      this.$router.push("/addconsultation");
+      this.$router.push({
+        name: "addconsultation",
+        query: { patientId: this.refid },
+      });
     },
     // 删除诊断信息
     deleteconsult(id) {
@@ -1337,6 +1627,15 @@ export default {
           };
           this.getpationconsult();
         });
+      });
+    },
+    // 拿到该患者第一次就诊信息和他的基本信息
+    getPatientInfo() {
+      getPatientInfo(this.$route.query.index).then((res) => {
+        console.log("this.$route.query.index", this.$route.query.index);
+        console.log("获取该患者第一次就诊信息和他的基本信息", res.data);
+        this.thisconsultationDto = res.data.consultationDto;
+        this.thispatientDto = res.data.patientDto;
       });
     },
     // 拿到所有的卫分

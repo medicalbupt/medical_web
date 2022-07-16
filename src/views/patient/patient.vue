@@ -3,7 +3,12 @@
     <el-card>
       <el-row class="patient-list-row" :gutter="20">
         <el-col :span="5">
-          <el-input placeholder="门诊ID查询" size="medium"  v-model="queryInfo.outpatientId" clearable>
+          <el-input
+            placeholder="门诊ID查询"
+            size="medium"
+            v-model="queryInfo.outpatientId"
+            clearable
+          >
             <el-button
               slot="append"
               icon="el-icon-search"
@@ -12,7 +17,12 @@
           </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input placeholder="患者姓名查询" size="medium" v-model="queryInfo.patientName" clearable>
+          <el-input
+            placeholder="患者姓名查询"
+            size="medium"
+            v-model="queryInfo.patientName"
+            clearable
+          >
             <el-button
               slot="append"
               icon="el-icon-search"
@@ -21,7 +31,12 @@
           </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input placeholder="手机号查询" size="medium" v-model="queryInfo.telephone" clearable>
+          <el-input
+            placeholder="手机号查询"
+            size="medium"
+            v-model="queryInfo.telephone"
+            clearable
+          >
             <el-button
               slot="append"
               icon="el-icon-search"
@@ -30,7 +45,9 @@
           </el-input>
         </el-col>
         <el-col :span="8">
-          <el-button type="primary" @click="addDialogVisible = true">患者录入</el-button>
+          <el-button v-if="0" type="primary" @click="addDialogVisible = true"
+            >患者录入</el-button
+          >
           <el-button type="danger" @click="Topage">快速录入</el-button>
 
           <!-- <el-button type="success" @click="Topage">快速录入</el-button> -->
@@ -160,7 +177,7 @@
           <el-row>
             <el-col :span="12">
               <div class="grid-content">
-                <el-form-item label="患者门诊ID" prop="outpatientId"> 
+                <el-form-item label="患者门诊ID" prop="outpatientId">
                   <el-input
                     class="input-style"
                     v-model="addForm.outpatientId"
@@ -428,7 +445,10 @@
             <el-col :span="12">
               <div class="grid-content">
                 <el-form-item class="input-style" label="患者门诊ID">
-                  <el-input v-model="patinenteditform.outpatientId" disabled></el-input>
+                  <el-input
+                    v-model="patinenteditform.outpatientId"
+                    disabled
+                  ></el-input>
                 </el-form-item>
               </div>
             </el-col>
@@ -631,7 +651,7 @@ export default {
   // },
   name: "patient",
   data() {
-     const validatePhone = (rule, value, cb) => {
+    const validatePhone = (rule, value, cb) => {
       let regphone =
         /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
       if (regphone.test(value)) {
@@ -643,8 +663,7 @@ export default {
       addRules: {
         patientName: [
           { required: true, message: "请输入患者姓名", trigger: "blur" },
-            
-          ],
+        ],
         telephone: [
           { required: true, message: "请输入患者手机号", trigger: "blur" },
           {
@@ -686,7 +705,7 @@ export default {
       queryInfo: {
         outpatientId: "",
         patientName: "",
-        telephone:"",
+        telephone: "",
         // 搜索值
         searchParm: "",
         //排序依据字段
@@ -813,7 +832,7 @@ export default {
         //    amount: 0,
 
         // },
-        outpatientId:"",
+        outpatientId: "",
         status: 1,
         telephone: "",
         allergyHistory: "",
@@ -862,7 +881,7 @@ export default {
         gender: "",
         idCard: "",
         id: "",
-        outpatientId:"",
+        outpatientId: "",
         modifiedTime: "",
         pastHistoryList: [],
         patientName: "",
@@ -1248,7 +1267,7 @@ export default {
           this.$message.error("删除患者失败！");
         }
       });
-
+      // console.log("删除");
       // 删除后更新列表
       this.getPatientList();
     },

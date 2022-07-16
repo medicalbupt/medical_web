@@ -17,6 +17,7 @@
                       :rules="addRules"
                     >
                     <el-row>
+                      
                         <el-col :span="18">
                           <div class="grid-content">
                             <el-form-item label="患者姓名" prop="patientName">
@@ -64,6 +65,16 @@
                 </el-form-item>
               </div>
             </el-col> -->
+            <el-col :span="18">
+                          <div class="grid-content">
+                            <el-form-item label="门诊id" prop="outpatientId">
+                              <el-input
+                                class="input-style"
+                                v-model="addForm.outpatientId"
+                              ></el-input>
+                            </el-form-item>
+                          </div>
+                        </el-col>
             <el-col :span="18">
               <div class="grid-content">
                 <el-form-item label="身份证号">
@@ -483,7 +494,7 @@
                       v-for="(subSymtom, subIndex) in symtom.children"
                       :key="symtom.typeId + '-' + subSymtom.id"
                       :label="subSymtom.dataName"
-                      :disabled="subSymtom.score"
+                      :disabled="subSymtom.score === 0 ? false : true"
                       :value="
                         index +
                         '-' +
@@ -978,6 +989,7 @@ export default {
     addquick() {
       addquick(this.addForm).then((res) => {
         console.log("新增快速录入", res.data);
+        this.$router.push("/patient");
       });
     },
     // 拿到所有的卫分
