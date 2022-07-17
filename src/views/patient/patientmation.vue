@@ -100,10 +100,44 @@
       </el-tab-pane>
       <el-tab-pane label="该患者中医四诊" name="4">
         <el-descriptions title="中医四诊" :column="2">
-          <el-descriptions-item label=" 舌象"></el-descriptions-item>
+          <el-descriptions-item label=" 舌象">
+            <h4
+              v-for="(item, index) in thisconsultationDto.symptom.symtomList2"
+              :key="index"
+            >
+              {{ typeNameList[item.typeName] }}
+              <h5 v-for="item1 in item.children" :key="item1.id + '1231'">
+                <span v-if="item1.score == 0">
+                  {{ " " + item1.dataName + "-----" + "程度:" + "无" }}</span
+                >
+                <span v-if="item.score == 1">
+                  {{ " " + item1.dataName + "-----" + "程度:" + "轻" }}</span
+                >
+                <span v-if="item1.score == 2">
+                  {{ " " + item1.dataName + "-----" + "程度:" + "重" }}</span
+                >
+              </h5>
+            </h4>
+          </el-descriptions-item>
           <el-descriptions-item label=" 脉象">
-            {{ thisconsultationDto.pulsePattern }}</el-descriptions-item
-          >
+            <h4
+              v-for="(item, index) in thisconsultationDto.symptom.symtomList3"
+              :key="index"
+            >
+              {{ typeNameList[item.typeName] }}
+              <h5 v-for="item1 in item.children" :key="item1.id + '1231'">
+                <span v-if="item1.score == 0">
+                  {{ " " + item1.dataName + "-----" + "程度:" + "无" }}</span
+                >
+                <span v-if="item.score == 1">
+                  {{ " " + item1.dataName + "-----" + "程度:" + "轻" }}</span
+                >
+                <span v-if="item1.score == 2">
+                  {{ " " + item1.dataName + "-----" + "程度:" + "重" }}</span
+                >
+              </h5>
+            </h4>
+          </el-descriptions-item>
           <el-descriptions-item label=" 基本查体">{{
             thisconsultationDto.bodyCheck
           }}</el-descriptions-item>

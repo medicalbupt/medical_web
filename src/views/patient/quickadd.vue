@@ -271,9 +271,6 @@
                 <div slot="header" class="clearfix">
                   <span>中医四诊</span>  
                 </div>
-                <!-- <h4>舌象</h4>
-                <TinymceEditor style="width: 70vw; height: 400px" /> -->
-                 
                 <div class="dialog-content">
                     <el-form
                       class="medical-form"
@@ -284,11 +281,152 @@
                       :model="addForm"
                     >
                 <el-form-item label="舌象" :label-width="formLabelWidth">
-            <TinymceEditor style="width: 70vw" /> 
+          <!-- <el-switch
+              v-model="simpleSymtomHideStatus2"
+              style="margin-bottom: 8px"
+              active-text="复杂模式"
+              inactive-text="简单模式"
+            >
+            </el-switch> -->
+            <div v-if="!simpleSymtomHideStatus2" class="simple-symtom-type">
+              <el-card shadow="never">
+                <el-select v-model="simpleSymtomValue2" filterable clearable>
+                  <el-option-group
+                    v-for="(symtom, index) in addForm.symptom.symtomList2"
+                    :key="symtom.typeId"
+                    :label="typeNameList[symtom.typeId]"
+                  >
+                    <el-option
+                      v-for="(subSymtom, subIndex) in symtom.children"
+                      :key="symtom.typeId + '-' + subSymtom.id"
+                      :label="subSymtom.dataName"
+                      :disabled="subSymtom.score === 0 ? false : true"
+                      :value="
+                        index +
+                        '-' +
+                        subIndex +
+                        '-' +
+                        symtom.typeId +
+                        '-' +
+                        subSymtom.id
+                      "
+                    >
+                    </el-option>
+                  </el-option-group>
+                </el-select>
+                <el-divider content-position="left">已选择症状</el-divider>
+                <div class="symtom-type">
+                  <div class="symtom-type-block">
+                    <template
+                      v-for="(symtom, index) in addForm.symptom.symtomList2"
+                    >
+                      <template
+                        v-for="(subSymtom, subIndex) in symtom.children"
+                      >
+                        <div
+                          v-if="subSymtom.score"
+                          :key="symtom.typeId + '-' + subSymtom.id"
+                          class="symtom-type-block-item"
+                        >
+                          <div class="symtom-type-block-item-title">
+                            {{ subSymtom.dataName }}
+                          </div>
+                          <el-select
+                            v-model="
+                              addForm.symptom.symtomList2[index].children[
+                                subIndex
+                              ].score
+                            "
+                            class="symtom-type-block-item-select"
+                            @change="symtomSelectChange(index, subIndex)"
+                          >
+                            <el-option :value="0" label="无"></el-option>
+                            <el-option :value="1" label="轻"></el-option>
+                            <el-option :value="2" label="中"></el-option>
+                            <el-option :value="3" label="重"></el-option>
+                          </el-select>
+                          <i
+                            class="
+                              icon
+                              el-icon-error
+                              symtom-type-block-item-delete
+                            "
+                            @click="symtomSelectChange2(index, subIndex, 0)"
+                          ></i>
+                        </div>
+                      </template>
+                    </template>
+                  </div>
+                </div>
+              </el-card>
+            </div>
+          
           </el-form-item>
-                <el-form-item label="脉象" :label-width="formLabelWidth">
-            <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addForm.pulsePattern"
-              autocomplete="off"></el-input>
+          <el-form-item label="脉象" :label-width="formLabelWidth">
+          <div v-if="!simpleSymtomHideStatus3" class="simple-symtom-type">
+              <el-card shadow="never">
+                <el-select v-model="simpleSymtomValue3" filterable clearable>
+                  <el-option-group
+                    v-for="(symtom, index) in addForm.symptom.symtomList3"
+                    :key="symtom.typeId"
+                    :label="typeNameList[symtom.typeId]"
+                  >
+                    <el-option
+                      v-for="(subSymtom, subIndex) in symtom.children"
+                      :key="symtom.typeId + '-' + subSymtom.id"
+                      :label="subSymtom.dataName"
+                      :disabled="subSymtom.score === 0 ? false : true"
+                      :value="
+                        index +
+                        '-' +
+                        subIndex +
+                        '-' +
+                        symtom.typeId +
+                        '-' +
+                        subSymtom.id
+                      "
+                    >
+                    </el-option>
+                  </el-option-group>
+                </el-select>
+                <el-divider content-position="left">已选择症状</el-divider>
+                <div class="symtom-type">
+                  <div class="symtom-type-block">
+                    <template
+                      v-for="(symtom, index) in addForm.symptom.symtomList3"
+                    >
+                      <template
+                        v-for="(subSymtom, subIndex) in symtom.children"
+                      >
+  <div
+    v-if="subSymtom.score"
+    :key="symtom.typeId + '-' + subSymtom.id"
+    class="symtom-type-block-item"
+  >
+    <div class="symtom-type-block-item-title">
+      {{ subSymtom.dataName }}
+    </div>
+    <el-select
+      v-model="addForm.symptom.symtomList3[index].children[subIndex].score"
+      class="symtom-type-block-item-select"
+      @change="symtomSelectChange3(index, subIndex)"
+    >
+      <el-option :value="0" label="无"></el-option>
+      <el-option :value="1" label="轻"></el-option>
+      <el-option :value="2" label="中"></el-option>
+      <el-option :value="3" label="重"></el-option>
+    </el-select>
+    <i
+      class="icon el-icon-error symtom-type-block-item-delete"
+      @click="symtomSelectChange3(index, subIndex, 0)"
+    ></i>
+  </div>
+</template>
+                    </template>
+                  </div>
+                </div>
+              </el-card>
+            </div>
           </el-form-item>
           <el-form-item label="基本查体" :label-width="formLabelWidth">
             <el-input type="textarea" :rows="5" placeholder="请输入基本查体" v-model="addForm.bodyCheck"
@@ -514,41 +652,36 @@
                     <template
                       v-for="(symtom, index) in addForm.symptom.symtomList"
                     >
+                    <div>
+                      
+                    </div>
                       <template
                         v-for="(subSymtom, subIndex) in symtom.children"
                       >
-                        <div
-                          v-if="subSymtom.score"
-                          :key="symtom.typeId + '-' + subSymtom.id"
-                          class="symtom-type-block-item"
-                        >
-                          <div class="symtom-type-block-item-title">
-                            {{ subSymtom.dataName }}
-                          </div>
-                          <el-select
-                            v-model="
-                              addForm.symptom.symtomList[index].children[
-                                subIndex
-                              ].score
-                            "
-                            class="symtom-type-block-item-select"
-                            @change="symtomSelectChange(index, subIndex)"
-                          >
-                            <el-option :value="0" label="无"></el-option>
-                            <el-option :value="1" label="轻"></el-option>
-                            <el-option :value="2" label="中"></el-option>
-                            <el-option :value="3" label="重"></el-option>
-                          </el-select>
-                          <i
-                            class="
-                              icon
-                              el-icon-error
-                              symtom-type-block-item-delete
-                            "
-                            @click="symtomSelectChange(index, subIndex, 0)"
-                          ></i>
-                        </div>
-                      </template>
+  <div
+    v-if="subSymtom.score"
+    :key="symtom.typeId + '-' + subSymtom.id"
+    class="symtom-type-block-item"
+  >
+    <div class="symtom-type-block-item-title">
+      {{ subSymtom.dataName }}
+    </div>
+    <el-select
+      v-model="addForm.symptom.symtomList[index].children[subIndex].score"
+      class="symtom-type-block-item-select"
+      @change="symtomSelectChange(index, subIndex)"
+    >
+      <el-option :value="0" label="无"></el-option>
+      <el-option :value="1" label="轻"></el-option>
+      <el-option :value="2" label="中"></el-option>
+      <el-option :value="3" label="重"></el-option>
+    </el-select>
+    <i
+      class="icon el-icon-error symtom-type-block-item-delete"
+      @click="symtomSelectChange(index, subIndex, 0)"
+    ></i>
+  </div>
+</template>
                     </template>
                   </div>
                 </div>
@@ -738,6 +871,7 @@ export default {
       cb(new Error("请输入合法的手机号"));
     };
     return {
+      symtomActiveNames: "1",
       addRules: {
         patientName: [
           { required: true, message: "请输入患者姓名", trigger: "blur" },
@@ -797,8 +931,15 @@ export default {
       ],
       //症状相应的数据
       commonDataEntityList: [],
+      commonDataEntityList2: [],
       simpleSymtomValue: "",
+      simpleSymtomValue2: "",
+      simpleSymtomValue3: "",
       simpleSymtomHideStatus: false,
+      // 舌象
+      simpleSymtomHideStatus2: false,
+      // 脉象
+      simpleSymtomHideStatus3: false,
       //风邪证单选框
       radio: "0",
       // 风邪相应数据
@@ -898,6 +1039,8 @@ export default {
         status: 1,
         symptom: {
           symtomList: [],
+          symtomList2: [],
+          symtomList3: [],
         },
         symptomCategories: {
           empty: [],
@@ -940,8 +1083,12 @@ export default {
     this.getweifen();
     // 拿到所有的三焦
     this.getsanjiao();
-    // 拿到所有的症状
+    // 拿到所有的症状3-11
     this.getsymtomlist();
+    // 拿到所有的症状12
+    this.getsymtomlist2();
+    // 拿到所有的症状13
+    this.getsymtomlist3();
     // 拿到所有的风邪
     this.getfengxie();
     // 拿到所有的CKD
@@ -982,6 +1129,53 @@ export default {
         );
 
         this.simpleSymtomValue = "";
+      }
+    },
+    // 12
+    simpleSymtomValue2(newVal, oldVal) {
+      if (newVal) {
+        const valueArr = newVal.split("-");
+        const index = valueArr[0];
+        const subIndex = valueArr[1];
+        // 深拷贝一份数据
+        const subItemList = JSON.parse(
+          JSON.stringify(
+            this.addForm.symptom.symtomList2[index].children[subIndex]
+          )
+        );
+        subItemList.score = 1; // 默认选中为轻症
+        // 用vue的splice方法触发更新
+        this.addForm.symptom.symtomList2[index].children.splice(
+          subIndex,
+          1,
+          subItemList
+        );
+
+        this.simpleSymtomValue2 = "";
+      }
+    },
+
+    // 13
+    simpleSymtomValue3(newVal, oldVal) {
+      if (newVal) {
+        const valueArr = newVal.split("-");
+        const index = valueArr[0];
+        const subIndex = valueArr[1];
+        // 深拷贝一份数据
+        const subItemList = JSON.parse(
+          JSON.stringify(
+            this.addForm.symptom.symtomList3[index].children[subIndex]
+          )
+        );
+        subItemList.score = 1; // 默认选中为轻症
+        // 用vue的splice方法触发更新
+        this.addForm.symptom.symtomList3[index].children.splice(
+          subIndex,
+          1,
+          subItemList
+        );
+
+        this.simpleSymtomValue3 = "";
       }
     },
   },
@@ -1108,10 +1302,50 @@ export default {
         subItemList
       );
     },
-    // 拿到所有的症状
+    // 症状的select的change事件监听，解决for循环赋值不生效问题12
+    symtomSelectChange2(index, subIndex, value = -1) {
+      // 深拷贝一份数据
+      const subItemList = JSON.parse(
+        JSON.stringify(
+          this.addForm.symptom.symtomList2[index].children[subIndex]
+        )
+      );
+
+      if (value !== -1) {
+        subItemList.score = value;
+      }
+
+      // 用vue的splice方法触发更新
+      this.addForm.symptom.symtomList2[index].children.splice(
+        subIndex,
+        1,
+        subItemList
+      );
+    },
+    // 症状的select的change事件监听，解决for循环赋值不生效问题12
+    symtomSelectChange3(index, subIndex, value = -1) {
+      // 深拷贝一份数据
+      const subItemList = JSON.parse(
+        JSON.stringify(
+          this.addForm.symptom.symtomList3[index].children[subIndex]
+        )
+      );
+
+      if (value !== -1) {
+        subItemList.score = value;
+      }
+
+      // 用vue的splice方法触发更新
+      this.addForm.symptom.symtomList3[index].children.splice(
+        subIndex,
+        1,
+        subItemList
+      );
+    },
+    // 拿到所有的症状3-11
     getsymtomlist() {
       const symtomMap = {};
-      var typeList = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+      var typeList = [3, 4, 5, 6, 7, 8, 9, 10, 11];
       var committypeList = typeList + "";
       console.log("this.typeList", typeList);
       getcommonlist(committypeList).then((res) => {
@@ -1151,7 +1385,108 @@ export default {
           }
         });
 
-        console.log(this.addForm.symptom.symtomList);
+        console.log(
+          "this.addForm.symptom.symtomList",
+          this.addForm.symptom.symtomList
+        );
+      });
+    },
+
+    // 拿到所有的症状12
+    getsymtomlist2() {
+      const symtomMap = {};
+      var typeList2 = [12];
+      var committypeList2 = typeList2 + "";
+      getcommonlist(committypeList2).then((res) => {
+        console.log("获取12类型数据的基本数据", res.data);
+        // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
+        //   this.$message({
+        //     message: "获取类型数据的基本数据成功",
+        //     type: "success",
+        //   });
+        // }
+        this.commonDataEntityList2 = res.data.commonDataEntityList;
+        typeList2.forEach((type) => {
+          const sameTypeList =
+            this.commonDataEntityList2.filter((dataEntity) => {
+              if (dataEntity.typeId.toString() === type.toString()) {
+                return true;
+              }
+              return false;
+            }) || [];
+
+          // 设置默认分数为0
+          sameTypeList.forEach((item) => {
+            item.score = 0;
+          });
+
+          symtomMap[type] = sameTypeList;
+        });
+
+        typeList2.forEach((type) => {
+          if (symtomMap[type] && symtomMap[type].length !== 0) {
+            // 给症状赋值
+            this.addForm.symptom.symtomList2.push({
+              typeId: type,
+              typeName: symtomMap[type][0]["typeId"],
+              children: symtomMap[type], // 父子结构
+            });
+          }
+        });
+
+        console.log(
+          "this.addForm.symptom.symtomList2",
+          this.addForm.symptom.symtomList2
+        );
+      });
+    },
+
+    // 拿到所有的症状13
+    getsymtomlist3() {
+      const symtomMap = {};
+      var typeList3 = [13];
+      var committypeList3 = typeList3 + "";
+      getcommonlist(committypeList3).then((res) => {
+        console.log("获取12类型数据的基本数据", res.data);
+        // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
+        //   this.$message({
+        //     message: "获取类型数据的基本数据成功",
+        //     type: "success",
+        //   });
+        // }
+        this.commonDataEntityList3 = res.data.commonDataEntityList;
+        typeList3.forEach((type) => {
+          const sameTypeList =
+            this.commonDataEntityList3.filter((dataEntity) => {
+              if (dataEntity.typeId.toString() === type.toString()) {
+                return true;
+              }
+              return false;
+            }) || [];
+
+          // 设置默认分数为0
+          sameTypeList.forEach((item) => {
+            item.score = 0;
+          });
+
+          symtomMap[type] = sameTypeList;
+        });
+
+        typeList3.forEach((type) => {
+          if (symtomMap[type] && symtomMap[type].length !== 0) {
+            // 给症状赋值
+            this.addForm.symptom.symtomList3.push({
+              typeId: type,
+              typeName: symtomMap[type][0]["typeId"],
+              children: symtomMap[type], // 父子结构
+            });
+          }
+        });
+
+        console.log(
+          "this.addForm.symptom.symtomList3",
+          this.addForm.symptom.symtomList3
+        );
       });
     },
     // 拿到所有的风邪
