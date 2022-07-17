@@ -1181,6 +1181,8 @@ export default {
   },
   methods: {
     addquick() {
+      this.addForm.vasScore.DM = this.newDMlist;
+      this.addForm.vasScore.CKD = this.newCKDlist;
       addquick(this.addForm).then((res) => {
         console.log("新增快速录入", res.data);
         this.$router.push("/patient");
