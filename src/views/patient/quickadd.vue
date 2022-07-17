@@ -174,153 +174,113 @@
             <el-form class="medical-form" label-width="80px" label-position="top" size="medium" ref="addFormRef"
               :model="addForm">
               <el-form-item label="舌象" :label-width="formLabelWidth">
-          <!-- <el-switch
+                <!-- <el-switch
               v-model="simpleSymtomHideStatus2"
               style="margin-bottom: 8px"
               active-text="复杂模式"
               inactive-text="简单模式"
             >
             </el-switch> -->
-            <div v-if="!simpleSymtomHideStatus2" class="simple-symtom-type">
-              <el-card shadow="never">
-                <el-select v-model="simpleSymtomValue2" filterable clearable>
-                  <el-option-group
-                    v-for="(symtom, index) in addForm.symptom.symtomList2"
-                    :key="symtom.typeId"
-                    :label="typeNameList[symtom.typeId]"
-                  >
-                    <el-option
-                      v-for="(subSymtom, subIndex) in symtom.children"
-                      :key="symtom.typeId + '-' + subSymtom.id"
-                      :label="subSymtom.dataName"
-                      :disabled="subSymtom.score === 0 ? false : true"
-                      :value="
-                        index +
-                        '-' +
-                        subIndex +
-                        '-' +
-                        symtom.typeId +
-                        '-' +
-                        subSymtom.id
-                      "
-                    >
-                    </el-option>
-                  </el-option-group>
-                </el-select>
-                <el-divider content-position="left">已选择症状</el-divider>
-                <div class="symtom-type">
-                  <div class="symtom-type-block">
-                    <template
-                      v-for="(symtom, index) in addForm.symptom.symtomList2"
-                    >
-                      <template
-                        v-for="(subSymtom, subIndex) in symtom.children"
-                      >
-                        <div
-                          v-if="subSymtom.score"
-                          :key="symtom.typeId + '-' + subSymtom.id"
-                          class="symtom-type-block-item"
-                        >
-                          <div class="symtom-type-block-item-title">
-                            {{ subSymtom.dataName }}
-                          </div>
-                          <el-select
-                            v-model="
-                              addForm.symptom.symtomList2[index].children[
-                                subIndex
-                              ].score
-                            "
-                            class="symtom-type-block-item-select"
-                            @change="symtomSelectChange(index, subIndex)"
-                          >
-                            <el-option :value="0" label="无"></el-option>
-                            <el-option :value="1" label="轻"></el-option>
-                            <el-option :value="2" label="中"></el-option>
-                            <el-option :value="3" label="重"></el-option>
-                          </el-select>
-                          <i
-                            class="
+                <div v-if="!simpleSymtomHideStatus2" class="simple-symtom-type">
+                  <el-card shadow="never">
+                    <el-select v-model="simpleSymtomValue2" filterable clearable>
+                      <el-option-group v-for="(symtom, index) in addForm.symptom.symtomList2" :key="symtom.typeId"
+                        :label="typeNameList[symtom.typeId]">
+                        <el-option v-for="(subSymtom, subIndex) in symtom.children"
+                          :key="symtom.typeId + '-' + subSymtom.id" :label="subSymtom.dataName"
+                          :disabled="subSymtom.score === 0 ? false : true" :value="
+                            index +
+                            '-' +
+                            subIndex +
+                            '-' +
+                            symtom.typeId +
+                            '-' +
+                            subSymtom.id
+                          ">
+                        </el-option>
+                      </el-option-group>
+                    </el-select>
+                    <el-divider content-position="left">已选择症状</el-divider>
+                    <div class="symtom-type">
+                      <div class="symtom-type-block">
+                        <template v-for="(symtom, index) in addForm.symptom.symtomList2">
+                          <template v-for="(subSymtom, subIndex) in symtom.children">
+                            <div v-if="subSymtom.score" :key="symtom.typeId + '-' + subSymtom.id"
+                              class="symtom-type-block-item">
+                              <div class="symtom-type-block-item-title">
+                                {{ subSymtom.dataName }}
+                              </div>
+                              <el-select v-model="
+                                addForm.symptom.symtomList2[index].children[
+                                  subIndex
+                                ].score
+                              " class="symtom-type-block-item-select" @change="symtomSelectChange(index, subIndex)">
+                                <el-option :value="0" label="无"></el-option>
+                                <el-option :value="1" label="轻"></el-option>
+                                <el-option :value="2" label="中"></el-option>
+                                <el-option :value="3" label="重"></el-option>
+                              </el-select>
+                              <i class="
                               icon
                               el-icon-error
                               symtom-type-block-item-delete
-                            "
-                            @click="symtomSelectChange2(index, subIndex, 0)"
-                          ></i>
-                        </div>
-                      </template>
-                    </template>
-                  </div>
+                            " @click="symtomSelectChange2(index, subIndex, 0)"></i>
+                            </div>
+                          </template>
+                        </template>
+                      </div>
+                    </div>
+                  </el-card>
                 </div>
-              </el-card>
-            </div>
-          
-          </el-form-item>
-          <el-form-item label="脉象" :label-width="formLabelWidth">
-          <div v-if="!simpleSymtomHideStatus3" class="simple-symtom-type">
-              <el-card shadow="never">
-                <el-select v-model="simpleSymtomValue3" filterable clearable>
-                  <el-option-group
-                    v-for="(symtom, index) in addForm.symptom.symtomList3"
-                    :key="symtom.typeId"
-                    :label="typeNameList[symtom.typeId]"
-                  >
-                    <el-option
-                      v-for="(subSymtom, subIndex) in symtom.children"
-                      :key="symtom.typeId + '-' + subSymtom.id"
-                      :label="subSymtom.dataName"
-                      :disabled="subSymtom.score === 0 ? false : true"
-                      :value="
-                        index +
-                        '-' +
-                        subIndex +
-                        '-' +
-                        symtom.typeId +
-                        '-' +
-                        subSymtom.id
-                      "
-                    >
-                    </el-option>
-                  </el-option-group>
-                </el-select>
-                <el-divider content-position="left">已选择症状</el-divider>
-                <div class="symtom-type">
-                  <div class="symtom-type-block">
-                    <template
-                      v-for="(symtom, index) in addForm.symptom.symtomList3"
-                    >
-                      <template
-                        v-for="(subSymtom, subIndex) in symtom.children"
-                      >
-  <div
-    v-if="subSymtom.score"
-    :key="symtom.typeId + '-' + subSymtom.id"
-    class="symtom-type-block-item"
-  >
-    <div class="symtom-type-block-item-title">
-      {{ subSymtom.dataName }}
-    </div>
-    <el-select
-      v-model="addForm.symptom.symtomList3[index].children[subIndex].score"
-      class="symtom-type-block-item-select"
-      @change="symtomSelectChange3(index, subIndex)"
-    >
-      <el-option :value="0" label="无"></el-option>
-      <el-option :value="1" label="轻"></el-option>
-      <el-option :value="2" label="中"></el-option>
-      <el-option :value="3" label="重"></el-option>
-    </el-select>
-    <i
-      class="icon el-icon-error symtom-type-block-item-delete"
-      @click="symtomSelectChange3(index, subIndex, 0)"
-    ></i>
-  </div>
-</template>
-                    </template>
-                  </div>
+
+              </el-form-item>
+              <el-form-item label="脉象" :label-width="formLabelWidth">
+                <div v-if="!simpleSymtomHideStatus3" class="simple-symtom-type">
+                  <el-card shadow="never">
+                    <el-select v-model="simpleSymtomValue3" filterable clearable>
+                      <el-option-group v-for="(symtom, index) in addForm.symptom.symtomList3" :key="symtom.typeId"
+                        :label="typeNameList[symtom.typeId]">
+                        <el-option v-for="(subSymtom, subIndex) in symtom.children"
+                          :key="symtom.typeId + '-' + subSymtom.id" :label="subSymtom.dataName"
+                          :disabled="subSymtom.score === 0 ? false : true" :value="
+                            index +
+                            '-' +
+                            subIndex +
+                            '-' +
+                            symtom.typeId +
+                            '-' +
+                            subSymtom.id
+                          ">
+                        </el-option>
+                      </el-option-group>
+                    </el-select>
+                    <el-divider content-position="left">已选择症状</el-divider>
+                    <div class="symtom-type">
+                      <div class="symtom-type-block">
+                        <template v-for="(symtom, index) in addForm.symptom.symtomList3">
+                          <template v-for="(subSymtom, subIndex) in symtom.children">
+                            <div v-if="subSymtom.score" :key="symtom.typeId + '-' + subSymtom.id"
+                              class="symtom-type-block-item">
+                              <div class="symtom-type-block-item-title">
+                                {{ subSymtom.dataName }}
+                              </div>
+                              <el-select v-model="addForm.symptom.symtomList3[index].children[subIndex].score"
+                                class="symtom-type-block-item-select" @change="symtomSelectChange3(index, subIndex)">
+                                <el-option :value="0" label="无"></el-option>
+                                <el-option :value="1" label="轻"></el-option>
+                                <el-option :value="2" label="中"></el-option>
+                                <el-option :value="3" label="重"></el-option>
+                              </el-select>
+                              <i class="icon el-icon-error symtom-type-block-item-delete"
+                                @click="symtomSelectChange3(index, subIndex, 0)"></i>
+                            </div>
+                          </template>
+                        </template>
+                      </div>
+                    </div>
+                  </el-card>
                 </div>
-              </el-card>
-            </div>
-          </el-form-item>
+              </el-form-item>
               <el-form-item label="基本查体" :label-width="formLabelWidth">
                 <el-input type="textarea" :rows="5" placeholder="请输入基本查体" v-model="addForm.bodyCheck"
                   autocomplete="off"></el-input>
@@ -1428,6 +1388,7 @@ export default {
 .input-style {
   width: 260px;
 }
+
 .symtom-type {
   .symtom-type-block {
     margin-bottom: 12px;
