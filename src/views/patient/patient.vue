@@ -30,7 +30,7 @@
           </el-input>
         </el-col>
         <el-col :span="8">
-          <el-button type="info" @click="getPatientList" size="medium">搜索</el-button>
+          <el-button type="info" @click="getPatientList" :loading="searchLoading" size="medium">搜索</el-button>
           <el-button type="primary" @click="Topage" size="medium">快速录入</el-button>
         </el-col>
       </el-row>
@@ -38,13 +38,14 @@
 
       <el-table
         :data="patientData.patientList"
+        v-loading="searchLoading"
         border
         stripe
         style="width: 100%"
       >
         <!-- <el-table-column label="ID" width="60" prop="id"></el-table-column> -->
-        <el-table-column prop="outpatientId" label="门诊号"></el-table-column>
-        <el-table-column prop="patientName" label="患者姓名">
+        <el-table-column prop="outpatientId" label="门诊号" width="120"></el-table-column>
+        <el-table-column prop="patientName" label="姓名" width="120">
           <template slot-scope="scope">
             <router-link
               :to="{
@@ -64,21 +65,25 @@
             <span v-if="scope.row.gender == 1">女</span>
           </template>
         </el-table-column>
-        <el-table-column prop="birthday" label="出生日期">
+        <el-table-column prop="birthday" label="出生日期" width="120">
           <template slot-scope="scope">
             <span>{{ scope.row.birthday | formatDate }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="telephone" label="手机号"></el-table-column>
+        <el-table-column prop="telephone" label="手机号" width="140"></el-table-column>
         <el-table-column prop="height" label="身高"></el-table-column>
         <el-table-column prop="weight" label="体重"></el-table-column>
-        <el-table-column prop="bmiIndex" label="bmi指数"></el-table-column>
+        <el-table-column prop="bmiIndex" label="BMI">
+          <template slot-scope="scope">
+            {{scope.row.bmiIndex ? scope.row.bmiIndex.toFixed(2) : '-'}}
+          </template>
+        </el-table-column>
         <el-table-column prop="modifiedTime" label="修改时间" width="200px">
           <template slot-scope="scope">
             <span>{{ scope.row.modifiedTime | formatDate3 }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="280">
+        <el-table-column label="操作" width="280" fixed="right">
           <template slot-scope="scope">
             <el-button
               type="warning"
@@ -627,6 +632,7 @@ export default {
       cb(new Error("请输入合法的手机号"));
     };
     return {
+      searchLoading: false,
       addRules: {
         patientName: [
           { required: true, message: "请输入患者姓名", trigger: "blur" },
@@ -987,6 +993,7 @@ export default {
       // const { data: res } = await this.$http.get('users', {
       //   params: this.queryInfo
       // })
+      this.searchLoading = true;
       getPatientList(this.queryInfo).then((res) => {
         console.log("获取患者列表", res.data);
         if (res.data.respCode == "0000") {
@@ -998,6 +1005,7 @@ export default {
         this.patientData.patientList = res.data.patientDtoList;
         this.patientData.total = res.data.totalCount;
         console.log("总数", this.patientData.total);
+        this.searchLoading = false;
         // this.patientData.totalPage = res.data.totalPage;
         // console.log("总页数", this.patientData.totalPage);
       });

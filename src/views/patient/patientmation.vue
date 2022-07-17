@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-tabs v-model="activeName" type="border-card">
-      <el-tab-pane label="该患者基本信息" name="1">
+      <el-tab-pane label="基本信息" name="1">
         <el-descriptions title="基本信息" :column="2">
           <el-descriptions-item label="姓名">{{
             thispatientDto.patientName
@@ -36,7 +36,7 @@
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者疾病资料" name="2">
+      <el-tab-pane label="疾病资料" name="2">
         <el-descriptions title="疾病资料" :column="2">
           <el-descriptions-item label="主述">
             {{ thisconsultationDto.mainComplaint }}
@@ -95,10 +95,10 @@
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者辅助检查" name="3">
+      <el-tab-pane label="辅助检查" name="3">
         <el-descriptions title="辅助检查" v-html="thisconsultationDto.auxiliaryExamination"></el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者中医四诊" name="4">
+      <el-tab-pane label="中医四诊" name="4">
         <el-descriptions title="中医四诊" :column="2">
           <el-descriptions-item label=" 舌象">
             <h4
@@ -146,7 +146,7 @@
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者量表评分" name="5">
+      <el-tab-pane label="量表评分" name="5">
         <el-descriptions title="量表评分" :column="1">
           <el-descriptions-item label="DM/CKD VAS评分">
             <el-descriptions :column="1">
@@ -210,7 +210,7 @@
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者诊断记录" name="6">
+      <el-tab-pane label="诊断记录" name="6">
         <el-descriptions title="诊断记录" :column="2">
           <el-descriptions-item label="西医诊断">{{
             manshenlist[thispatientDto.curMedicalRecord.Westernmedicine.list]
@@ -277,7 +277,7 @@
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者治疗信息" name="7">
+      <el-tab-pane label="治疗信息" name="7">
         <el-descriptions title="治疗信息" :column="2">
           <el-descriptions-item label="处方">
             {{ thisconsultationDto.prescription }}
@@ -286,7 +286,7 @@
           <el-descriptions-item label="其他治疗"></el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者复诊信息" name="8">
+      <el-tab-pane label="复诊信息" name="8">
         <el-descriptions title="复诊信息" :column="2">
           <el-descriptions-item label="其他资料">
             {{ thisconsultationDto.additionalInfo }}

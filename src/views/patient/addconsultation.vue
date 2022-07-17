@@ -1,93 +1,62 @@
-<template lang="123">
-    <div>
-        <el-tabs v-model="activeName" type="border-card" >
+<template>
+  <div>
+    <div class="submit-footer">
+      <el-button type="primary" @click="addconsult">提交复诊</el-button>
+    </div>
+    <el-tabs v-model="activeName" type="border-card">
       <el-tab-pane label="基本信息" name="1">
-        <el-form
-          :model="addconsultform"
-          class="medical-form"
-          label-position="top"
-          size="medium"
-        >
-        <el-form-item label="就诊地点" :label-width="formLabelWidth">
-                <el-select
-                  v-model="addconsultform.medicalLocId"
-                  style="width: 240px"
-                  filterable
-                  placeholder="请选择"
-                >
-                  <el-option
-                    v-for="item in locallist"
-                    :key="item.dataCode"
-                    :label="item.dataName"
-                    :value="item.id"
-                  >
+        <el-form :model="addconsultform" class="medical-form" label-position="top" size="medium">
+          <el-row>
+            <el-col :span="8">
+              <el-form-item label="就诊地点" :label-width="formLabelWidth">
+                <el-select v-model="addconsultform.medicalLocId" style="width: 260px" filterable placeholder="请选择">
+                  <el-option v-for="item in locallist" :key="item.dataCode" :label="item.dataName" :value="item.id">
                   </el-option>
                 </el-select>
               </el-form-item>
+            </el-col>
+            <el-col :span="8">
               <el-form-item label="就诊时间" :label-width="formLabelWidth">
-                <el-date-picker
-                  v-model="addconsultform.consultTime"
-                  style="width: 240px"
-                  type="date"
-                  placeholder="选择就诊日期"
-                >
+                <el-date-picker v-model="addconsultform.consultTime" style="width: 260px" type="date" placeholder="选择就诊日期">
                 </el-date-picker>
               </el-form-item>
+            </el-col>
+            <el-col :span="8">
               <el-form-item label="门诊号" :label-width="formLabelWidth">
-                <el-input
-                  v-model="addconsultform.outpatNum"
-                  autocomplete="off"
-                ></el-input>
+                <el-input v-model="addconsultform.outpatNum" style="width: 260px" autocomplete="off"></el-input>
               </el-form-item>
+            </el-col>
+          </el-row>
         </el-form>
       </el-tab-pane>
       <el-tab-pane v-if="0" label="疾病资料" name="2">
-        
       </el-tab-pane>
       <el-tab-pane label="辅助检查" name="3">
-        <el-form
-          :model="addconsultform"
-          class="medical-form"
-          label-position="top"
-          size="medium"
-        >
-         <el-form-item label="辅助检查" :label-width="formLabelWidth">
-          <TinymceEditor style="width: 70vw" />
+        <el-form :model="addconsultform" class="medical-form" label-position="top" size="medium">
+          <el-form-item label="辅助检查" :label-width="formLabelWidth">
+            <TinymceEditor v-model="addconsultform.auxiliaryExamination" style="width: 70vw" />
           </el-form-item>
         </el-form>
       </el-tab-pane>
       <el-tab-pane v-if="0" label="中医四诊" name="4">中医四诊</el-tab-pane>
       <el-tab-pane label="量表评分" name="5">
-        <el-form
-          :model="addconsultform"
-          class="medical-form"
-          label-position="top"
-          size="medium"
-        >
-        <el-form-item label="DM/CKD VAS评分" :label-width="formLabelWidth">
+        <el-form :model="addconsultform" class="medical-form" label-position="top" size="medium">
+          <el-form-item label="DM/CKD VAS评分" :label-width="formLabelWidth">
             <el-card class="box-card" shadow="never">
               <el-row :gutter="20">
                 <el-col :span="10">
                   <div class="grid-content">
                     <div class="grid1">
                       <span class="block-title">最不适症状:</span>
-                      <el-input
-                        type="textarea"
-                        :rows="1"
-                        placeholder="请输入最不适症状"
-                        v-model="addconsultform.vasScore.worstSymptom"
-                        autocomplete="off"
-                      ></el-input>
+                      <el-input type="textarea" :rows="1" placeholder="请输入最不适症状"
+                        v-model="addconsultform.vasScore.worstSymptom" autocomplete="off"></el-input>
                     </div>
                   </div>
                 </el-col>
                 <el-col :span="10" :offset="3">
                   <div class="grid-content">
                     <span class="block-title">最不适症状程度:</span>
-                    <el-slider
-                      v-model="addconsultform.vasScore.degree"
-                       show-input
-                    ></el-slider>
+                    <el-slider v-model="addconsultform.vasScore.degree" show-input></el-slider>
                   </div>
                 </el-col>
               </el-row>
@@ -97,11 +66,7 @@
                   <el-col :span="8">
                     <div class="grid-content">
                       <span>{{ item.dataName }}程度:</span>
-                      <el-slider
-                        class="slider1"
-                        v-model="item.score"
-                         show-input
-                      ></el-slider>
+                      <el-slider class="slider1" v-model="item.score" show-input></el-slider>
                     </div>
                   </el-col>
                 </div>
@@ -111,26 +76,18 @@
                 <div v-for="item in newCKDlist" :key="item.id">
                   <el-col :span="8">
                     <span>{{ item.dataName }}程度:</span>
-                    <el-slider class="slider1" v-model="item.score"  show-input></el-slider>
+                    <el-slider class="slider1" v-model="item.score" show-input></el-slider>
                   </el-col>
                 </div>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="8">
                   <span class="block-title">生活质量:</span>
-                  <el-slider
-                    v-model="addconsultform.vasScore.lifeQuality"
-                     show-input
-                    class="slider1"
-                  ></el-slider>
+                  <el-slider v-model="addconsultform.vasScore.lifeQuality" show-input class="slider1"></el-slider>
                 </el-col>
                 <el-col :span="8">
                   <span class="block-title">健康状况:</span>
-                  <el-slider
-                    v-model="addconsultform.vasScore.healthyStatus"
-                    class="slider1"
-                     show-input
-                  ></el-slider>
+                  <el-slider v-model="addconsultform.vasScore.healthyStatus" class="slider1" show-input></el-slider>
                 </el-col>
               </el-row>
             </el-card>
@@ -139,39 +96,20 @@
             <el-card class="box-card" shadow="never">
               <div class="symtom-type">
                 <div class="symtom-type-block">
-                  <el-divider content-position="left"
-                    >风邪（肾病填写）:</el-divider
-                  >
-                  <div
-                    v-for="(item, index) in newfengxielist"
-                    :key="item.id"
-                    class="symtom-type-block-item"
-                  >
+                  <el-divider content-position="left">风邪（肾病填写）:</el-divider>
+                  <div v-for="(item, index) in newfengxielist" :key="item.id" class="symtom-type-block-item">
                     <div class="symtom-type-block-item-title">
                       {{ item.dataName }}
                     </div>
-                    <el-select
-                      v-model="newfengxielist[index].value"
-                      class="symtom-type-block-item-select"
-                    >
+                    <el-select v-model="newfengxielist[index].value" class="symtom-type-block-item-select">
                       <el-option :value="0" label="无"></el-option>
                       <el-option :value="1" label="偶尔"></el-option>
                       <el-option :value="2" label="总是"></el-option>
                     </el-select>
                   </div>
-                  <el-divider content-position="left"
-                    >是否诊断为风邪证</el-divider
-                  >
-                  <el-radio
-                    v-model="addconsultform.windEvil.diagnosticResult"
-                    label="1"
-                    >是</el-radio
-                  >
-                  <el-radio
-                    v-model="addconsultform.windEvil.diagnosticResult"
-                    label="0"
-                    >否</el-radio
-                  >
+                  <el-divider content-position="left">是否诊断为风邪证</el-divider>
+                  <el-radio v-model="addconsultform.windEvil.diagnosticResult" label="1">是</el-radio>
+                  <el-radio v-model="addconsultform.windEvil.diagnosticResult" label="0">否</el-radio>
                 </div>
               </div>
             </el-card>
@@ -179,34 +117,19 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="诊断记录" name="6">
-        <el-form
-          :model="addconsultform"
-          class="medical-form"
-          label-position="top"
-          size="medium"
-        >
-         <el-form-item label="症状诊断" :label-width="formLabelWidth">
-            <el-switch
-              v-model="simpleSymtomHideStatus"
-              style="margin-bottom: 8px"
-              active-text="复杂模式"
-              inactive-text="简单模式"
-            >
+        <el-form :model="addconsultform" class="medical-form" label-position="top" size="medium">
+          <el-form-item label="症状诊断" :label-width="formLabelWidth">
+            <el-switch v-model="simpleSymtomHideStatus" style="margin-bottom: 8px" active-text="复杂模式"
+              inactive-text="简单模式">
             </el-switch>
             <div v-if="!simpleSymtomHideStatus" class="simple-symtom-type">
               <el-card shadow="never">
                 <el-select v-model="simpleSymtomValue" filterable clearable>
-                  <el-option-group
-                    v-for="(symtom, index) in addconsultform.symptom.symtomList"
-                    :key="symtom.typeId"
-                    :label="typeNameList[symtom.typeId]"
-                  >
-                    <el-option
-                      v-for="(subSymtom, subIndex) in symtom.children"
-                      :key="symtom.typeId + '-' + subSymtom.id"
-                      :label="subSymtom.dataName"
-                      :disabled="subSymtom.score === 0 ? false : true"
-                      :value="
+                  <el-option-group v-for="(symtom, index) in addconsultform.symptom.symtomList" :key="symtom.typeId"
+                    :label="typeNameList[symtom.typeId]">
+                    <el-option v-for="(subSymtom, subIndex) in symtom.children"
+                      :key="symtom.typeId + '-' + subSymtom.id" :label="subSymtom.dataName"
+                      :disabled="subSymtom.score === 0 ? false : true" :value="
                         index +
                         '-' +
                         subIndex +
@@ -214,51 +137,36 @@
                         symtom.typeId +
                         '-' +
                         subSymtom.id
-                      "
-                    >
+                      ">
                     </el-option>
                   </el-option-group>
                 </el-select>
                 <el-divider content-position="left">已选择症状</el-divider>
                 <div class="symtom-type">
                   <div class="symtom-type-block">
-                    <template
-                      v-for="(symtom, index) in addconsultform.symptom
-                        .symtomList"
-                    >
-                      <template
-                        v-for="(subSymtom, subIndex) in symtom.children"
-                      >
-                        <div
-                          v-if="subSymtom.score"
-                          :key="symtom.typeId + '-' + subSymtom.id"
-                          class="symtom-type-block-item"
-                        >
+                    <template v-for="(symtom, index) in addconsultform.symptom
+                    .symtomList">
+                      <template v-for="(subSymtom, subIndex) in symtom.children">
+                        <div v-if="subSymtom.score" :key="symtom.typeId + '-' + subSymtom.id"
+                          class="symtom-type-block-item">
                           <div class="symtom-type-block-item-title">
                             {{ subSymtom.dataName }}
                           </div>
-                          <el-select
-                            v-model="
-                              addconsultform.symptom.symtomList[index].children[
-                                subIndex
-                              ].score
-                            "
-                            class="symtom-type-block-item-select"
-                            @change="symtomSelectChange(index, subIndex)"
-                          >
+                          <el-select v-model="
+                            addconsultform.symptom.symtomList[index].children[
+                              subIndex
+                            ].score
+                          " class="symtom-type-block-item-select" @change="symtomSelectChange(index, subIndex)">
                             <el-option :value="0" label="无"></el-option>
                             <el-option :value="1" label="轻"></el-option>
                             <el-option :value="2" label="中"></el-option>
                             <el-option :value="3" label="重"></el-option>
                           </el-select>
-                          <i
-                            class="
+                          <i class="
                               icon
                               el-icon-error
                               symtom-type-block-item-delete
-                            "
-                            @click="symtomSelectChange(index, subIndex, 0)"
-                          ></i>
+                            " @click="symtomSelectChange(index, subIndex, 0)"></i>
                         </div>
                       </template>
                     </template>
@@ -268,34 +176,24 @@
             </div>
             <div v-else class="symtom-type">
               <el-collapse v-model="symtomActiveNames">
-                <el-collapse-item
-                  v-for="(symtom, index) in addconsultform.symptom.symtomList"
-                  :key="symtom.typeId"
-                  :name="symtom.typeId"
-                >
+                <el-collapse-item v-for="(symtom, index) in addconsultform.symptom.symtomList" :key="symtom.typeId"
+                  :name="symtom.typeId">
                   <template #title>
                     <span style="padding-left: 12px">{{
-                      typeNameList[symtom.typeId]
+                        typeNameList[symtom.typeId]
                     }}</span>
                   </template>
                   <div class="symtom-type-block">
-                    <div
-                      v-for="(subSymtom, subIndex) in symtom.children"
-                      :key="symtom.typeId + '-' + subSymtom.id"
-                      class="symtom-type-block-item"
-                    >
+                    <div v-for="(subSymtom, subIndex) in symtom.children" :key="symtom.typeId + '-' + subSymtom.id"
+                      class="symtom-type-block-item">
                       <div class="symtom-type-block-item-title">
                         {{ subSymtom.dataName }}
                       </div>
-                      <el-select
-                        v-model="
-                          addconsultform.symptom.symtomList[index].children[
-                            subIndex
-                          ].score
-                        "
-                        class="symtom-type-block-item-select"
-                        @change="symtomSelectChange(index, subIndex)"
-                      >
+                      <el-select v-model="
+                        addconsultform.symptom.symtomList[index].children[
+                          subIndex
+                        ].score
+                      " class="symtom-type-block-item-select" @change="symtomSelectChange(index, subIndex)">
                         <el-option :value="0" label="无"></el-option>
                         <el-option :value="1" label="轻"></el-option>
                         <el-option :value="2" label="中"></el-option>
@@ -310,115 +208,57 @@
           <el-form-item label="辩证" :label-width="formLabelWidth">
             <span class="block-title">虚：</span>
             <el-checkbox-group v-model="addconsultform.symptomCategories.empty">
-              <el-checkbox
-                v-for="symtom in xulist"
-                :key="symtom.dataName"
-                :label="symtom.dataName"
-              >
+              <el-checkbox v-for="symtom in xulist" :key="symtom.dataName" :label="symtom.dataName">
               </el-checkbox>
             </el-checkbox-group>
             <span class="block-title">实：</span>
             <el-checkbox-group v-model="addconsultform.symptomCategories.real">
-              <el-checkbox
-                v-for="symtom in shilist"
-                :key="symtom.dataName"
-                :label="symtom.dataName"
-              >
+              <el-checkbox v-for="symtom in shilist" :key="symtom.dataName" :label="symtom.dataName">
               </el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="病位诊断" :label-width="formLabelWidth">
             <span class="block-title">脏腑：</span>
             <el-checkbox-group v-model="addconsultform.diseaseLocation.viscera">
-              <el-checkbox
-                v-for="symtom in zangfulist"
-                :key="symtom.dataName"
-                :label="symtom.dataName"
-              >
+              <el-checkbox v-for="symtom in zangfulist" :key="symtom.dataName" :label="symtom.dataName">
               </el-checkbox>
             </el-checkbox-group>
             <span class="block-title">经脉：</span>
-            <el-checkbox-group
-              v-model="addconsultform.diseaseLocation.meridian"
-            >
-              <el-checkbox
-                v-for="symtom in jingmailist"
-                :key="symtom.dataName"
-                :label="symtom.dataName"
-              >
+            <el-checkbox-group v-model="addconsultform.diseaseLocation.meridian">
+              <el-checkbox v-for="symtom in jingmailist" :key="symtom.dataName" :label="symtom.dataName">
               </el-checkbox>
             </el-checkbox-group>
             <span class="block-title">卫分：</span>
-            <el-checkbox-group
-              v-model="addconsultform.diseaseLocation.defender"
-            >
-              <el-checkbox
-                v-for="symtom in weifenlist"
-                :key="symtom.dataName"
-                :label="symtom.dataName"
-              >
+            <el-checkbox-group v-model="addconsultform.diseaseLocation.defender">
+              <el-checkbox v-for="symtom in weifenlist" :key="symtom.dataName" :label="symtom.dataName">
               </el-checkbox>
             </el-checkbox-group>
             <span class="block-title">三焦：</span>
-            <el-checkbox-group
-              v-model="addconsultform.diseaseLocation.tripleFocus"
-            >
-              <el-checkbox
-                v-for="symtom in sanjiaolist"
-                :key="symtom.dataName"
-                :label="symtom.dataName"
-              >
+            <el-checkbox-group v-model="addconsultform.diseaseLocation.tripleFocus">
+              <el-checkbox v-for="symtom in sanjiaolist" :key="symtom.dataName" :label="symtom.dataName">
               </el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="治疗信息" name="7">
-        <el-form
-          :model="addconsultform"
-          class="medical-form"
-          label-position="top"
-          size="medium"
-        >
-        <el-form-item label="医嘱" :label-width="formLabelWidth">
+        <el-form :model="addconsultform" class="medical-form" label-position="top" size="medium">
+          <el-form-item label="医嘱" :label-width="formLabelWidth">
             <el-checkbox-group v-model="addconsultform.doctorOrder">
-              <el-checkbox
-                v-for="symtom in doctorcommonDataEntityList"
-                :key="symtom.dataName"
-                :label="symtom.dataName"
-              >
+              <el-checkbox v-for="symtom in doctorcommonDataEntityList" :key="symtom.dataName" :label="symtom.dataName">
               </el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="合并用药" :label-width="formLabelWidth">
-            <el-input
-              type="textarea"
-              :rows="5"
-              placeholder="请输入合并用药（格式为：化学名—剂量mg—频次）"
-              v-model="addconsultform.combinationTherapy"
-              autocomplete="off"
-            ></el-input>
+            <el-input type="textarea" :rows="5" placeholder="请输入合并用药（格式为：化学名—剂量mg—频次）"
+              v-model="addconsultform.combinationTherapy" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
-          <el-divider></el-divider>
-      <el-button type="primary" @click="addconsult">
-      提交复诊
-      </el-button>
       </el-tab-pane>
     </el-tabs>
-
-   
-
-
-
-<el-card v-if="0" class="box-card">
-      <el-form
-          :model="addconsultform"
-          class="medical-form"
-          label-position="top"
-          size="medium"
-        >
-          <!-- <el-form-item label="腹诊" :label-width="formLabelWidth">
+    <el-card v-if="0" class="box-card">
+      <el-form :model="addconsultform" class="medical-form" label-position="top" size="medium">
+        <!-- <el-form-item label="腹诊" :label-width="formLabelWidth">
             <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addconsultform.abdominalExamination"
               autocomplete="off"></el-input>
           </el-form-item>
@@ -444,8 +284,8 @@
               </div>
             </el-upload>
           </el-form-item> -->
-  
-          <!-- <el-form-item label="基本查体" :label-width="formLabelWidth">
+
+        <!-- <el-form-item label="基本查体" :label-width="formLabelWidth">
             <el-input type="textarea" :rows="5" placeholder="请输入基本查体" v-model="addconsultform.bodyCheck"
               autocomplete="off"></el-input>
           </el-form-item>
@@ -454,7 +294,7 @@
               autocomplete="off"></el-input>
           </el-form-item> -->
 
-          <!-- <el-form-item label="主述" :label-width="formLabelWidth">
+        <!-- <el-form-item label="主述" :label-width="formLabelWidth">
             <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addconsultform.mainComplaint"
               autocomplete="off"></el-input>
           </el-form-item>
@@ -465,7 +305,7 @@
             </el-select>
           </el-form-item> -->
 
-          <!-- <el-form-item label="其他诊断" :label-width="formLabelWidth">
+        <!-- <el-form-item label="其他诊断" :label-width="formLabelWidth">
             <el-select v-model="addconsultform.otherDiagnosisId" filterable placeholder="请选择">
               <el-option v-for="item in impotantlist" :key="item.dataCode" :label="item.dataName" :value="item.id">
               </el-option>
@@ -494,10 +334,10 @@
             <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addconsultform.treatment"
               autocomplete="off"></el-input>
           </el-form-item> -->
-        </el-form>
-        </el-card>
-  
-    </div>
+      </el-form>
+    </el-card>
+
+  </div>
 </template>
 <script>
 import TinymceEditor from "@/components/Tinymce";
@@ -1080,6 +920,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@/styles/variables.scss";
+
 /* .collapse {
   margin: 20px;
 } */
@@ -1146,7 +987,7 @@ export default {
       margin-right: 8px;
       margin-bottom: 12px;
 
-      & > * {
+      &>* {
         vertical-align: middle;
       }
 
@@ -1208,5 +1049,16 @@ export default {
       width: 33%;
     }
   }
+}
+
+.submit-footer {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding: 0 20px;
+  position: absolute;
+  z-index: 3;
+  right: 8px;
 }
 </style>

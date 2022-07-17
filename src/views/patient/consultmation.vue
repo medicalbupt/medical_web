@@ -1,36 +1,20 @@
-<template lang="">
-    <div>
-    <!-- <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
-      <el-tab-pane label="基本信息" name="1">基本信息</el-tab-pane>
-      <el-tab-pane label="疾病资料" name="2">疾病资料</el-tab-pane>
-      <el-tab-pane label="辅助检查" name="3">辅助检查</el-tab-pane>
-      <el-tab-pane label="中医四诊" name="4">中医四诊</el-tab-pane>
-      <el-tab-pane label="量表评分" name="5">量表评分</el-tab-pane>
-      <el-tab-pane label="诊断记录" name="6">诊断记录</el-tab-pane>
-      <el-tab-pane label="治疗信息" name="7">治疗信息</el-tab-pane>
-      <el-tab-pane label="复诊信息" name="8">复诊信息</el-tab-pane>
-    </el-tabs> -->
-
-
-    <el-table
-      :data="consultationDto"
-      class="table1"
-    >
-      
+<template>
+  <div>
+    <el-table :data="consultationDto" class="table1">
       <el-table-column label="患者诊次" prop="consultNum"> </el-table-column>
       <el-table-column label="门诊号" prop="outpatNum"> </el-table-column>
       <el-table-column label="患者就诊时间" prop="consultTime">
         <template slot-scope="scope">
-  <span>{{ scope.row.consultTime | formatDate }}</span>
-</template>
+          <span>{{ scope.row.consultTime | formatDate }}</span>
+        </template>
       </el-table-column>
     </el-table>
-<h4 style="margin-left:40px">该诊次详细信息：</h4>
+    <h4 style="margin-left:40px">该诊次详细信息：</h4>
     <el-tabs v-model="activeName2" type="border-card" style="margin-left:40px;margin-right:40px">
-      <el-tab-pane label="该患者基本信息"  name="1">
+      <el-tab-pane label="基本信息" name="1">
         <el-descriptions title="基本信息" :column="2">
           <el-descriptions-item label="姓名">{{
-            thispatientDto.patientName
+              thispatientDto.patientName
           }}</el-descriptions-item>
           <el-descriptions-item label="性别">
             <span v-if="thispatientDto.gender == 0">男</span>
@@ -55,14 +39,13 @@
             {{ thispatientDto.outpatientId }}
           </el-descriptions-item>
           <el-descriptions-item label="就诊地点">
-            {{ thisconsultationDto.medicalLoc }}</el-descriptions-item
-          >
+            {{ thisconsultationDto.medicalLoc }}</el-descriptions-item>
           <el-descriptions-item label="初诊时间">
             {{ thisconsultationDto.consultTime | formatDate }}
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者疾病资料" name="2">
+      <el-tab-pane label="疾病资料" name="2">
         <el-descriptions title="疾病资料" :column="2">
           <el-descriptions-item label="主述">
             {{ thisconsultationDto.mainComplaint }}
@@ -70,23 +53,22 @@
           <el-descriptions-item label="现病史">
             <el-descriptions :column="1">
               <el-descriptions-item label=" 西医诊断及病程">{{
-                manshenlist[
+                  manshenlist[
                   thispatientDto.curMedicalRecord.Westernmedicine.list
-                ]
+                  ]
               }}</el-descriptions-item>
               <el-descriptions-item label=" 确诊时间">
                 {{
-                  thispatientDto.curMedicalRecord.confirmTime.time | formatDate
-                }}</el-descriptions-item
-              >
+                    thispatientDto.curMedicalRecord.confirmTime.time | formatDate
+                }}</el-descriptions-item>
               <el-descriptions-item label="  糖尿病并发症">{{
-                manshenlist[
+                  manshenlist[
                   thispatientDto.curMedicalRecord.DMcomplications.list[0]
-                ]
+                  ]
               }}</el-descriptions-item>
               <el-descriptions-item label="慢性肾脏病病因">
                 {{
-                  manshenlist[thispatientDto.curMedicalRecord.CKDreason.list[0]]
+                    manshenlist[thispatientDto.curMedicalRecord.CKDreason.list[0]]
                 }}
               </el-descriptions-item>
             </el-descriptions>
@@ -99,14 +81,12 @@
             <el-descriptions :column="1">
               <el-descriptions-item label=" 吸烟数量（支/天）">
                 {{
-                  thispatientDto.personalHistory.smoke.amount
-                }}</el-descriptions-item
-              >
+                    thispatientDto.personalHistory.smoke.amount
+                }}</el-descriptions-item>
               <el-descriptions-item label="啤酒数量（瓶/天）">
                 {{
-                  thispatientDto.personalHistory.beer.amount
-                }}</el-descriptions-item
-              >
+                    thispatientDto.personalHistory.beer.amount
+                }}</el-descriptions-item>
               <el-descriptions-item label="白酒数量（两/天）">
                 {{ thispatientDto.personalHistory.whiteWine.amount }}
               </el-descriptions-item>
@@ -121,131 +101,108 @@
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者辅助检查" name="3">
-        <el-descriptions title="辅助检查"> </el-descriptions>
+      <el-tab-pane label="辅助检查" name="3">
+        <el-descriptions title="辅助检查" v-html="thisconsultationDto.auxiliaryExamination"></el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者中医四诊" name="4">
+      <el-tab-pane label="中医四诊" name="4">
         <el-descriptions title="中医四诊" :column="2">
           <el-descriptions-item label=" 舌象"></el-descriptions-item>
           <el-descriptions-item label=" 脉象">
-            {{ thisconsultationDto.pulsePattern }}</el-descriptions-item
-          >
+            {{ thisconsultationDto.pulsePattern }}</el-descriptions-item>
           <el-descriptions-item label=" 基本查体">{{
-            thisconsultationDto.bodyCheck
+              thisconsultationDto.bodyCheck
           }}</el-descriptions-item>
           <el-descriptions-item label="腹证">
             {{ thisconsultationDto.abdominalExamination }}
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者量表评分" name="5">
+      <el-tab-pane label="量表评分" name="5">
         <el-descriptions title="量表评分" :column="1">
           <el-descriptions-item label="DM/CKD VAS评分">
             <el-descriptions :column="1">
               <el-descriptions-item label="最不适症状">{{
-                thisconsultationDto.vasScore.worstSymptom
+                  thisconsultationDto.vasScore.worstSymptom
               }}</el-descriptions-item>
               <el-descriptions-item label="程度">{{
-                thisconsultationDto.vasScore.degree
+                  thisconsultationDto.vasScore.degree
               }}</el-descriptions-item>
               <el-descriptions-item label="DM">
-                <span
-                  v-for="(item, index) in thisconsultationDto.vasScore.DM"
-                  :key="index"
-                >
+                <span v-for="(item, index) in thisconsultationDto.vasScore.DM" :key="index">
                   {{ " " + item.dataName + "-----" + "程度" + item.score + "" }}
                 </span>
               </el-descriptions-item>
               <el-descriptions-item label="CDK">
-                <span
-                  v-for="(item, index) in thisconsultationDto.vasScore.CKD"
-                  :key="index"
-                >
+                <span v-for="(item, index) in thisconsultationDto.vasScore.CKD" :key="index">
                   {{ " " + item.dataName + "-----" + "程度" + item.score + "" }}
                 </span>
               </el-descriptions-item>
               <el-descriptions-item label="生活质量评分">{{
-                thisconsultationDto.vasScore.healthyStatus
+                  thisconsultationDto.vasScore.healthyStatus
               }}</el-descriptions-item>
               <el-descriptions-item label="健康状况评分">{{
-                thisconsultationDto.vasScore.lifeQuality
+                  thisconsultationDto.vasScore.lifeQuality
               }}</el-descriptions-item>
             </el-descriptions>
           </el-descriptions-item>
           <el-descriptions-item label="风邪">
             <el-descriptions :column="1">
               <el-descriptions-item label="是否诊断为风邪证">
-                <span v-if="thisconsultationDto.windEvil.diagnosticResult == 1"
-                  >是</span
-                >
-                <span v-if="thisconsultationDto.windEvil.diagnosticResult == 0"
-                  >否</span
-                ></el-descriptions-item
-              >
+                <span v-if="thisconsultationDto.windEvil.diagnosticResult == 1">是</span>
+                <span v-if="thisconsultationDto.windEvil.diagnosticResult == 0">否</span>
+              </el-descriptions-item>
               <el-descriptions-item label="风邪">
-                <span
-                  v-for="(item, index) in thisconsultationDto.windEvil.fengxie"
-                  :key="index"
-                >
+                <span v-for="(item, index) in thisconsultationDto.windEvil.fengxie" :key="index">
                   <span v-if="item.value == 0">
-                    {{ " " + item.dataName + "-----" + "程度:" + "无" }}</span
-                  >
+                    {{ " " + item.dataName + "-----" + "程度:" + "无" }}</span>
                   <span v-if="item.value == 1">
-                    {{ " " + item.dataName + "-----" + "程度:" + "轻" }}</span
-                  >
+                    {{ " " + item.dataName + "-----" + "程度:" + "轻" }}</span>
                   <span v-if="item.value == 2">
-                    {{ " " + item.dataName + "-----" + "程度:" + "重" }}</span
-                  >
+                    {{ " " + item.dataName + "-----" + "程度:" + "重" }}</span>
                 </span>
               </el-descriptions-item>
             </el-descriptions>
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者诊断记录" name="6">
+      <el-tab-pane label="诊断记录" name="6">
         <el-descriptions title="诊断记录" :column="2">
           <el-descriptions-item label="西医诊断">
             {{
-            manshenlist[thispatientDto.curMedicalRecord.Westernmedicine.list]
-          }}</el-descriptions-item>
+                manshenlist[thispatientDto.curMedicalRecord.Westernmedicine.list]
+            }}</el-descriptions-item>
           <el-descriptions-item label="辩证">
             <el-descriptions :column="1">
               <el-descriptions-item label="实">{{
-                thisconsultationDto.symptomCategories.real
+                  thisconsultationDto.symptomCategories.real
               }}</el-descriptions-item>
               <el-descriptions-item label="虚">{{
-                thisconsultationDto.symptomCategories.empty
+                  thisconsultationDto.symptomCategories.empty
               }}</el-descriptions-item>
             </el-descriptions>
           </el-descriptions-item>
           <el-descriptions-item label="体质诊断">{{
-            thispatientDto.physiqueId
+              thispatientDto.physiqueId
           }}</el-descriptions-item>
           <el-descriptions-item label="症状">
             <el-collapse v-model="activeNames">
               <el-collapse-item title="展开折叠" name="0">
-                <h4
-                  v-for="(item, index) in thisconsultationDto.symptom
-                    .symtomList"
-                  :key="index"
-                >
+                <h4 v-for="(item, index) in thisconsultationDto.symptom
+                .symtomList" :key="index">
                   {{ typeNameList[item.typeName] }}
                   <h5 v-for="item1 in item.children" :key="item1.id + '1231'">
                     <span v-if="item1.score == 0">
                       {{
-                        " " + item1.dataName + "-----" + "程度:" + "无"
-                      }}</span
-                    >
+                          " " + item1.dataName + "-----" + "程度:" + "无"
+                      }}</span>
                     <span v-if="item.score == 1">
                       {{
-                        " " + item1.dataName + "-----" + "程度:" + "轻"
-                      }}</span
-                    >
+                          " " + item1.dataName + "-----" + "程度:" + "轻"
+                      }}</span>
                     <span v-if="item1.score == 2">
                       {{
-                        " " + item1.dataName + "-----" + "程度:" + "重"
-                      }}</span
-                    >
+                          " " + item1.dataName + "-----" + "程度:" + "重"
+                      }}</span>
                   </h5>
                 </h4>
                 <!-- <span>{{ props.row.symptom }}</span> -->
@@ -255,22 +212,22 @@
           <el-descriptions-item label="病位诊断">
             <el-descriptions :column="1">
               <el-descriptions-item label="脏腑">{{
-                thisconsultationDto.diseaseLocation.viscera
+                  thisconsultationDto.diseaseLocation.viscera
               }}</el-descriptions-item>
               <el-descriptions-item label="经脉">{{
-                thisconsultationDto.diseaseLocation.meridian
+                  thisconsultationDto.diseaseLocation.meridian
               }}</el-descriptions-item>
               <el-descriptions-item label="卫分">{{
-                thisconsultationDto.diseaseLocation.defender
+                  thisconsultationDto.diseaseLocation.defender
               }}</el-descriptions-item>
               <el-descriptions-item label="三焦">{{
-                thisconsultationDto.diseaseLocation.tripleFocus
+                  thisconsultationDto.diseaseLocation.tripleFocus
               }}</el-descriptions-item>
             </el-descriptions>
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者治疗信息" name="7">
+      <el-tab-pane label="治疗信息" name="7">
         <el-descriptions title="治疗信息" :column="2">
           <el-descriptions-item label="处方">
             {{ thisconsultationDto.prescription }}
@@ -311,7 +268,7 @@
         </el-descriptions>
       </el-tab-pane>
     </el-tabs>
-    </div>
+  </div>
 </template>
 <script>
 import { getConsultationInfo, getAllSameData1 } from "@/api/patient";
@@ -419,9 +376,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@/styles/variables.scss";
+
 .table1 {
   margin: 20px 30px 40px 50px;
 }
+
 .margin-top {
   margin: 20px 30px 40px 50px;
 }
@@ -485,7 +444,7 @@ export default {
       margin-right: 8px;
       margin-bottom: 12px;
 
-      & > * {
+      &>* {
         vertical-align: middle;
       }
 

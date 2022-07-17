@@ -25,13 +25,14 @@ html {
 #app {
   height: 100%;
   letter-spacing: -0.1px;
+  font-size: $fontSize;
 
   // &.en-us-app {
   //     letter-spacing: -0.2px;
   // }
 
   .no-need-restyle {
-      font-size: 14px;
+      font-size: $fontSize;
 
       // font-size公共样式
       .el-date-editor .el-range__icon,
@@ -45,7 +46,7 @@ html {
       .el-menu-item,
       .el-popover,
       .el-input {
-          font-size: 14px;
+          font-size: $fontSize;
       }
 
       // hight、line-hight行高变更
@@ -111,6 +112,14 @@ div:focus {
   }
 }
 
+.el-descriptions {
+  font-size: $fontSize;
+
+  h5 {
+    font-size: $fontSize;
+  }
+}
+
 // main-container global css
 .app-container {
   // padding: 0 10px 10px 10px;
@@ -124,6 +133,7 @@ div:focus {
           // overflow: hidden;
           margin-left: -12px;
           margin-right: -12px;
+          font-size: $fontSize;
       }
 
       .el-form-item {
