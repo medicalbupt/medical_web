@@ -5,7 +5,6 @@
     :style="{ width: containerWidth }"
   >
     <textarea :id="tinymceId" class="tinymce-textarea" />
-    111
     <div class="editor-custom-btn-container">
       <editorImage
         color="#1890ff"

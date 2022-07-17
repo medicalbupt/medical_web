@@ -96,7 +96,7 @@
         </el-descriptions>
       </el-tab-pane>
       <el-tab-pane label="该患者辅助检查" name="3">
-        <el-descriptions title="辅助检查"> </el-descriptions>
+        <el-descriptions title="辅助检查" v-html="thisconsultationDto.auxiliaryExamination"></el-descriptions>
       </el-tab-pane>
       <el-tab-pane label="该患者中医四诊" name="4">
         <el-descriptions title="中医四诊" :column="2">

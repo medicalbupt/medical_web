@@ -1,61 +1,41 @@
-<template lang="">
-    <div>
-    <el-tabs v-model="activeName" type="border-card" >
-        <el-tab-pane label="基本信息" name="1">
-            <el-card class="box-card">
-                <div slot="header" class="clearfix">
-                  <span>基本信息</span>  
-                </div>
-                <div class="dialog-content">
-                    <el-form
-                      class="medical-form"
-                      label-width="80px"
-                      label-position="top"
-                      size="medium"
-                      ref="addFormRef"
-                      :model="addForm"
-                      :rules="addRules"
-                    >
-                    <el-row>
-                      
-                        <el-col :span="18">
-                          <div class="grid-content">
-                            <el-form-item label="患者姓名" prop="patientName">
-                              <el-input
-                                class="input-style"
-                                v-model="addForm.patientName"
-                              ></el-input>
-                            </el-form-item>
-                          </div>
-                        </el-col>
-                        <el-col :span="18">
-                        <div class="grid-content">
-                          <el-form-item label="性别">
-                            <el-select
-                              class="input-style"
-                              v-model="addForm.gender"
-                              placeholder="请选择性别"
-                            >
-                              <el-option label="男" value="0"></el-option>
-                              <el-option label="女" value="1"></el-option>
-                            </el-select>
-                          </el-form-item>
-                        </div>
-                        </el-col>
-                        <el-col :span="18">
-              <div class="grid-content">
-                <el-form-item label="出生日期">
-                  <el-date-picker
-                    class="input-style"
-                    v-model="addForm.birthday"
-                    type="date"
-                    placeholder="选择日期"
-                  >
-                  </el-date-picker>
-                </el-form-item>
-              </div>
-            </el-col>
-            <!-- <el-col :span="18">
+<template>
+  <div>
+    <div class="submit-footer">
+      <el-button type="primary" @click="addquick">提交录入</el-button>
+    </div>
+    <el-tabs v-model="activeName" class="border-card" type="border-card">
+      <el-tab-pane label="基本信息" name="1">
+        <el-card class="box-card">
+          <div class="dialog-content">
+            <el-form class="medical-form" label-width="80px" label-position="top" size="medium" ref="addFormRef"
+              :model="addForm" :rules="addRules">
+              <el-row :gutter="20">
+                <el-col :span="7">
+                  <div class="grid-content">
+                    <el-form-item label="患者姓名" prop="patientName">
+                      <el-input class="input-style" v-model="addForm.patientName"></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="7">
+                  <div class="grid-content">
+                    <el-form-item label="性别">
+                      <el-select class="input-style" v-model="addForm.gender" placeholder="请选择性别">
+                        <el-option label="男" value="0"></el-option>
+                        <el-option label="女" value="1"></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="7">
+                  <div class="grid-content">
+                    <el-form-item label="出生日期">
+                      <el-date-picker class="input-style" v-model="addForm.birthday" type="date" placeholder="选择日期">
+                      </el-date-picker>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <!-- <el-col :span="18">
               <div class="grid-content">
                 <el-form-item label="ID号">
                   <el-input
@@ -65,648 +45,405 @@
                 </el-form-item>
               </div>
             </el-col> -->
-            <el-col :span="18">
-                          <div class="grid-content">
-                            <el-form-item label="门诊id" prop="outpatientId">
-                              <el-input
-                                class="input-style"
-                                v-model="addForm.outpatientId"
-                              ></el-input>
-                            </el-form-item>
-                          </div>
-                        </el-col>
-            <el-col :span="18">
-              <div class="grid-content">
-                <el-form-item label="身份证号">
-                  <el-input
-                    class="input-style"
-                    v-model="addForm.idCard"
-                  ></el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="18">
-              <div class="grid-content">
-                <el-form-item label="身高">
-                  <el-input
-                    class="input-style"
-                    type="number"
-                    v-model="addForm.height"
-                    placeholder="单位：cm"
-                  ></el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="18">
-              <div class="grid-content">
-                <el-form-item label="体重">
-                  <el-input
-                    class="input-style"
-                    type="number"
-                    v-model="addForm.weight"
-                    placeholder="单位：kg"
-                  ></el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="18">
-              <el-form-item label="就诊地点" :label-width="formLabelWidth">
-                <el-select
-                  v-model="addForm.medicalLocId"
-                  style="width: 240px"
-                  filterable
-                  placeholder="请选择"
-                >
-                  <el-option
-                    v-for="item in locallist"
-                    :key="item.dataCode"
-                    :label="item.dataName"
-                    :value="item.id"
-                  >
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="就诊时间" :label-width="formLabelWidth">
-                <el-date-picker
-                  v-model="addForm.consultTime"
-                  style="width: 240px"
-                  type="date"
-                  placeholder="选择就诊日期"
-                >
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
-                    </el-row>
-                    </el-form>
-                </div>
-            </el-card>
-        </el-tab-pane>
-    <el-tab-pane label="疾病资料" name="2">
-        <el-card class="box-card">
-                <div slot="header" class="clearfix">
-                  <span>疾病资料</span>  
-                </div>
-                <div class="dialog-content">
-                    <el-form
-                      class="medical-form"
-                      label-width="80px"
-                      label-position="top"
-                      size="medium"
-                      ref="addFormRef"
-                      :model="addForm"
-                    >
-                   <el-form-item label="主述">
-            <el-input
-              type="textarea"
-              :rows="5"
-              placeholder="请输入内容"
-              v-model="addForm.mainComplaint"
-            ></el-input>
-          </el-form-item>
-          
-          <el-form-item label="现病史">
-            <el-card shadow="never">
-              
-              <span class="block-title">糖尿病并发症</span>
-              <el-checkbox-group
-                v-model="addForm.curMedicalRecord.DMcomplications.list"
-              >
-                <el-checkbox
-                  v-for="item in DMcomplicationsOptions"
-                  :key="item.id"
-                  :label="item.id"
-                  >{{ item.dataName }}
-                </el-checkbox>
-              </el-checkbox-group>
-              <span class="block-title">慢性肾脏病病因</span>
-              <el-checkbox-group
-                v-model="addForm.curMedicalRecord.CKDreason.list"
-              >
-                <el-checkbox
-                  v-for="item in CKDreasonOptions"
-                  :label="item.id"
-                  :key="item.id"
-                  >{{ item.dataName }}
-                </el-checkbox>
-              </el-checkbox-group>
-            </el-card>
-          </el-form-item>
-          <el-form-item label="既往史">
-            <el-checkbox-group v-model="addForm.pastHistoryList">
-              <el-checkbox
-                v-for="item in pastHistoryListOptions"
-                :label="item.id"
-                :key="item.id"
-                >{{ item.dataName }}
-              </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item label="个人史">
-            <el-row>
-              <el-col :span="8">
-                <div class="block-title">吸烟数量（支/天）</div>
-                <el-input-number
-                  v-model="addForm.personalHistory.smoke.amount"
-                  :max="50"
-                  :min="0"
-                  controls-position="right"
-                ></el-input-number>
-              </el-col>
-              <el-col :span="8">
-                <div class="block-title">啤酒数量（瓶/天）</div>
-                <el-input-number
-                  v-model="addForm.personalHistory.beer.amount"
-                  :max="50"
-                  :min="0"
-                  controls-position="right"
-                ></el-input-number>
-              </el-col>
-              <el-col :span="8">
-                <div class="block-title">白酒数量（两/天）</div>
-                <el-input-number
-                  v-model="addForm.personalHistory.whiteWine.amount"
-                  :max="50"
-                  :min="0"
-                  controls-position="right"
-                ></el-input-number>
-              </el-col>
-            </el-row>
-          </el-form-item>
-          <el-form-item label="家族史">
-            <el-checkbox-group v-model="addForm.familyHistoryList">
-              <el-checkbox
-                v-for="item in familyHistoryListOptions"
-                :label="item.id"
-                :key="item.id"
-                >{{ item.dataName }}
-              </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-           <el-form-item label="过敏史">
-            <el-input
-              :rows="5"
-              placeholder="请输入内容"
-              auto-complete=""
-              v-model="addForm.allergyHistory"
-              type="textarea"
-            >
-            </el-input>
-          </el-form-item>
-                    </el-form>
-                </div>
-            </el-card>
-    </el-tab-pane>
-    <el-tab-pane label="辅助检查" name="3">
-        <el-card class="box-card">
-                <div slot="header" class="clearfix">
-                  <span>辅助检查</span>  
-                </div>
-                <TinymceEditor style="width: 70vw" />
-            </el-card>
-    </el-tab-pane>
-    <el-tab-pane label="中医四诊" name="4">
-         <el-card class="box-card">
-                <div slot="header" class="clearfix">
-                  <span>中医四诊</span>  
-                </div>
-                <!-- <h4>舌象</h4>
-                <TinymceEditor style="width: 70vw; height: 400px" /> -->
-                 
-                <div class="dialog-content">
-                    <el-form
-                      class="medical-form"
-                      label-width="80px"
-                      label-position="top"
-                      size="medium"
-                      ref="addFormRef"
-                      :model="addForm"
-                    >
-                <el-form-item label="舌象" :label-width="formLabelWidth">
-            <TinymceEditor style="width: 70vw" /> 
-          </el-form-item>
-                <el-form-item label="脉象" :label-width="formLabelWidth">
-            <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addForm.pulsePattern"
-              autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="基本查体" :label-width="formLabelWidth">
-            <el-input type="textarea" :rows="5" placeholder="请输入基本查体" v-model="addForm.bodyCheck"
-              autocomplete="off"></el-input>
-          </el-form-item>
-        <el-form-item label="腹诊" :label-width="formLabelWidth">
-            <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addForm.abdominalExamination"
-              autocomplete="off"></el-input>
-          </el-form-item>
-                    </el-form>
-                </div>
-                
-            </el-card>
-    </el-tab-pane>
-    <el-tab-pane label="量表评分" name="5">
-        <el-card class="box-card">
-                <div slot="header" class="clearfix">
-                  <span>量表评分</span>  
-                </div>
-                <div class="dialog-content">
-                    <el-form
-                      class="medical-form"
-                      label-width="80px"
-                      label-position="top"
-                      size="medium"
-                      ref="addFormRef"
-                      :model="addForm"
-                    >
-            <el-form-item label="DM/CKD VAS评分" :label-width="formLabelWidth">
-            <el-card class="box-card" shadow="never">
-              <el-row :gutter="20">
-                <el-col :span="10">
+                <el-col :span="7">
                   <div class="grid-content">
-                    <div class="grid1">
-                      <span class="block-title">最不适症状:</span>
-                      <el-input
-                        type="textarea"
-                        :rows="1"
-                        placeholder="请输入最不适症状"
-                        v-model="addForm.vasScore.worstSymptom"
-                        autocomplete="off"
-                      ></el-input>
-                    </div>
+                    <el-form-item label="门诊id" prop="outpatientId">
+                      <el-input class="input-style" v-model="addForm.outpatientId"></el-input>
+                    </el-form-item>
                   </div>
                 </el-col>
-                <el-col :span="10" :offset="3">
+                <el-col :span="7">
                   <div class="grid-content">
-                    <span class="block-title">最不适症状程度:</span>
-                    <el-slider
-                      v-model="addForm.vasScore.degree"
-                       show-input
-                    ></el-slider>
+                    <el-form-item label="身份证号">
+                      <el-input class="input-style" v-model="addForm.idCard"></el-input>
+                    </el-form-item>
                   </div>
                 </el-col>
-              </el-row>
-              <span class="block-title">DM:</span>
-              <el-row :gutter="20">
-                <div v-for="item in newDMlist" :key="item.id">
-                  <el-col :span="8">
-                    <div class="grid-content">
-                      <span>{{ item.dataName }}程度:</span>
-                      <el-slider
-                        class="slider1"
-                        v-model="item.score"
-                         show-input
-                      ></el-slider>
-                    </div>
-                  </el-col>
-                </div>
-              </el-row>
-              <span class="block-title">CDK:</span>
-              <el-row :gutter="20">
-                <div v-for="item in newCKDlist" :key="item.id">
-                  <el-col :span="8">
-                    <span>{{ item.dataName }}程度:</span>
-                    <el-slider class="slider1" v-model="item.score"  show-input></el-slider>
-                  </el-col>
-                </div>
-              </el-row>
-              <el-row :gutter="20">
-                <el-col :span="8">
-                  <span class="block-title">生活质量:</span>
-                  <el-slider
-                    v-model="addForm.vasScore.lifeQuality"
-                    class="slider1"
-                     show-input
-                  ></el-slider>
+                <el-col :span="7">
+                  <div class="grid-content">
+                    <el-form-item label="身高">
+                      <el-input class="input-style" type="number" v-model="addForm.height" placeholder="单位：cm">
+                      </el-input>
+                    </el-form-item>
+                  </div>
                 </el-col>
-                <el-col :span="8">
-                  <span class="block-title">健康状况:</span>
-                  <el-slider
-                    v-model="addForm.vasScore.healthyStatus"
-                    class="slider1"
-                     show-input
-                  ></el-slider>
+                <el-col :span="7">
+                  <div class="grid-content">
+                    <el-form-item label="体重">
+                      <el-input class="input-style" type="number" v-model="addForm.weight" placeholder="单位：kg">
+                      </el-input>
+                    </el-form-item>
+                  </div>
                 </el-col>
-              </el-row>
-            </el-card>
-          </el-form-item>
-           <el-form-item label="风邪" :label-width="formLabelWidth">
-            <el-card class="box-card" shadow="never">
-              <div class="symtom-type">
-                <div class="symtom-type-block">
-                  <el-divider content-position="left"
-                    >风邪（肾病填写）:</el-divider
-                  >
-                  <div
-                    v-for="(item, index) in newfengxielist"
-                    :key="item.id"
-                    class="symtom-type-block-item"
-                  >
-                    <div class="symtom-type-block-item-title">
-                      {{ item.dataName }}
-                    </div>
-                    <el-select
-                      v-model="newfengxielist[index].value"
-                      class="symtom-type-block-item-select"
-                    >
-                      <el-option :value="0" label="无"></el-option>
-                      <el-option :value="1" label="偶尔"></el-option>
-                      <el-option :value="2" label="总是"></el-option>
+                <el-col :span="7">
+                  <el-form-item label="就诊地点" :label-width="formLabelWidth">
+                    <el-select v-model="addForm.medicalLocId" class="input-style" filterable placeholder="请选择">
+                      <el-option v-for="item in locallist" :key="item.dataCode" :label="item.dataName" :value="item.id">
+                      </el-option>
                     </el-select>
-                  </div>
-                  <el-divider content-position="left"
-                    >是否诊断为风邪证</el-divider
-                  >
-                  <el-radio
-                    v-model="addForm.windEvil.diagnosticResult"
-                    label="1"
-                    >是</el-radio
-                  >
-                  <el-radio
-                    v-model="addForm.windEvil.diagnosticResult"
-                    label="0"
-                    >否</el-radio
-                  >
-                </div>
-              </div>
-            </el-card>
-          </el-form-item>
-                    </el-form>
-                </div>
-                
-            </el-card>
-    </el-tab-pane>
-    <el-tab-pane label="诊断记录" name="6">
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="就诊时间" :label-width="formLabelWidth">
+                    <el-date-picker v-model="addForm.consultTime" class="input-style" type="date" placeholder="选择就诊日期">
+                    </el-date-picker>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+          </div>
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="疾病资料" name="2">
         <el-card class="box-card">
-                <div slot="header" class="clearfix">
-                  <span>诊断记录</span>  
-                </div>
-                <div class="dialog-content">
-                    <el-form
-                      class="medical-form"
-                      label-width="80px"
-                      label-position="top"
-                      size="medium"
-                      ref="addFormRef"
-                      :model="addForm"
-                    >
-                     <el-card shadow="never">
-           <span class="block-title">西医诊断及病程诊断</span>
-              <el-radio-group
-                v-model="addForm.curMedicalRecord.Westernmedicine.list"
-              >
-                <el-radio
-                  v-for="item in WesternmedicineOptions"
-                  :label="item.id"
-                  :key="item.id"
-                  >{{ item.dataName }}
-                </el-radio>
-              </el-radio-group>
-              <span class="block-title">确诊时间</span>
-              <div>
-                <el-date-picker
-                  class="input-style"
-                  v-model="addForm.curMedicalRecord.confirmTime.time"
-                  type="date"
-                  placeholder="选择日期"
-                >
+          <div class="dialog-content">
+            <el-form class="medical-form" label-width="80px" label-position="top" size="medium" ref="addFormRef"
+              :model="addForm">
+              <el-form-item label="主述">
+                <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addForm.mainComplaint"></el-input>
+              </el-form-item>
+              <el-form-item label="现病史">
+                <el-card shadow="never">
+                  <span class="block-title">糖尿病并发症</span>
+                  <el-checkbox-group v-model="addForm.curMedicalRecord.DMcomplications.list">
+                    <el-checkbox v-for="item in DMcomplicationsOptions" :key="item.id" :label="item.id">{{ item.dataName
+                    }}
+                    </el-checkbox>
+                  </el-checkbox-group>
+                  <span class="block-title">慢性肾脏病病因</span>
+                  <el-checkbox-group v-model="addForm.curMedicalRecord.CKDreason.list">
+                    <el-checkbox v-for="item in CKDreasonOptions" :label="item.id" :key="item.id">{{ item.dataName }}
+                    </el-checkbox>
+                  </el-checkbox-group>
+                </el-card>
+              </el-form-item>
+              <el-form-item label="既往史">
+                <el-checkbox-group v-model="addForm.pastHistoryList">
+                  <el-checkbox v-for="item in pastHistoryListOptions" :label="item.id" :key="item.id">{{ item.dataName
+                  }}
+                  </el-checkbox>
+                </el-checkbox-group>
+              </el-form-item>
+              <el-form-item label="个人史">
+                <el-row>
+                  <el-col :span="8">
+                    <div class="block-title">吸烟数量（支/天）</div>
+                    <el-input-number v-model="addForm.personalHistory.smoke.amount" :max="50" :min="0"
+                      controls-position="right"></el-input-number>
+                  </el-col>
+                  <el-col :span="8">
+                    <div class="block-title">啤酒数量（瓶/天）</div>
+                    <el-input-number v-model="addForm.personalHistory.beer.amount" :max="50" :min="0"
+                      controls-position="right"></el-input-number>
+                  </el-col>
+                  <el-col :span="8">
+                    <div class="block-title">白酒数量（两/天）</div>
+                    <el-input-number v-model="addForm.personalHistory.whiteWine.amount" :max="50" :min="0"
+                      controls-position="right"></el-input-number>
+                  </el-col>
+                </el-row>
+              </el-form-item>
+              <el-form-item label="家族史">
+                <el-checkbox-group v-model="addForm.familyHistoryList">
+                  <el-checkbox v-for="item in familyHistoryListOptions" :label="item.id" :key="item.id">{{ item.dataName
+                  }}
+                  </el-checkbox>
+                </el-checkbox-group>
+              </el-form-item>
+              <el-form-item label="过敏史">
+                <el-input :rows="5" placeholder="请输入内容" auto-complete="" v-model="addForm.allergyHistory"
+                  type="textarea">
+                </el-input>
+              </el-form-item>
+            </el-form>
+          </div>
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="辅助检查" name="3">
+        <el-card class="box-card">
+          <el-form class="medical-form" label-width="80px" label-position="top" size="medium">
+            <el-form-item label="辅助检查">
+              <TinymceEditor v-model="addForm.auxiliaryExamination" style="width: 800px;" />
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="中医四诊" name="4">
+        <el-card class="box-card">
+          <div class="dialog-content">
+            <el-form class="medical-form" label-width="80px" label-position="top" size="medium" ref="addFormRef"
+              :model="addForm">
+              <el-form-item label="舌象" :label-width="formLabelWidth">
+                <TinymceEditor style="width: 70vw" />
+              </el-form-item>
+              <el-form-item label="脉象" :label-width="formLabelWidth">
+                <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addForm.pulsePattern"
+                  autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="基本查体" :label-width="formLabelWidth">
+                <el-input type="textarea" :rows="5" placeholder="请输入基本查体" v-model="addForm.bodyCheck"
+                  autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="腹诊" :label-width="formLabelWidth">
+                <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addForm.abdominalExamination"
+                  autocomplete="off"></el-input>
+              </el-form-item>
+            </el-form>
+          </div>
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="量表评分" name="5">
+        <el-card class="box-card">
+          <div class="dialog-content">
+            <el-form class="medical-form" label-width="80px" label-position="top" size="medium" ref="addFormRef"
+              :model="addForm">
+              <el-form-item label="DM/CKD VAS评分" :label-width="formLabelWidth">
+                <el-card class="box-card" shadow="never">
+                  <el-row :gutter="20">
+                    <el-col :span="10">
+                      <div class="grid-content">
+                        <div class="grid1">
+                          <span class="block-title">最不适症状:</span>
+                          <el-input type="textarea" :rows="1" placeholder="请输入最不适症状"
+                            v-model="addForm.vasScore.worstSymptom" autocomplete="off"></el-input>
+                        </div>
+                      </div>
+                    </el-col>
+                    <el-col :span="10" :offset="3">
+                      <div class="grid-content">
+                        <span class="block-title">最不适症状程度:</span>
+                        <el-slider v-model="addForm.vasScore.degree" show-input></el-slider>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-divider content-position="left">DM:</el-divider>
+                  <el-row :gutter="20">
+                    <div v-for="item in newDMlist" :key="item.id">
+                      <el-col :span="8">
+                        <div class="grid-content">
+                          <span>{{ item.dataName }}程度:</span>
+                          <el-slider class="slider1" v-model="item.score" show-input></el-slider>
+                        </div>
+                      </el-col>
+                    </div>
+                  </el-row>
+                  <el-divider content-position="left">CDK:</el-divider>
+                  <el-row :gutter="20">
+                    <div v-for="item in newCKDlist" :key="item.id">
+                      <el-col :span="8">
+                        <span>{{ item.dataName }}程度:</span>
+                        <el-slider class="slider1" v-model="item.score" show-input></el-slider>
+                      </el-col>
+                    </div>
+                  </el-row>
+                  <el-divider content-position="left">其他:</el-divider>
+                  <el-row :gutter="20">
+                    <el-col :span="8">
+                      <span>生活质量:</span>
+                      <el-slider v-model="addForm.vasScore.lifeQuality" class="slider1" show-input></el-slider>
+                    </el-col>
+                    <el-col :span="8">
+                      <span>健康状况:</span>
+                      <el-slider v-model="addForm.vasScore.healthyStatus" class="slider1" show-input></el-slider>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-form-item>
+              <el-form-item label="风邪" :label-width="formLabelWidth">
+                <el-card class="box-card" shadow="never">
+                  <div class="symtom-type">
+                    <div class="symtom-type-block">
+                      <el-divider content-position="left">风邪（肾病填写）:</el-divider>
+                      <div v-for="(item, index) in newfengxielist" :key="item.id" class="symtom-type-block-item">
+                        <div class="symtom-type-block-item-title">
+                          {{ item.dataName }}
+                        </div>
+                        <el-select v-model="newfengxielist[index].value" class="symtom-type-block-item-select">
+                          <el-option :value="0" label="无"></el-option>
+                          <el-option :value="1" label="偶尔"></el-option>
+                          <el-option :value="2" label="总是"></el-option>
+                        </el-select>
+                      </div>
+                      <el-divider content-position="left">是否诊断为风邪证</el-divider>
+                      <el-radio v-model="addForm.windEvil.diagnosticResult" label="1">是</el-radio>
+                      <el-radio v-model="addForm.windEvil.diagnosticResult" label="0">否</el-radio>
+                    </div>
+                  </div>
+                </el-card>
+              </el-form-item>
+            </el-form>
+          </div>
+
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="诊断记录" name="6">
+        <el-card class="box-card">
+          <div class="dialog-content">
+            <el-form class="medical-form" label-width="80px" label-position="top" size="medium" ref="addFormRef"
+              :model="addForm">
+              <el-form-item label="西医诊断及病程诊断">
+                <el-radio-group v-model="addForm.curMedicalRecord.Westernmedicine.list">
+                  <el-radio v-for="item in WesternmedicineOptions" :label="item.id" :key="item.id">{{ item.dataName }}
+                  </el-radio>
+                </el-radio-group>
+              </el-form-item>
+              <el-form-item label="确诊时间">
+                <el-date-picker class="input-style" v-model="addForm.curMedicalRecord.confirmTime.time" type="date"
+                  placeholder="选择日期">
                 </el-date-picker>
-              </div>
-              </el-card>
-
-              
-
+              </el-form-item>
               <el-form-item label="症状诊断" :label-width="formLabelWidth">
-            <el-switch
-              v-model="simpleSymtomHideStatus"
-              style="margin-bottom: 8px"
-              active-text="复杂模式"
-              inactive-text="简单模式"
-            >
-            </el-switch>
-            <div v-if="!simpleSymtomHideStatus" class="simple-symtom-type">
-              <el-card shadow="never">
-                <el-select v-model="simpleSymtomValue" filterable clearable>
-                  <el-option-group
-                    v-for="(symtom, index) in addForm.symptom.symtomList"
-                    :key="symtom.typeId"
-                    :label="typeNameList[symtom.typeId]"
-                  >
-                    <el-option
-                      v-for="(subSymtom, subIndex) in symtom.children"
-                      :key="symtom.typeId + '-' + subSymtom.id"
-                      :label="subSymtom.dataName"
-                      :disabled="subSymtom.score === 0 ? false : true"
-                      :value="
-                        index +
-                        '-' +
-                        subIndex +
-                        '-' +
-                        symtom.typeId +
-                        '-' +
-                        subSymtom.id
-                      "
-                    >
-                    </el-option>
-                  </el-option-group>
-                </el-select>
-                <el-divider content-position="left">已选择症状</el-divider>
-                <div class="symtom-type">
-                  <div class="symtom-type-block">
-                    <template
-                      v-for="(symtom, index) in addForm.symptom.symtomList"
-                    >
-                      <template
-                        v-for="(subSymtom, subIndex) in symtom.children"
-                      >
-                        <div
-                          v-if="subSymtom.score"
-                          :key="symtom.typeId + '-' + subSymtom.id"
-                          class="symtom-type-block-item"
-                        >
+                <el-switch v-model="simpleSymtomHideStatus" style="margin-bottom: 8px" active-text="复杂模式"
+                  inactive-text="简单模式">
+                </el-switch>
+                <div v-if="!simpleSymtomHideStatus" class="simple-symtom-type">
+                  <el-card shadow="never">
+                    <el-select v-model="simpleSymtomValue" filterable clearable>
+                      <el-option-group v-for="(symtom, index) in addForm.symptom.symtomList" :key="symtom.typeId"
+                        :label="typeNameList[symtom.typeId]">
+                        <el-option v-for="(subSymtom, subIndex) in symtom.children"
+                          :key="symtom.typeId + '-' + subSymtom.id" :label="subSymtom.dataName"
+                          :disabled="subSymtom.score === 0 ? false : true" :value="
+                            index +
+                            '-' +
+                            subIndex +
+                            '-' +
+                            symtom.typeId +
+                            '-' +
+                            subSymtom.id
+                          ">
+                        </el-option>
+                      </el-option-group>
+                    </el-select>
+                    <el-divider content-position="left">已选择症状</el-divider>
+                    <div class="symtom-type">
+                      <div class="symtom-type-block">
+                        <template v-for="(symtom, index) in addForm.symptom.symtomList">
+                          <template v-for="(subSymtom, subIndex) in symtom.children">
+                            <div v-if="subSymtom.score" :key="symtom.typeId + '-' + subSymtom.id"
+                              class="symtom-type-block-item">
+                              <div class="symtom-type-block-item-title">
+                                {{ subSymtom.dataName }}
+                              </div>
+                              <el-select v-model="
+                                addForm.symptom.symtomList[index].children[
+                                  subIndex
+                                ].score
+                              " class="symtom-type-block-item-select" @change="symtomSelectChange(index, subIndex)">
+                                <el-option :value="0" label="无"></el-option>
+                                <el-option :value="1" label="轻"></el-option>
+                                <el-option :value="2" label="中"></el-option>
+                                <el-option :value="3" label="重"></el-option>
+                              </el-select>
+                              <i class="
+                              icon
+                              el-icon-error
+                              symtom-type-block-item-delete
+                            " @click="symtomSelectChange(index, subIndex, 0)"></i>
+                            </div>
+                          </template>
+                        </template>
+                      </div>
+                    </div>
+                  </el-card>
+                </div>
+                <div v-else class="symtom-type">
+                  <el-collapse v-model="symtomActiveNames">
+                    <el-collapse-item v-for="(symtom, index) in addForm.symptom.symtomList" :key="symtom.typeId"
+                      :name="symtom.typeId">
+                      <template #title>
+                        <span style="padding-left: 12px">{{
+                            typeNameList[symtom.typeId]
+                        }}</span>
+                      </template>
+                      <div class="symtom-type-block">
+                        <div v-for="(subSymtom, subIndex) in symtom.children" :key="symtom.typeId + '-' + subSymtom.id"
+                          class="symtom-type-block-item">
                           <div class="symtom-type-block-item-title">
                             {{ subSymtom.dataName }}
                           </div>
-                          <el-select
-                            v-model="
-                              addForm.symptom.symtomList[index].children[
-                                subIndex
-                              ].score
-                            "
-                            class="symtom-type-block-item-select"
-                            @change="symtomSelectChange(index, subIndex)"
-                          >
+                          <el-select v-model="
+                            addForm.symptom.symtomList[index].children[
+                              subIndex
+                            ].score
+                          " class="symtom-type-block-item-select" @change="symtomSelectChange(index, subIndex)">
                             <el-option :value="0" label="无"></el-option>
                             <el-option :value="1" label="轻"></el-option>
                             <el-option :value="2" label="中"></el-option>
                             <el-option :value="3" label="重"></el-option>
                           </el-select>
-                          <i
-                            class="
-                              icon
-                              el-icon-error
-                              symtom-type-block-item-delete
-                            "
-                            @click="symtomSelectChange(index, subIndex, 0)"
-                          ></i>
                         </div>
-                      </template>
-                    </template>
-                  </div>
-                </div>
-              </el-card>
-            </div>
-            <div v-else class="symtom-type">
-              <el-collapse v-model="symtomActiveNames">
-                <el-collapse-item
-                  v-for="(symtom, index) in addForm.symptom.symtomList"
-                  :key="symtom.typeId"
-                  :name="symtom.typeId"
-                >
-                  <template #title>
-                    <span style="padding-left: 12px">{{
-                      typeNameList[symtom.typeId]
-                    }}</span>
-                  </template>
-                  <div class="symtom-type-block">
-                    <div
-                      v-for="(subSymtom, subIndex) in symtom.children"
-                      :key="symtom.typeId + '-' + subSymtom.id"
-                      class="symtom-type-block-item"
-                    >
-                      <div class="symtom-type-block-item-title">
-                        {{ subSymtom.dataName }}
                       </div>
-                      <el-select
-                        v-model="
-                          addForm.symptom.symtomList[index].children[
-                            subIndex
-                          ].score
-                        "
-                        class="symtom-type-block-item-select"
-                        @change="symtomSelectChange(index, subIndex)"
-                      >
-                        <el-option :value="0" label="无"></el-option>
-                        <el-option :value="1" label="轻"></el-option>
-                        <el-option :value="2" label="中"></el-option>
-                        <el-option :value="3" label="重"></el-option>
-                      </el-select>
-                    </div>
-                  </div>
-                </el-collapse-item>
-              </el-collapse>
-            </div>
-          </el-form-item>
-
-           <el-form-item label="体质诊断">
-                  <el-input
-                    class="input-style"
-                    type="number"
-                    v-model="addForm.physiqueId"
-                  ></el-input>
-                </el-form-item>
-
-
-                
-                 <el-form-item label="辩证诊断" :label-width="formLabelWidth">
-            <span class="block-title">虚：</span>
-            <el-checkbox-group v-model="addForm.symptomCategories.empty">
-              <el-checkbox
-                v-for="symtom in xulist"
-                :key="symtom.dataName"
-                :label="symtom.dataName"
-              >
-              </el-checkbox>
-            </el-checkbox-group>
-            <span class="block-title">实：</span>
-            <el-checkbox-group v-model="addForm.symptomCategories.real">
-              <el-checkbox
-                v-for="symtom in shilist"
-                :key="symtom.dataName"
-                :label="symtom.dataName"
-              >
-              </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item label="病位诊断" :label-width="formLabelWidth">
-            <span class="block-title">脏腑：</span>
-            <el-checkbox-group v-model="addForm.diseaseLocation.viscera">
-              <el-checkbox
-                v-for="symtom in zangfulist"
-                :key="symtom.dataName"
-                :label="symtom.dataName"
-              >
-              </el-checkbox>
-            </el-checkbox-group>
-            <span class="block-title">经脉：</span>
-            <el-checkbox-group
-              v-model="addForm.diseaseLocation.meridian"
-            >
-              <el-checkbox
-                v-for="symtom in jingmailist"
-                :key="symtom.dataName"
-                :label="symtom.dataName"
-              >
-              </el-checkbox>
-            </el-checkbox-group>
-            <span class="block-title">卫分：</span>
-            <el-checkbox-group
-              v-model="addForm.diseaseLocation.defender"
-            >
-              <el-checkbox
-                v-for="symtom in weifenlist"
-                :key="symtom.dataName"
-                :label="symtom.dataName"
-              >
-              </el-checkbox>
-            </el-checkbox-group>
-            <span class="block-title">三焦：</span>
-            <el-checkbox-group
-              v-model="addForm.diseaseLocation.tripleFocus"
-            >
-              <el-checkbox
-                v-for="symtom in sanjiaolist"
-                :key="symtom.dataName"
-                :label="symtom.dataName"
-              >
-              </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-
-                    </el-form>
+                    </el-collapse-item>
+                  </el-collapse>
                 </div>
-                
-            </el-card>
-    </el-tab-pane>
-    <el-tab-pane label="治疗信息" name="7">
+              </el-form-item>
+
+              <el-form-item label="体质诊断">
+                <el-input class="input-style" type="number" v-model="addForm.physiqueId"></el-input>
+              </el-form-item>
+
+
+
+              <el-form-item label="辩证诊断" :label-width="formLabelWidth">
+                <span class="block-title">虚：</span>
+                <el-checkbox-group v-model="addForm.symptomCategories.empty">
+                  <el-checkbox v-for="symtom in xulist" :key="symtom.dataName" :label="symtom.dataName">
+                  </el-checkbox>
+                </el-checkbox-group>
+                <span class="block-title">实：</span>
+                <el-checkbox-group v-model="addForm.symptomCategories.real">
+                  <el-checkbox v-for="symtom in shilist" :key="symtom.dataName" :label="symtom.dataName">
+                  </el-checkbox>
+                </el-checkbox-group>
+              </el-form-item>
+              <el-form-item label="病位诊断" :label-width="formLabelWidth">
+                <span class="block-title">脏腑：</span>
+                <el-checkbox-group v-model="addForm.diseaseLocation.viscera">
+                  <el-checkbox v-for="symtom in zangfulist" :key="symtom.dataName" :label="symtom.dataName">
+                  </el-checkbox>
+                </el-checkbox-group>
+                <span class="block-title">经脉：</span>
+                <el-checkbox-group v-model="addForm.diseaseLocation.meridian">
+                  <el-checkbox v-for="symtom in jingmailist" :key="symtom.dataName" :label="symtom.dataName">
+                  </el-checkbox>
+                </el-checkbox-group>
+                <span class="block-title">卫分：</span>
+                <el-checkbox-group v-model="addForm.diseaseLocation.defender">
+                  <el-checkbox v-for="symtom in weifenlist" :key="symtom.dataName" :label="symtom.dataName">
+                  </el-checkbox>
+                </el-checkbox-group>
+                <span class="block-title">三焦：</span>
+                <el-checkbox-group v-model="addForm.diseaseLocation.tripleFocus">
+                  <el-checkbox v-for="symtom in sanjiaolist" :key="symtom.dataName" :label="symtom.dataName">
+                  </el-checkbox>
+                </el-checkbox-group>
+              </el-form-item>
+
+            </el-form>
+          </div>
+
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="治疗信息" name="7">
         <el-card class="box-card">
-                <div slot="header" class="clearfix">
-                  <span>治疗信息</span>  
-                </div>
-                <div class="dialog-content">
-                    <el-form
-                      class="medical-form"
-                      label-width="80px"
-                      label-position="top"
-                      size="medium"
-                      ref="addFormRef"
-                      :model="addForm"
-                    >
-            <el-form-item label="处方" :label-width="formLabelWidth">
-            <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addForm.prescription"
-              autocomplete="off"></el-input>
-          </el-form-item>
-            <el-form-item label="其他治疗" :label-width="formLabelWidth">
-            <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addForm.otherTreatment"
-              autocomplete="off"></el-input>
-          </el-form-item>
-                    </el-form>
-                </div>
-                
-            </el-card>
- <el-divider></el-divider>
-             <el-button type="primary" @click="addquick">提交录入</el-button>
-    </el-tab-pane>
-  </el-tabs>
-    </div>
+          <div class="dialog-content">
+            <el-form class="medical-form" label-width="80px" label-position="top" size="medium" ref="addFormRef"
+              :model="addForm">
+              <el-form-item label="处方" :label-width="formLabelWidth">
+                <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addForm.prescription"
+                  autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="其他治疗" :label-width="formLabelWidth">
+                <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addForm.otherTreatment"
+                  autocomplete="off"></el-input>
+              </el-form-item>
+            </el-form>
+          </div>
+        </el-card>
+      </el-tab-pane>
+    </el-tabs>
+  </div>
 </template>
 <script>
 import {
@@ -1342,6 +1079,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.input-style {
+  width: 260px;
+}
 .symtom-type {
   .symtom-type-block {
     margin-bottom: 12px;
@@ -1351,7 +1091,7 @@ export default {
       margin-right: 8px;
       margin-bottom: 12px;
 
-      & > * {
+      &>* {
         vertical-align: middle;
       }
 
@@ -1375,5 +1115,29 @@ export default {
       }
     }
   }
+}
+
+.border-card {
+  ::v-deep {
+    .el-tabs__content {
+      height: calc(100vh - 92px);
+      overflow-y: auto;
+    }
+  }
+}
+
+.submit-footer {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding: 0 20px;
+  position: absolute;
+  z-index: 3;
+  right: 8px;
+}
+
+.slider1 {
+  margin: 0 8px;
 }
 </style>

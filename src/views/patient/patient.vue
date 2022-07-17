@@ -9,11 +9,6 @@
             v-model="queryInfo.outpatientId"
             clearable
           >
-            <el-button
-              slot="append"
-              icon="el-icon-search"
-              @click="getPatientList"
-            ></el-button>
           </el-input>
         </el-col>
         <el-col :span="5">
@@ -23,11 +18,6 @@
             v-model="queryInfo.patientName"
             clearable
           >
-            <el-button
-              slot="append"
-              icon="el-icon-search"
-              @click="getPatientList"
-            ></el-button>
           </el-input>
         </el-col>
         <el-col :span="5">
@@ -37,35 +27,12 @@
             v-model="queryInfo.telephone"
             clearable
           >
-            <el-button
-              slot="append"
-              icon="el-icon-search"
-              @click="getPatientList"
-            ></el-button>
           </el-input>
         </el-col>
         <el-col :span="8">
-          <el-button v-if="0" type="primary" @click="addDialogVisible = true"
-            >患者录入</el-button
-          >
-          <el-button type="danger" @click="Topage">快速录入</el-button>
-
-          <!-- <el-button type="success" @click="Topage">快速录入</el-button> -->
+          <el-button type="info" @click="getPatientList" size="medium">搜索</el-button>
+          <el-button type="primary" @click="Topage" size="medium">快速录入</el-button>
         </el-col>
-        <!-- <el-col :span="4">
-          
-        </el-col> -->
-        <!-- <el-col :span="6">
-          <el-select v-model="value" placeholder="排序方式">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select>
-        </el-col> -->
       </el-row>
       <!-- 展示患者信息 -->
 
