@@ -279,7 +279,7 @@
           <el-descriptions-item label="其他治疗"></el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者复诊信息" name="8">
+      <el-tab-pane label="其他" name="8">
         <el-descriptions title="复诊信息" :column="2">
           <el-descriptions-item label="其他资料">
             {{ thisconsultationDto.additionalInfo }}

@@ -753,8 +753,17 @@ export default {
   methods: {
     // 提交复诊
     addconsult() {
+      this.addconsultform.vasScore.DM = this.newDMlist;
+      this.addconsultform.vasScore.CKD = this.newCKDlist;
+      this.addconsultform.windEvil.fengxie = this.newfengxielist;
       addconsult(this.addconsultform).then((res) => {
         console.log("提交复诊", res.data);
+        if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
+          this.$message({
+            message: "提交复诊成功",
+            type: "success",
+          });
+        }
         // this.$router.push("/patientmation");
       });
     },
