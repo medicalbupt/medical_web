@@ -1183,6 +1183,7 @@ export default {
     addquick() {
       this.addForm.vasScore.DM = this.newDMlist;
       this.addForm.vasScore.CKD = this.newCKDlist;
+      this.addForm.windEvil.fengxie = this.newfengxielist;
       addquick(this.addForm).then((res) => {
         console.log("新增快速录入", res.data);
         this.$router.push("/patient");
@@ -1542,25 +1543,25 @@ export default {
       });
     },
     // 快速新增患者信息
-    async addconsult() {
-      //   this.nowTime = new Date().valueOf();
-      this.addForm.vasScore.DM = this.newDMlist;
-      this.addForm.vasScore.CKD = this.newCKDlist;
-      this.addForm.windEvil.fengxie = this.newfengxielist;
-      //   this.addconsultform.createTinme = this.nowTime;
-      //   await addconsult(this.addconsultform).then((res) => {
-      //     console.log("this.consultqueryInfo", this.consultqueryInfo);
-      //     console.log("新增患者就诊信息", res.data);
-      //     if (res.data.respCode == "0000") {
-      //       // this.$message({
-      //       //   message: "该患者就诊信息添加成功",
-      //       //   type: "success",
-      //       // });
-      //       this.dialogFormVisible = false;
-      //       this.getpationconsult();
-      //     }
-      //   });
-    },
+    // async addconsult() {
+    //   //   this.nowTime = new Date().valueOf();
+    //   this.addForm.vasScore.DM = this.newDMlist;
+    //   this.addForm.vasScore.CKD = this.newCKDlist;
+    //   this.addForm.windEvil.fengxie = this.newfengxielist;
+    //   //   this.addconsultform.createTinme = this.nowTime;
+    //   //   await addconsult(this.addconsultform).then((res) => {
+    //   //     console.log("this.consultqueryInfo", this.consultqueryInfo);
+    //   //     console.log("新增患者就诊信息", res.data);
+    //   //     if (res.data.respCode == "0000") {
+    //   //       // this.$message({
+    //   //       //   message: "该患者就诊信息添加成功",
+    //   //       //   type: "success",
+    //   //       // });
+    //   //       this.dialogFormVisible = false;
+    //   //       this.getpationconsult();
+    //   //     }
+    //   //   });
+    // },
     // 拿到所有的DM症状
     getDM() {
       var typeList = [15];
