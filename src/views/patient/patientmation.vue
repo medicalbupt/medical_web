@@ -95,8 +95,11 @@
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="辅助检查" name="3">
-        <el-descriptions title="辅助检查" v-html="thisconsultationDto.auxiliaryExamination"></el-descriptions>
+      <el-tab-pane label="该患者辅助检查" name="3">
+        <el-descriptions
+          title="辅助检查"
+          v-html="thisconsultationDto.auxiliaryExamination"
+        ></el-descriptions>
       </el-tab-pane>
       <el-tab-pane label="中医四诊" name="4">
         <el-descriptions title="中医四诊" :column="2">
@@ -107,13 +110,16 @@
             >
               {{ typeNameList[item.typeName] }}
               <h5 v-for="item1 in item.children" :key="item1.id + '1231'">
-                <span v-if="item1.score == 0">
+                <!-- <span v-if="item1.score == 0">
                   {{ " " + item1.dataName + "-----" + "程度:" + "无" }}</span
-                >
+                > -->
                 <span v-if="item.score == 1">
                   {{ " " + item1.dataName + "-----" + "程度:" + "轻" }}</span
                 >
                 <span v-if="item1.score == 2">
+                  {{ " " + item1.dataName + "-----" + "程度:" + "中" }}</span
+                >
+                <span v-if="item1.score == 3">
                   {{ " " + item1.dataName + "-----" + "程度:" + "重" }}</span
                 >
               </h5>
@@ -126,13 +132,16 @@
             >
               {{ typeNameList[item.typeName] }}
               <h5 v-for="item1 in item.children" :key="item1.id + '1231'">
-                <span v-if="item1.score == 0">
+                <!-- <span v-if="item1.score == 0">
                   {{ " " + item1.dataName + "-----" + "程度:" + "无" }}</span
-                >
+                > -->
                 <span v-if="item.score == 1">
                   {{ " " + item1.dataName + "-----" + "程度:" + "轻" }}</span
                 >
                 <span v-if="item1.score == 2">
+                  {{ " " + item1.dataName + "-----" + "程度:" + "中" }}</span
+                >
+                <span v-if="item1.score == 3">
                   {{ " " + item1.dataName + "-----" + "程度:" + "重" }}</span
                 >
               </h5>
@@ -229,20 +238,18 @@
             thispatientDto.physiqueId
           }}</el-descriptions-item>
           <el-descriptions-item label="症状">
-            <el-collapse v-model="activeNames">
-              <el-collapse-item title="展开折叠" name="0">
-                <h4
+            <el-collapse v-model="activeNames3">
+              <el-collapse-item title="展开折叠" name="1">
+                <h3
                   v-for="(item, index) in thisconsultationDto.symptom
                     .symtomList"
                   :key="index"
                 >
                   {{ typeNameList[item.typeName] }}
                   <h5 v-for="item1 in item.children" :key="item1.id + '1231'">
-                    <span v-if="item1.score == 0">
-                      {{
-                        " " + item1.dataName + "-----" + "程度:" + "无"
-                      }}</span
-                    >
+                    <!-- <span v-if="item1.score == 0">
+                  {{ " " + item1.dataName + "-----" + "程度:" + "无" }}</span
+                > -->
                     <span v-if="item.score == 1">
                       {{
                         " " + item1.dataName + "-----" + "程度:" + "轻"
@@ -250,11 +257,16 @@
                     >
                     <span v-if="item1.score == 2">
                       {{
+                        " " + item1.dataName + "-----" + "程度:" + "中"
+                      }}</span
+                    >
+                    <span v-if="item1.score == 3">
+                      {{
                         " " + item1.dataName + "-----" + "程度:" + "重"
                       }}</span
                     >
                   </h5>
-                </h4>
+                </h3>
                 <!-- <span>{{ props.row.symptom }}</span> -->
               </el-collapse-item>
             </el-collapse>
@@ -1341,6 +1353,7 @@ export default {
       radio: "0",
       // 折叠框的选择
       activeNames: "1",
+      activeNames3: "1",
       symtomActiveNames: 3,
       // 医嘱相应的数据
       doctorcommonDataEntityList: [],
@@ -1670,6 +1683,10 @@ export default {
         console.log("获取该患者第一次就诊信息和他的基本信息", res.data);
         this.thisconsultationDto = res.data.consultationDto;
         this.thispatientDto = res.data.patientDto;
+        console.log(
+          "thisconsultationDto.symptom.symtomList2",
+          this.thisconsultationDto.symptom.symtomList2
+        );
       });
     },
     // 拿到所有的卫分
