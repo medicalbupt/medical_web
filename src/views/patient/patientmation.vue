@@ -2,18 +2,40 @@
   <div>
     <el-tabs v-model="activeName" type="border-card">
       <el-tab-pane label="该患者基本信息" name="1">
-        <el-descriptions title="基本信息" :column="2">
-          <el-descriptions-item label="姓名">{{
-            thispatientDto.patientName
-          }}</el-descriptions-item>
-          <el-descriptions-item label="性别">
+        <el-descriptions
+          title="基本信息"
+          :size="size"
+          :column="3"
+          border
+          direction="vertical"
+        >
+          <el-descriptions-item>
+            <template slot="label">
+              <i class="el-icon-user-solid"></i>
+              姓名
+            </template>
+            {{ thispatientDto.patientName }}</el-descriptions-item
+          >
+          <el-descriptions-item>
+            <template slot="label">
+              <i class="el-icon-s-custom"></i>
+              性别
+            </template>
             <span v-if="thispatientDto.gender == 0">男</span>
             <span v-if="thispatientDto.gender == 1">女</span>
           </el-descriptions-item>
-          <el-descriptions-item label="出生日期">
+          <el-descriptions-item>
+            <template slot="label">
+              <i class="el-icon-date"></i>
+              出生日期
+            </template>
             {{ thispatientDto.birthday | formatDate }}
           </el-descriptions-item>
-          <el-descriptions-item label="身份证号">
+          <el-descriptions-item>
+            <template slot="label">
+              <i class="el-icon-star-on"></i>
+              身份证号
+            </template>
             {{ thispatientDto.idCard }}
           </el-descriptions-item>
           <el-descriptions-item label="身高(cm)">
@@ -29,7 +51,7 @@
             {{ thispatientDto.outpatientId }}
           </el-descriptions-item>
           <el-descriptions-item label="就诊地点">
-            {{ thisconsultationDto.medicalLoc }}</el-descriptions-item
+            {{ thisconsultationDto.medicalLoc.dataName }}</el-descriptions-item
           >
           <el-descriptions-item label="初诊时间">
             {{ thisconsultationDto.consultTime | formatDate }}
@@ -37,7 +59,13 @@
         </el-descriptions>
       </el-tab-pane>
       <el-tab-pane label="该患者疾病资料" name="2">
-        <el-descriptions title="疾病资料" :column="2">
+        <el-descriptions
+          title="疾病资料"
+          :column="2"
+          :size="size"
+          border
+          direction="vertical"
+        >
           <el-descriptions-item label="主述">
             {{ thisconsultationDto.mainComplaint }}
           </el-descriptions-item>
@@ -99,10 +127,20 @@
         <el-descriptions
           title="辅助检查"
           v-html="thisconsultationDto.auxiliaryExamination"
+          :column="2"
+          :size="size"
+          border
+          direction="vertical"
         ></el-descriptions>
       </el-tab-pane>
       <el-tab-pane label="该患者中医四诊" name="4">
-        <el-descriptions title="中医四诊" :column="2">
+        <el-descriptions
+          title="中医四诊"
+          :column="2"
+          :size="size"
+          border
+          direction="vertical"
+        >
           <el-descriptions-item label=" 舌象">
             <h4
               v-for="(item, index) in thisconsultationDto.symptom.symtomList2"
@@ -156,7 +194,13 @@
         </el-descriptions>
       </el-tab-pane>
       <el-tab-pane label="该患者量表评分" name="5">
-        <el-descriptions title="量表评分" :column="1">
+        <el-descriptions
+          title="量表评分"
+          :column="1"
+          :size="size"
+          border
+          direction="vertical"
+        >
           <el-descriptions-item label="DM/CKD VAS评分">
             <el-descriptions :column="1">
               <el-descriptions-item label="最不适症状">{{
@@ -220,7 +264,13 @@
         </el-descriptions>
       </el-tab-pane>
       <el-tab-pane label="该患者诊断记录" name="6">
-        <el-descriptions title="诊断记录" :column="2">
+        <el-descriptions
+          title="诊断记录"
+          :column="2"
+          :size="size"
+          border
+          direction="vertical"
+        >
           <el-descriptions-item label="西医诊断">{{
             manshenlist[thispatientDto.curMedicalRecord.Westernmedicine.list]
           }}</el-descriptions-item>
@@ -239,7 +289,7 @@
           }}</el-descriptions-item>
           <el-descriptions-item label="症状">
             <el-collapse v-model="activeNames3">
-              <el-collapse-item title="展开折叠" name="1">
+              <el-collapse-item title="展开折叠" name="0">
                 <h3
                   v-for="(item, index) in thisconsultationDto.symptom
                     .symtomList"
@@ -290,7 +340,13 @@
         </el-descriptions>
       </el-tab-pane>
       <el-tab-pane label="该患者治疗信息" name="7">
-        <el-descriptions title="治疗信息" :column="2">
+        <el-descriptions
+          title="治疗信息"
+          :column="2"
+          :size="size"
+          border
+          direction="vertical"
+        >
           <el-descriptions-item label="处方">
             {{ thisconsultationDto.prescription }}
           </el-descriptions-item>
@@ -299,7 +355,13 @@
         </el-descriptions>
       </el-tab-pane>
       <el-tab-pane label="该患者复诊信息" name="8">
-        <el-descriptions title="复诊信息" :column="2">
+        <el-descriptions
+          title="复诊信息"
+          :column="2"
+          :size="size"
+          border
+          direction="vertical"
+        >
           <el-descriptions-item label="其他资料">
             {{ thisconsultationDto.additionalInfo }}
           </el-descriptions-item>
@@ -1302,6 +1364,7 @@ export default {
   },
   data() {
     return {
+      size: "",
       // 查询该患者第一次就诊信息列表
       thisconsultationDto: [],
       // 查询该患者的基本信息列表
