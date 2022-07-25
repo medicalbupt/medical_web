@@ -173,7 +173,13 @@
                 ></el-input>
               </el-form-item>
               <el-form-item label="现病史">
-                <el-card shadow="never">
+                <el-input
+                  type="textarea"
+                  :rows="3"
+                  placeholder="请输入内容"
+                  v-model="addForm.curMedicalRecord.currentText"
+                ></el-input>
+                <!-- <el-card shadow="never">
                   <span class="block-title">糖尿病并发症</span>
                   <el-checkbox-group
                     v-model="addForm.curMedicalRecord.DMcomplications.list"
@@ -196,7 +202,128 @@
                       >{{ item.dataName }}
                     </el-checkbox>
                   </el-checkbox-group>
-                </el-card>
+                </el-card> -->
+              </el-form-item>
+              <el-form-item label="刻下症" :label-width="formLabelWidth">
+                <el-switch
+                  v-model="simpleSymtomHideStatus"
+                  style="margin-bottom: 8px"
+                  active-text="复杂模式"
+                  inactive-text="简单模式"
+                >
+                </el-switch>
+                <div v-if="!simpleSymtomHideStatus" class="simple-symtom-type">
+                  <el-card shadow="never">
+                    <el-select v-model="simpleSymtomValue" filterable clearable>
+                      <el-option-group
+                        v-for="(symtom, index) in addForm.symptom.symtomList"
+                        :key="symtom.typeId"
+                        :label="typeNameList[symtom.typeId]"
+                      >
+                        <el-option
+                          v-for="(subSymtom, subIndex) in symtom.children"
+                          :key="symtom.typeId + '-' + subSymtom.id"
+                          :label="subSymtom.dataName"
+                          :disabled="subSymtom.score === 0 ? false : true"
+                          :value="
+                            index +
+                            '-' +
+                            subIndex +
+                            '-' +
+                            symtom.typeId +
+                            '-' +
+                            subSymtom.id
+                          "
+                        >
+                        </el-option>
+                      </el-option-group>
+                    </el-select>
+                    <el-divider content-position="left">已选择症状</el-divider>
+                    <div class="symtom-type">
+                      <div class="symtom-type-block">
+                        <template
+                          v-for="(symtom, index) in addForm.symptom.symtomList"
+                        >
+                          <template
+                            v-for="(subSymtom, subIndex) in symtom.children"
+                          >
+                            <div
+                              v-if="subSymtom.score"
+                              :key="symtom.typeId + '-' + subSymtom.id"
+                              class="symtom-type-block-item"
+                            >
+                              <div class="symtom-type-block-item-title">
+                                {{ subSymtom.dataName }}
+                              </div>
+                              <el-select
+                                v-model="
+                                  addForm.symptom.symtomList[index].children[
+                                    subIndex
+                                  ].score
+                                "
+                                class="symtom-type-block-item-select"
+                                @change="symtomSelectChange(index, subIndex)"
+                              >
+                                <el-option :value="0" label="无"></el-option>
+                                <el-option :value="1" label="轻"></el-option>
+                                <el-option :value="2" label="中"></el-option>
+                                <el-option :value="3" label="重"></el-option>
+                              </el-select>
+                              <i
+                                class="
+                                  icon
+                                  el-icon-error
+                                  symtom-type-block-item-delete
+                                "
+                                @click="symtomSelectChange(index, subIndex, 0)"
+                              ></i>
+                            </div>
+                          </template>
+                        </template>
+                      </div>
+                    </div>
+                  </el-card>
+                </div>
+                <div v-else class="symtom-type">
+                  <el-collapse v-model="symtomActiveNames">
+                    <el-collapse-item
+                      v-for="(symtom, index) in addForm.symptom.symtomList"
+                      :key="symtom.typeId"
+                      :name="symtom.typeId"
+                    >
+                      <template #title>
+                        <span style="padding-left: 12px">{{
+                          typeNameList[symtom.typeId]
+                        }}</span>
+                      </template>
+                      <div class="symtom-type-block">
+                        <div
+                          v-for="(subSymtom, subIndex) in symtom.children"
+                          :key="symtom.typeId + '-' + subSymtom.id"
+                          class="symtom-type-block-item"
+                        >
+                          <div class="symtom-type-block-item-title">
+                            {{ subSymtom.dataName }}
+                          </div>
+                          <el-select
+                            v-model="
+                              addForm.symptom.symtomList[index].children[
+                                subIndex
+                              ].score
+                            "
+                            class="symtom-type-block-item-select"
+                            @change="symtomSelectChange(index, subIndex)"
+                          >
+                            <el-option :value="0" label="无"></el-option>
+                            <el-option :value="1" label="轻"></el-option>
+                            <el-option :value="2" label="中"></el-option>
+                            <el-option :value="3" label="重"></el-option>
+                          </el-select>
+                        </div>
+                      </div>
+                    </el-collapse-item>
+                  </el-collapse>
+                </div>
               </el-form-item>
               <el-form-item label="既往史">
                 <el-checkbox-group v-model="addForm.pastHistoryList">
@@ -250,14 +377,19 @@
                 </el-checkbox-group>
               </el-form-item>
               <el-form-item label="过敏史">
-                <el-input
-                  :rows="5"
-                  placeholder="请输入内容"
-                  auto-complete=""
-                  v-model="addForm.allergyHistory"
-                  type="textarea"
-                >
-                </el-input>
+                <div>
+                  <el-radio v-model="addForm.allergyHistory.has" :label="false">无</el-radio>
+                  <el-radio v-model="addForm.allergyHistory.has" :label="true">有</el-radio>
+                </div>
+                <div v-if="addForm.allergyHistory.has">
+                  <el-input
+                    :rows="3"
+                    placeholder="请输入内容"
+                    v-model="addForm.allergyHistory.desc"
+                    type="textarea"
+                  >
+                  </el-input>
+                </div>
               </el-form-item>
             </el-form>
           </div>
@@ -578,7 +710,7 @@
                         :key="item.id"
                         class="symtom-type-block-item"
                       >
-                        <div class="symtom-type-block-item-title">
+                        <div class="symtom-type-block-item-title big">
                           {{ item.dataName }}
                         </div>
                         <el-select
@@ -623,16 +755,16 @@
               :model="addForm"
             >
               <el-form-item label="西医诊断及病程诊断">
-                <el-radio-group
+                <el-checkbox-group
                   v-model="addForm.curMedicalRecord.Westernmedicine.list"
                 >
-                  <el-radio
+                  <el-checkbox
                     v-for="item in WesternmedicineOptions"
                     :label="item.id"
                     :key="item.id"
                     >{{ item.dataName }}
-                  </el-radio>
-                </el-radio-group>
+                  </el-checkbox>
+                </el-checkbox-group>
               </el-form-item>
               <el-form-item label="确诊时间">
                 <el-date-picker
@@ -642,127 +774,6 @@
                   placeholder="选择日期"
                 >
                 </el-date-picker>
-              </el-form-item>
-              <el-form-item label="症状诊断" :label-width="formLabelWidth">
-                <el-switch
-                  v-model="simpleSymtomHideStatus"
-                  style="margin-bottom: 8px"
-                  active-text="复杂模式"
-                  inactive-text="简单模式"
-                >
-                </el-switch>
-                <div v-if="!simpleSymtomHideStatus" class="simple-symtom-type">
-                  <el-card shadow="never">
-                    <el-select v-model="simpleSymtomValue" filterable clearable>
-                      <el-option-group
-                        v-for="(symtom, index) in addForm.symptom.symtomList"
-                        :key="symtom.typeId"
-                        :label="typeNameList[symtom.typeId]"
-                      >
-                        <el-option
-                          v-for="(subSymtom, subIndex) in symtom.children"
-                          :key="symtom.typeId + '-' + subSymtom.id"
-                          :label="subSymtom.dataName"
-                          :disabled="subSymtom.score === 0 ? false : true"
-                          :value="
-                            index +
-                            '-' +
-                            subIndex +
-                            '-' +
-                            symtom.typeId +
-                            '-' +
-                            subSymtom.id
-                          "
-                        >
-                        </el-option>
-                      </el-option-group>
-                    </el-select>
-                    <el-divider content-position="left">已选择症状</el-divider>
-                    <div class="symtom-type">
-                      <div class="symtom-type-block">
-                        <template
-                          v-for="(symtom, index) in addForm.symptom.symtomList"
-                        >
-                          <template
-                            v-for="(subSymtom, subIndex) in symtom.children"
-                          >
-                            <div
-                              v-if="subSymtom.score"
-                              :key="symtom.typeId + '-' + subSymtom.id"
-                              class="symtom-type-block-item"
-                            >
-                              <div class="symtom-type-block-item-title">
-                                {{ subSymtom.dataName }}
-                              </div>
-                              <el-select
-                                v-model="
-                                  addForm.symptom.symtomList[index].children[
-                                    subIndex
-                                  ].score
-                                "
-                                class="symtom-type-block-item-select"
-                                @change="symtomSelectChange(index, subIndex)"
-                              >
-                                <el-option :value="0" label="无"></el-option>
-                                <el-option :value="1" label="轻"></el-option>
-                                <el-option :value="2" label="中"></el-option>
-                                <el-option :value="3" label="重"></el-option>
-                              </el-select>
-                              <i
-                                class="
-                                  icon
-                                  el-icon-error
-                                  symtom-type-block-item-delete
-                                "
-                                @click="symtomSelectChange(index, subIndex, 0)"
-                              ></i>
-                            </div>
-                          </template>
-                        </template>
-                      </div>
-                    </div>
-                  </el-card>
-                </div>
-                <div v-else class="symtom-type">
-                  <el-collapse v-model="symtomActiveNames">
-                    <el-collapse-item
-                      v-for="(symtom, index) in addForm.symptom.symtomList"
-                      :key="symtom.typeId"
-                      :name="symtom.typeId"
-                    >
-                      <template #title>
-                        <span style="padding-left: 12px">{{
-                          typeNameList[symtom.typeId]
-                        }}</span>
-                      </template>
-                      <div class="symtom-type-block">
-                        <div
-                          v-for="(subSymtom, subIndex) in symtom.children"
-                          :key="symtom.typeId + '-' + subSymtom.id"
-                          class="symtom-type-block-item"
-                        >
-                          <div class="symtom-type-block-item-title">
-                            {{ subSymtom.dataName }}
-                          </div>
-                          <el-select
-                            v-model="
-                              addForm.symptom.symtomList[index].children[
-                                subIndex
-                              ].score
-                            "
-                            class="symtom-type-block-item-select"
-                            @change="symtomSelectChange(index, subIndex)"
-                          >
-                            <el-option :value="0" label="无"></el-option>
-                            <el-option :value="1" label="轻"></el-option>
-                            <el-option :value="2" label="中"></el-option>
-                            <el-option :value="3" label="重"></el-option>
-                          </el-select>
-                        </div>
-                      </div>
-                    </el-collapse-item>
-                  </el-collapse>
-                </div>
               </el-form-item>
 
               <el-form-item label="体质诊断">
@@ -848,6 +859,12 @@
               ref="addFormRef"
               :model="addForm"
             >
+              <el-form-item label="医嘱" :label-width="formLabelWidth">
+                <el-checkbox-group v-model="addForm.doctorOrder">
+                  <el-checkbox v-for="symtom in doctorcommonDataEntityList" :key="symtom.dataName" :label="symtom.dataName">
+                  </el-checkbox>
+                </el-checkbox-group>
+              </el-form-item>
               <el-form-item label="处方" :label-width="formLabelWidth">
                 <el-input
                   type="textarea"
@@ -857,7 +874,13 @@
                   autocomplete="off"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="其他治疗" :label-width="formLabelWidth">
+              <el-form-item label="合并用药">
+                <TinymceEditor
+                  v-model="addForm.combinationTherapy"
+                  style="width: 800px"
+                />
+              </el-form-item>
+              <!-- <el-form-item label="其他治疗" :label-width="formLabelWidth">
                 <el-input
                   type="textarea"
                   :rows="5"
@@ -865,7 +888,7 @@
                   v-model="addForm.otherTreatment"
                   autocomplete="off"
                 ></el-input>
-              </el-form-item>
+              </el-form-item> -->
             </el-form>
           </div>
         </el-card>
@@ -967,6 +990,8 @@ export default {
       simpleSymtomValue: "",
       simpleSymtomValue2: "",
       simpleSymtomValue3: "",
+      // 医嘱相应的数据
+      doctorcommonDataEntityList: [],
       simpleSymtomHideStatus: false,
       // 舌象
       simpleSymtomHideStatus2: false,
@@ -998,7 +1023,10 @@ export default {
         // 其他资料
         additionalInfo: "",
         // 过敏史
-        allergyHistory: "",
+        allergyHistory: {
+          has: false,
+          desc: '',
+        },
         // 辅助检查
         auxiliaryExamination: "",
         // 出生日期
@@ -1015,6 +1043,7 @@ export default {
         createTinme: "",
         // 现病史
         curMedicalRecord: {
+          currentText: '',
           Westernmedicine: {
             list: [],
           },
@@ -1121,6 +1150,8 @@ export default {
     this.getsymtomlist2();
     // 拿到所有的症状13
     this.getsymtomlist3();
+    // 拿到所有的医嘱
+    this.getdoctororder();
     // 拿到所有的风邪
     this.getfengxie();
     // 拿到所有的CKD
@@ -1220,6 +1251,21 @@ export default {
       addquick(this.addForm).then((res) => {
         console.log("新增快速录入", res.data);
         this.$router.push("/patient");
+      });
+    },
+     // 拿到所有的医嘱
+    getdoctororder() {
+      var typeList = [14];
+      var committypeList = typeList + "";
+      getcommonlist(committypeList).then((res) => {
+        console.log("获取医嘱的基本数据", res.data);
+        // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
+        //   this.$message({
+        //     message: "获取医嘱的基本数据成功",
+        //     type: "success",
+        //   });
+        // }
+        this.doctorcommonDataEntityList = res.data.commonDataEntityList;
       });
     },
     // 拿到所有的卫分
@@ -1735,6 +1781,10 @@ export default {
         display: inline-block;
         text-align: right;
         padding-right: 8px;
+
+        &.big {
+          width: 180px;
+        }
       }
 
       .symtom-type-block-item-select {
