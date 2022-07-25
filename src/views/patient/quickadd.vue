@@ -30,6 +30,17 @@
 
                 <el-col :span="7">
                   <div class="grid-content">
+                    <el-form-item label="患者手机号" prop="telephone">
+                      <el-input
+                        class="input-style"
+                        v-model="addForm.telephone"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+
+                <el-col :span="7">
+                  <div class="grid-content">
                     <el-form-item label="性别">
                       <el-select
                         class="input-style"
@@ -106,7 +117,16 @@
                         type="number"
                         v-model="addForm.weight"
                         placeholder="单位：kg"
+                        @change="bmishow"
                       >
+                      </el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="7">
+                  <div class="grid-content">
+                    <el-form-item label="患者bmi指数">
+                      <el-input class="input-style" disabled v-model="bmidata">
                       </el-input>
                     </el-form-item>
                   </div>
@@ -129,7 +149,7 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="7">
                   <el-form-item label="就诊时间" :label-width="formLabelWidth">
                     <el-date-picker
                       v-model="addForm.consultTime"
@@ -141,14 +161,6 @@
                   </el-form-item>
                 </el-col>
               </el-row>
-              <div class="grid-content">
-                <el-form-item label="患者手机号" prop="telephone">
-                  <el-input
-                    class="input-style"
-                    v-model="addForm.telephone"
-                  ></el-input>
-                </el-form-item>
-              </div>
             </el-form>
           </div>
         </el-card>
@@ -167,7 +179,7 @@
               <el-form-item label="主述">
                 <el-input
                   type="textarea"
-                  :rows="5"
+                  :rows="1"
                   placeholder="请输入内容"
                   v-model="addForm.mainComplaint"
                 ></el-input>
@@ -926,6 +938,8 @@ export default {
       cb(new Error("请输入合法的手机号"));
     };
     return {
+      // bmi
+      bmidata: 0,
       symtomActiveNames: "1",
       addRules: {
         patientName: [
@@ -1194,6 +1208,7 @@ export default {
         this.simpleSymtomValue = "";
       }
     },
+
     // 12
     simpleSymtomValue2(newVal, oldVal) {
       if (newVal) {
@@ -1247,7 +1262,7 @@ export default {
       this.addForm.vasScore.DM = this.newDMlist;
       this.addForm.vasScore.CKD = this.newCKDlist;
       this.addForm.windEvil.fengxie = this.newfengxielist;
-      console.log("this.addForm",this.addForm);
+      console.log("this.addForm", this.addForm);
       addquick(this.addForm).then((res) => {
         console.log("新增快速录入", res.data);
         this.$router.push("/patient");
@@ -1754,6 +1769,16 @@ export default {
         // this.curMedicalRecordListOptions = res.data.commonDataEntityList;
         this.CKDreasonOptions = res.data.commonDataEntityList;
       });
+    },
+    // bmi
+    bmishow() {
+      if (this.addForm.weight && this.addForm.height) {
+        this.bmidata =
+          this.addForm.weight /
+          ((this.addForm.height / 100) * (this.addForm.height / 100));
+      } else {
+        this.bmidata = 0;
+      }
     },
   },
 };
