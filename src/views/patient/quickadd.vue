@@ -946,7 +946,6 @@ export default {
           { required: true, message: "请输入患者姓名", trigger: "blur" },
         ],
         telephone: [
-          { required: true, message: "请输入患者手机号", trigger: "blur" },
           {
             validator: validatePhone,
             message: "请输入正确的手机号",
