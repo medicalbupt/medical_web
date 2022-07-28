@@ -341,8 +341,8 @@
                 <el-checkbox-group v-model="addForm.pastHistoryList">
                   <el-checkbox
                     v-for="item in pastHistoryListOptions"
-                    :label="item.id"
-                    :key="item.id"
+                    :label="item.dataCode"
+                    :key="item.dataCode"
                     >{{ item.dataName }}
                   </el-checkbox>
                 </el-checkbox-group>
@@ -382,8 +382,8 @@
                 <el-checkbox-group v-model="addForm.familyHistoryList">
                   <el-checkbox
                     v-for="item in familyHistoryListOptions"
-                    :label="item.id"
-                    :key="item.id"
+                    :label="item.dataCode"
+                    :key="item.dataCode"
                     >{{ item.dataName }}
                   </el-checkbox>
                 </el-checkbox-group>
@@ -608,13 +608,18 @@
                 ></el-input>
               </el-form-item>
               <el-form-item label="腹诊" :label-width="formLabelWidth">
-                <el-input
-                  type="textarea"
-                  :rows="5"
-                  placeholder="请输入内容"
-                  v-model="addForm.abdominalExamination"
-                  autocomplete="off"
-                ></el-input>
+                <div v-for="abdominalExaminationItem in abdominalExaminationList" :key="abdominalExaminationItem.key">
+                  <span class="block-title">{{abdominalExaminationItem.label}}：</span>
+                  <el-checkbox-group v-model="addForm.abdominalExamination[abdominalExaminationItem.key]">
+                    <el-checkbox
+                      v-for="symtom in abdominalExaminationItem.children"
+                      :key="symtom.dataCode"
+                      :label="symtom.dataCode"
+                    >
+                      {{symptom.dataName}}
+                    </el-checkbox>
+                  </el-checkbox-group>
+                </div>
               </el-form-item>
             </el-form>
           </div>
@@ -772,8 +777,8 @@
                 >
                   <el-checkbox
                     v-for="item in WesternmedicineOptions"
-                    :label="item.id"
-                    :key="item.id"
+                    :label="item.dataCode"
+                    :key="item.dataCode"
                     >{{ item.dataName }}
                   </el-checkbox>
                 </el-checkbox-group>
@@ -788,12 +793,19 @@
                 </el-date-picker>
               </el-form-item>
 
-              <el-form-item label="体质诊断">
-                <el-input
-                  class="input-style"
-                  type="number"
-                  v-model="addForm.physiqueId"
-                ></el-input>
+              <el-form-item label="体质诊断" :label-width="formLabelWidth">
+                <div v-for="physiqueItem in physiqueList" :key="physiqueItem.key">
+                  <span class="block-title">{{physiqueItem.label}}：</span>
+                  <el-checkbox-group v-model="addForm.physiqueId[physiqueItem.key]">
+                    <el-checkbox
+                      v-for="symtom in physiqueItem.children"
+                      :key="symtom.dataCode"
+                      :label="symtom.dataCode"
+                    >
+                      {{ symtom.dataName }}
+                    </el-checkbox>
+                  </el-checkbox-group>
+                </div>
               </el-form-item>
 
               <el-form-item label="辩证诊断" :label-width="formLabelWidth">
@@ -801,18 +813,20 @@
                 <el-checkbox-group v-model="addForm.symptomCategories.empty">
                   <el-checkbox
                     v-for="symtom in xulist"
-                    :key="symtom.dataName"
-                    :label="symtom.dataName"
+                    :key="symtom.dataCode"
+                    :label="symtom.dataCode"
                   >
+                    {{ symtom.dataName }}
                   </el-checkbox>
                 </el-checkbox-group>
                 <span class="block-title">实：</span>
                 <el-checkbox-group v-model="addForm.symptomCategories.real">
                   <el-checkbox
                     v-for="symtom in shilist"
-                    :key="symtom.dataName"
-                    :label="symtom.dataName"
+                    :key="symtom.dataCode"
+                    :label="symtom.dataCode"
                   >
+                    {{ symtom.dataName }}
                   </el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
@@ -821,27 +835,30 @@
                 <el-checkbox-group v-model="addForm.diseaseLocation.viscera">
                   <el-checkbox
                     v-for="symtom in zangfulist"
-                    :key="symtom.dataName"
-                    :label="symtom.dataName"
+                    :key="symtom.dataCode"
+                    :label="symtom.dataCode"
                   >
+                    {{ symtom.dataName }}
                   </el-checkbox>
                 </el-checkbox-group>
                 <span class="block-title">经脉：</span>
                 <el-checkbox-group v-model="addForm.diseaseLocation.meridian">
                   <el-checkbox
                     v-for="symtom in jingmailist"
-                    :key="symtom.dataName"
-                    :label="symtom.dataName"
+                    :key="symtom.dataCode"
+                    :label="symtom.dataCode"
                   >
+                    {{ symtom.dataName }}
                   </el-checkbox>
                 </el-checkbox-group>
                 <span class="block-title">卫分：</span>
                 <el-checkbox-group v-model="addForm.diseaseLocation.defender">
                   <el-checkbox
                     v-for="symtom in weifenlist"
-                    :key="symtom.dataName"
-                    :label="symtom.dataName"
+                    :key="symtom.dataCode"
+                    :label="symtom.dataCode"
                   >
+                    {{ symtom.dataName }}
                   </el-checkbox>
                 </el-checkbox-group>
                 <span class="block-title">三焦：</span>
@@ -850,9 +867,10 @@
                 >
                   <el-checkbox
                     v-for="symtom in sanjiaolist"
-                    :key="symtom.dataName"
-                    :label="symtom.dataName"
+                    :key="symtom.dataCode"
+                    :label="symtom.dataCode"
                   >
+                    {{ symtom.dataName }}
                   </el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
@@ -873,7 +891,8 @@
             >
               <el-form-item label="医嘱" :label-width="formLabelWidth">
                 <el-checkbox-group v-model="addForm.doctorOrder">
-                  <el-checkbox v-for="symtom in doctorcommonDataEntityList" :key="symtom.dataName" :label="symtom.dataName">
+                  <el-checkbox v-for="symtom in doctorcommonDataEntityList" :key="symtom.dataCode" :label="symtom.dataCode">
+                    {{ symtom.dataName }}
                   </el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
@@ -1032,11 +1051,19 @@ export default {
       //   快速增加患者表单
       addForm: {
         // 腹诊
-        abdominalExamination: "",
+        abdominalExamination: { // todo 需要改成json解析（前端）
+          abdominal_37: [],
+          abdominal_31: [],
+          abdominal_32: [],
+          abdominal_33: [],
+          abdominal_34: [],
+          abdominal_35: [],
+          abdominal_36: []
+        },
         // 其他资料
         additionalInfo: "",
         // 过敏史
-        allergyHistory: {
+        allergyHistory: { // todo 需要改成json解析（前端）
           has: false,
           desc: '',
         },
@@ -1107,7 +1134,14 @@ export default {
             amount: 0,
           },
         },
-        physiqueId: "",
+        physiqueId: { // todo 需要改成json解析（前端）
+          physique_25: [],
+          physique_26: [],
+          physique_27: [],
+          physique_28: [],
+          physique_29: [],
+          physique_30: [],
+        },
         prescription: "",
         pulsePattern: "",
         status: 1,
@@ -1142,6 +1176,25 @@ export default {
       // CKD相应数据
       CKDlist: [],
       newCKDlist: [],
+      abdominalExaminationList: [],
+      abdominalExaminationTypeList: {
+        abdominal_37: '全腹概况',
+        abdominal_31: '腹皮',
+        abdominal_32: '皮温',
+        abdominal_33: '腹力',
+        abdominal_34: '胸、心区腹证',
+        abdominal_35: '心下腹证',
+        abdominal_36: '腹部腹证'
+      },
+      physiqueList: [],
+      physiqueTypeList: {
+        physique_25: '太阳体质',
+        physique_26: '阳明体质',
+        physique_27: '少阳体质',
+        physique_28: '太阴体质',
+        physique_29: '少阴体质',
+        physique_30: '厥阴体质',
+      }
     };
   },
   created() {
@@ -1183,6 +1236,10 @@ export default {
     this.getDMcomplicationsList();
     // 拿到所有的现病史慢性肾脏病病因选项
     this.getCKDreasonList();
+    // 拿到所有腹诊
+    this.getAbdominalExaminationList();
+    // 拿到所有体质
+    this.getPhysiqueList();
   },
   watch: {
     simpleSymtomValue(newVal, oldVal) {
@@ -1767,6 +1824,48 @@ export default {
         // }
         // this.curMedicalRecordListOptions = res.data.commonDataEntityList;
         this.CKDreasonOptions = res.data.commonDataEntityList;
+      });
+    },
+    getAbdominalExaminationList() {
+      var typeList = [31, 32, 33, 34, 35, 36, 37];
+      var committypeList = typeList + "";
+      getcommonlist(committypeList).then((res) => {
+        const abdominalExaminationList_ = res.data.commonDataEntityList;
+        const abdominalExaminationList = [];
+        for(let key in this.abdominalExaminationTypeList) {
+          const typeId_ = key.split('_')[1];
+          const index_ = abdominalExaminationList.findIndex((item) => item.key == typeId_);
+          if (index_ === -1) {
+            abdominalExaminationList.push({
+              key: key,
+              label: this.abdominalExaminationTypeList[key],
+              children: abdominalExaminationList_.filter((item) => item.typeId == typeId_),
+            });
+          }
+        }
+
+        this.abdominalExaminationList = abdominalExaminationList;
+      });
+    },
+    getPhysiqueList() {
+      var typeList = [25, 26, 27, 28, 29, 30];
+      var committypeList = typeList + "";
+      getcommonlist(committypeList).then((res) => {
+        const tempList_ = res.data.commonDataEntityList;
+        const physiqueList = [];
+        for(let key in this.physiqueTypeList) {
+          const typeId_ = key.split('_')[1];
+          const index_ = physiqueList.findIndex((item) => item.key == typeId_);
+          if (index_ === -1) {
+            physiqueList.push({
+              key: key,
+              label: this.physiqueTypeList[key],
+              children: tempList_.filter((item) => item.typeId == typeId_),
+            });
+          }
+        }
+
+        this.physiqueList = physiqueList;
       });
     },
     // bmi
