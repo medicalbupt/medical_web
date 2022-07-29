@@ -1,17 +1,15 @@
 <template>
   <div>
     <el-tabs v-if="thispatientDto.patientName" v-model="activeName" type="border-card">
-      <el-tab-pane label="该患者基本信息" name="1">
+      <el-tab-pane label="基本信息" name="1">
         <el-descriptions title="基本信息" :size="size" :column="3" border direction="vertical">
           <el-descriptions-item>
             <template slot="label">
-              <i class="el-icon-user-solid"></i>
               姓名
             </template>
             {{ thispatientDto.patientName }}</el-descriptions-item>
           <el-descriptions-item>
             <template slot="label">
-              <i class="el-icon-s-custom"></i>
               性别
             </template>
             <span v-if="thispatientDto.gender == 0">男</span>
@@ -19,14 +17,12 @@
           </el-descriptions-item>
           <el-descriptions-item>
             <template slot="label">
-              <i class="el-icon-date"></i>
               出生日期
             </template>
             {{ thispatientDto.birthday | formatDate }}
           </el-descriptions-item>
           <el-descriptions-item>
             <template slot="label">
-              <i class="el-icon-star-on"></i>
               身份证号
             </template>
             {{ thispatientDto.idCard }}
@@ -50,37 +46,16 @@
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者疾病资料" name="2">
+      <el-tab-pane label="疾病资料" name="2">
         <el-descriptions title="疾病资料" :column="2" :size="size" border direction="vertical">
           <el-descriptions-item label="主述">
             {{ thisconsultationDto.mainComplaint }}
           </el-descriptions-item>
           <el-descriptions-item label="现病史">
-            <el-descriptions :column="1">
-              <el-descriptions-item label=" 西医诊断及病程">{{
-                manshenlist[
-                  thispatientDto.curMedicalRecord.Westernmedicine.list
-                ]
-              }}</el-descriptions-item>
-              <el-descriptions-item label=" 确诊时间">
-                {{
-                  thispatientDto.curMedicalRecord.confirmTime.time | formatDate
-                }}</el-descriptions-item>
-              <el-descriptions-item label="  糖尿病并发症">{{
-                manshenlist[
-                  thispatientDto.curMedicalRecord.DMcomplications.list[0]
-                ]
-              }}</el-descriptions-item>
-              <el-descriptions-item label="慢性肾脏病病因">
-                {{
-                  manshenlist[thispatientDto.curMedicalRecord.CKDreason.list[0]]
-                }}
-              </el-descriptions-item>
-            </el-descriptions>
+            {{ thispatientDto.curMedicalRecord.currentText || '-' }}
           </el-descriptions-item>
           <el-descriptions-item label="既往史">
-            <!-- {{ thispatientDto.pastHistoryList }} -->
-            高血压
+            <el-tag v-for="item in changeListToName(thispatientDto.pastHistoryList)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="个人史">
             <el-descriptions :column="2">
@@ -98,61 +73,46 @@
             </el-descriptions>
           </el-descriptions-item>
           <el-descriptions-item label="家族史">
-            <!-- {{ thispatientDto.familyHistoryList }} -->
-            脑血管病
+            <el-tag v-for="item in changeListToName(thispatientDto.pastHistoryList)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="过敏史">
             {{ thispatientDto.allergyHistory.has ? thispatientDto.allergyHistory.desc : '无' }}
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者辅助检查" name="3">
+      <el-tab-pane label="辅助检查" name="3">
         <el-descriptions title="辅助检查" v-html="thisconsultationDto.auxiliaryExamination" :column="2" :size="size" border
           direction="vertical"></el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者中医四诊" name="4">
+      <el-tab-pane label="中医四诊" name="4">
         <el-descriptions title="中医四诊" :column="2" :size="size" border direction="vertical">
-          <el-descriptions-item label=" 舌象">
-            <h4 v-for="(item, index) in thisconsultationDto.symptom.symtomList2" :key="index">
-              {{ typeNameList[item.typeName] }}
-              <h5 v-for="item1 in item.children" :key="item1.id + '1231'">
-                <!-- <span v-if="item1.score == 0">
-                  {{ " " + item1.dataName + "-----" + "程度:" + "无" }}</span
-                > -->
-                <span v-if="item.score == 1">
-                  {{ " " + item1.dataName + "-----" + "程度:" + "轻" }}</span>
-                <span v-if="item1.score == 2">
-                  {{ " " + item1.dataName + "-----" + "程度:" + "中" }}</span>
-                <span v-if="item1.score == 3">
-                  {{ " " + item1.dataName + "-----" + "程度:" + "重" }}</span>
-              </h5>
-            </h4>
+          <el-descriptions-item label="舌象">
+            <div v-for="(item) in thisconsultationDto.symptom.symtomList2" :key="item.typeId">
+              <template v-for="item1 in item.children">
+                <el-tag v-if="item1.score !== 0" :key="item1.id" :type="symptomScoreList[Number(item1.score)].type" class="medical-tag">{{item1.dataName}}: {{symptomScoreList[Number(item1.score)].label}}</el-tag>
+              </template>
+            </div>
           </el-descriptions-item>
-          <el-descriptions-item label=" 脉象">
-            <h4 v-for="(item, index) in thisconsultationDto.symptom.symtomList3" :key="index">
-              {{ typeNameList[item.typeName] }}
-              <h5 v-for="item1 in item.children" :key="item1.id + '1231'">
-                <!-- <span v-if="item1.score == 0">
-                  {{ " " + item1.dataName + "-----" + "程度:" + "无" }}</span
-                > -->
-                <span v-if="item.score == 1">
-                  {{ " " + item1.dataName + "-----" + "程度:" + "轻" }}</span>
-                <span v-if="item1.score == 2">
-                  {{ " " + item1.dataName + "-----" + "程度:" + "中" }}</span>
-                <span v-if="item1.score == 3">
-                  {{ " " + item1.dataName + "-----" + "程度:" + "重" }}</span>
-              </h5>
-            </h4>
+          <el-descriptions-item label="脉象">
+            <div v-for="(item) in thisconsultationDto.symptom.symtomList3" :key="item.typeId">
+              <template v-for="item1 in item.children">
+                <el-tag v-if="item1.score !== 0" :key="item1.id" :type="symptomScoreList[Number(item1.score)].type" class="medical-tag">{{item1.dataName}}: {{symptomScoreList[Number(item1.score)].label}}</el-tag>
+              </template>
+            </div>
           </el-descriptions-item>
-          <el-descriptions-item label=" 基本查体">{{
+          <el-descriptions-item label="基本查体" :span="2">{{
             thisconsultationDto.bodyCheck
           }}</el-descriptions-item>
           <el-descriptions-item label="腹证">
-            {{ thisconsultationDto.abdominalExamination }}
+            <el-descriptions :column="1">
+              <el-descriptions-item v-for="(item, index) in changeObjectToName(thisconsultationDto.abdominalExamination, abdominalExaminationTypeList)" :key="index" :label="item.title">
+                <el-tag v-for="name in item.children" :key="name" type="info" class="medical-tag">{{name}}</el-tag>
+              </el-descriptions-item>
+            </el-descriptions>
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者量表评分" name="5">
+      <el-tab-pane label="量表评分" name="5">
         <el-descriptions title="量表评分" :column="1" :size="size" border direction="vertical">
           <el-descriptions-item label="DM/CKD VAS评分">
             <el-descriptions :column="1">
@@ -199,81 +159,72 @@
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者诊断记录" name="6">
+      <el-tab-pane label="诊断记录" name="6">
         <el-descriptions title="诊断记录" :column="2" :size="size" border direction="vertical">
-          <el-descriptions-item label="西医诊断">{{
-            manshenlist[thispatientDto.curMedicalRecord.Westernmedicine.list]
-          }}</el-descriptions-item>
-          <el-descriptions-item label="辩证">
+          <el-descriptions-item label="西医诊断及病程">
+            <el-tag v-for="item in changeListToName(thispatientDto.pastHistoryList)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="确诊时间">{{thispatientDto.curMedicalRecord.confirmTime.time | formatDate}}</el-descriptions-item>
+          <el-descriptions-item label="症状">
             <el-descriptions :column="1">
-              <el-descriptions-item label="实">{{
-                thisconsultationDto.symptomCategories.real
-              }}</el-descriptions-item>
-              <el-descriptions-item label="虚">{{
-                thisconsultationDto.symptomCategories.empty
-              }}</el-descriptions-item>
+              <template v-for="item in thisconsultationDto.symptom.symtomList">
+                <el-descriptions-item v-if="item.children" :key="item.typeId" :label="typeNameList[item.typeName]">
+                  <template v-for="item1 in item.children">
+                    <el-tag v-if="item1.score !== 0" :key="item1.id" :type="symptomScoreList[Number(item1.score)].type" class="medical-tag">{{item1.dataName}}: {{symptomScoreList[Number(item1.score)].label}}</el-tag>
+                  </template>
+                </el-descriptions-item>
+              </template>
             </el-descriptions>
           </el-descriptions-item>
-          <el-descriptions-item label="体质诊断">{{
-            thispatientDto.physique
-          }}</el-descriptions-item>
-          <el-descriptions-item label="症状">
-            <el-collapse v-model="activeNames3">
-              <el-collapse-item title="展开折叠" name="0">
-                <h3 v-for="(item, index) in thisconsultationDto.symptom
-                    .symtomList" :key="index">
-                  {{ typeNameList[item.typeName] }}
-                  <h5 v-for="item1 in item.children" :key="item1.id + '1231'">
-                    <!-- <span v-if="item1.score == 0">
-                  {{ " " + item1.dataName + "-----" + "程度:" + "无" }}</span
-                > -->
-                    <span v-if="item.score == 1">
-                      {{
-                        " " + item1.dataName + "-----" + "程度:" + "轻"
-                      }}</span>
-                    <span v-if="item1.score == 2">
-                      {{
-                        " " + item1.dataName + "-----" + "程度:" + "中"
-                      }}</span>
-                    <span v-if="item1.score == 3">
-                      {{
-                        " " + item1.dataName + "-----" + "程度:" + "重"
-                      }}</span>
-                  </h5>
-                </h3>
-                <!-- <span>{{ props.row.symptom }}</span> -->
-              </el-collapse-item>
-            </el-collapse>
+          <el-descriptions-item label="体质诊断">
+            <el-descriptions :column="1">
+              <el-descriptions-item v-for="(item, index) in changeObjectToName(thispatientDto.physique, physiqueTypeList)" :key="index" :label="item.title">
+                <el-tag v-for="name in item.children" :key="name" type="info" class="medical-tag">{{name}}</el-tag>
+              </el-descriptions-item>
+            </el-descriptions>
+          </el-descriptions-item>
+          <el-descriptions-item label="辩证">
+            <el-descriptions :column="1">
+              <el-descriptions-item label="实">
+                <el-tag v-for="item in changeListToName(thisconsultationDto.symptomCategories.real)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="虚">
+                <el-tag v-for="item in changeListToName(thisconsultationDto.symptomCategories.empty)" :key="item" type="info" class="medical-tag">{{item}}</el-tag></el-descriptions-item>
+            </el-descriptions>
           </el-descriptions-item>
           <el-descriptions-item label="病位诊断">
             <el-descriptions :column="1">
-              <el-descriptions-item label="脏腑">{{
-                thisconsultationDto.diseaseLocation.viscera
-              }}</el-descriptions-item>
-              <el-descriptions-item label="经脉">{{
-                thisconsultationDto.diseaseLocation.meridian
-              }}</el-descriptions-item>
-              <el-descriptions-item label="卫分">{{
-                thisconsultationDto.diseaseLocation.defender
-              }}</el-descriptions-item>
-              <el-descriptions-item label="三焦">{{
-                thisconsultationDto.diseaseLocation.tripleFocus
-              }}</el-descriptions-item>
+              <el-descriptions-item label="脏腑">
+                <el-tag v-for="item in changeListToName(thisconsultationDto.diseaseLocation.viscera)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="经脉">
+                <el-tag v-for="item in changeListToName(thisconsultationDto.diseaseLocation.meridian)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="卫分">
+                <el-tag v-for="item in changeListToName(thisconsultationDto.diseaseLocation.defender)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="三焦">
+                <el-tag v-for="item in changeListToName(thisconsultationDto.diseaseLocation.tripleFocus)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
+              </el-descriptions-item>
             </el-descriptions>
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者治疗信息" name="7">
+      <el-tab-pane label="治疗信息" name="7">
         <el-descriptions title="治疗信息" :column="2" :size="size" border direction="vertical">
+          <el-descriptions-item label="医嘱">
+            <el-tag v-for="item in changeListToName(thisconsultationDto.diseaseLocation.tripleFocus)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
+          </el-descriptions-item>
           <el-descriptions-item label="处方">
             {{ thisconsultationDto.prescription }}
           </el-descriptions-item>
-          <el-descriptions-item label="调护"></el-descriptions-item>
-          <el-descriptions-item label="其他治疗"></el-descriptions-item>
+          <el-descriptions-item label="合并用药">
+            <div v-html="thisconsultationDto.combinationTherapy"></div>
+          </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="该患者复诊信息" name="8">
-        <el-descriptions title="复诊信息" :column="2" :size="size" border direction="vertical">
+      <el-tab-pane label="复诊信息" name="8">
+        <!-- <el-descriptions title="复诊信息" :column="2" :size="size" border direction="vertical">
           <el-descriptions-item label="其他资料">
             {{ thisconsultationDto.additionalInfo }}
           </el-descriptions-item>
@@ -302,7 +253,7 @@
             {{ thisconsultationDto.treatment }}
           </el-descriptions-item>
         </el-descriptions>
-        <el-divider></el-divider>
+        <el-divider></el-divider> -->
         <el-button class="but1" round type="primary" size="small" @click="gopage">添加复诊</el-button>
 
         <!-- 展示患者诊断信息 -->
@@ -353,661 +304,6 @@
         </el-pagination>
       </el-tab-pane>
     </el-tabs>
-
-    <!-- 已注释 -->
-    <el-descriptions class="margin-top" title="该患者信息" direction="vertical" :column="3" border v-if="0">
-      <!-- <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-s-check"></i>
-          患者ID
-        </template>
-        {{ patinentform.id }}
-      </el-descriptions-item> -->
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-s-check"></i>
-          患者姓名
-        </template>
-        {{ patinentform.patientName }}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-coordinate"></i>
-          患者性别
-        </template>
-        <!-- <template slot-scope="scope">
-            <span v-if="scope.row.gender == 0">男</span>
-            <span v-if="scope.row.gender == 1">女</span>
-          </template> -->
-        <span v-if="this.patinentform.gender == 0">男</span>
-        <span v-if="this.patinentform.gender == 1">女</span>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-wallet"></i>
-          患者身份证号
-        </template>
-        {{ patinentform.idCard }}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-phone"></i>
-          患者手机号
-        </template>
-        {{ patinentform.telephone }}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-wallet"></i>
-          患者身高(cm)
-        </template>
-        {{ patinentform.height }}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-wallet"></i>
-          患者体重(kg)
-        </template>
-        {{ patinentform.weight }}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-wallet"></i>
-          患者bmi指数
-        </template>
-        {{ patinentform.bmiIndex }}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-ship"></i>
-          患者出生日期
-        </template>
-        {{ patinentform.birthday | formatDate }}
-      </el-descriptions-item>
-      <!-- <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-pie-chart"></i>
-          患者创建时间
-        </template>
-        {{ patinentform.createTinme | formatDate3 }}
-      </el-descriptions-item> -->
-      <!-- <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-pie-chart"></i>
-          患者修改时间
-        </template>
-        {{ patinentform.modifiedTime | formatDate3 }}
-      </el-descriptions-item> -->
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-notebook-1"></i>
-          患者主诉
-        </template>
-        {{ patinentform.mainComplaint }}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-notebook-1"></i>
-          患者现病史
-        </template>
-        <!-- <p v-if="patinentform.curMedicalRecordList.includes(1)">糖尿病</p>
-        <p v-if="patinentform.curMedicalRecordList.includes(2)">慢性肾脏病</p>
-        <p v-if="patinentform.curMedicalRecordList.includes(3)">甲状腺疾病</p> -->
-        <!-- {{ patinentform.curMedicalRecordList }} -->
-        西医诊断及病程:
-        {{ manshenlist[patinentform.curMedicalRecord.Westernmedicine.list] }}
-        <h1></h1>
-        确诊时间:
-        {{ patinentform.curMedicalRecord.confirmTime.time | formatDate }}
-        <h1></h1>
-        糖尿病并发症:
-        {{ manshenlist[patinentform.curMedicalRecord.DMcomplications.list[0]] }}
-        <h1></h1>
-        慢性肾脏病病因:
-        {{ manshenlist[patinentform.curMedicalRecord.CKDreason.list[0]] }}
-      </el-descriptions-item>
-
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-notebook-2"></i>
-          患者既往史
-        </template>
-        <!-- {{ patinentform.pastHistoryList }} -->
-        高血压
-
-        <!-- <p v-if="patinentform.pastHistoryList.includes(1)">冠心病</p>
-        <p v-if="patinentform.pastHistoryList.includes(2)">脑血管病</p>
-        <p v-if="patinentform.pastHistoryList.includes(3)">高血压</p>
-        <p v-if="patinentform.pastHistoryList.includes(3)">慢性肾脏病</p> -->
-        <!-- {{ patinentform.pastHistoryList }} -->
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-notebook-2"></i>
-          患者个人史
-        </template>
-        吸烟数量（支/天）:
-        {{ patinentform.personalHistory.smoke.amount }}
-        啤酒数量（瓶/天）:
-        {{ patinentform.personalHistory.beer.amount }}
-        白酒数量（两/天）:
-        {{ patinentform.personalHistory.whiteWine.amount }}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-notebook-2"></i>
-          患者家族史
-        </template>
-        <!-- {{ patinentform.familyHistoryList }} -->
-        脑血管病
-      </el-descriptions-item>
-
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-notebook-1"></i>
-          过敏史
-        </template>
-        {{ patinentform.allergyHistory }}
-      </el-descriptions-item>
-
-      <!-- <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-notebook-1"></i>
-          刻下症
-        </template>
-        {{ patinentform.engravedDisease }}
-      </el-descriptions-item> -->
-      <!-- <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-s-flag"></i>
-          患者状态
-        </template>
-        {{ patinentform.status }}
-      </el-descriptions-item> -->
-    </el-descriptions>
-
-    <!-- 注释掉了原来的复诊信息列表 -->
-    <el-table v-if="0" :data="patientconsultData.patientconsultList" class="table1">
-      <el-table-column type="expand">
-        <template slot-scope="props">
-          <el-descriptions title="诊断信息" direction="vertical" class="margin-top2" border :column="4" style="width: 90%">
-            <el-descriptions-item label="主病诊断">
-              <span>{{
-                impotantlisttext(props.row.mainDiseaseDiagnosisId)
-              }}</span></el-descriptions-item>
-            <el-descriptions-item label="证候分类">
-              <h4>实：</h4>
-              <span>{{ props.row.symptomCategories.real }}</span>
-              <h4>虚：</h4>
-              <span>{{ props.row.symptomCategories.empty }}</span>
-            </el-descriptions-item>
-            <el-descriptions-item label="其他诊断">
-              <span>{{
-                otherdiotext(props.row.otherDiagnosisId)
-              }}</span></el-descriptions-item>
-            <el-descriptions-item label="病位">
-              <h4>脏腑：</h4>
-              <span>{{ props.row.diseaseLocation.viscera }}</span>
-              <h4>经脉：</h4>
-              <span>{{ props.row.diseaseLocation.meridian }}</span>
-              <h4>卫分：</h4>
-              <span>{{ props.row.diseaseLocation.defender }}</span>
-              <h4>三焦：</h4>
-              <span>{{ props.row.diseaseLocation.tripleFocus }}</span>
-            </el-descriptions-item>
-            <el-descriptions-item label="医嘱">
-              <span>{{ props.row.doctorOrder }}</span></el-descriptions-item>
-            <el-descriptions-item label="合并用药">
-              <span>{{
-                props.row.combinationTherapy
-              }}</span></el-descriptions-item>
-            <el-descriptions-item label="DM/CKD VAS评分">
-              <h4>最不适症状：</h4>
-              <span>{{ props.row.vasScore.worstSymptom }}</span>
-              <h5>程度:</h5>
-              <span>{{ props.row.vasScore.degree }}</span>
-              <h4>DM:</h4>
-              <span v-for="(item, index) in props.row.vasScore.DM" :key="index">
-                {{ " " + item.dataName + "-----" + "程度" + item.score + "" }}
-              </span>
-              <h4>CDK:</h4>
-              <span v-for="(item, index) in props.row.vasScore.CKD" :key="index">
-                {{ " " + item.dataName + "-----" + "程度" + item.score + "" }}
-              </span>
-              <h4>生活质量评分：</h4>
-              <span>{{ props.row.vasScore.healthyStatus }}</span>
-              <h4>健康状况评分：</h4>
-              <span>{{ props.row.vasScore.lifeQuality }}</span>
-            </el-descriptions-item>
-            <el-descriptions-item label="风邪">
-              <h4>是否诊断为风邪证：</h4>
-              <span v-if="props.row.windEvil.diagnosticResult == 1">是</span>
-              <span v-if="props.row.windEvil.diagnosticResult == 0">否</span>
-              <h4>风邪:</h4>
-              <span v-for="(item, index) in props.row.windEvil.fengxie" :key="index">
-                <span v-if="item.value == 0">
-                  {{ " " + item.dataName + "-----" + "程度:" + "无" }}</span>
-                <span v-if="item.value == 1">
-                  {{ " " + item.dataName + "-----" + "程度:" + "轻" }}</span>
-                <span v-if="item.value == 2">
-                  {{ " " + item.dataName + "-----" + "程度:" + "重" }}</span>
-              </span>
-            </el-descriptions-item>
-            <el-descriptions-item label="症状">
-              <el-collapse v-model="activeNames">
-                <el-collapse-item title="展开折叠" name="0">
-                  <h4 v-for="(item, index) in props.row.symptom.symtomList" :key="index">
-                    {{ typeNameList[item.typeName] }}
-                    <h5 v-for="item1 in item.children" :key="item1.id + '1231'">
-                      <span v-if="item1.score == 0">
-                        {{
-                          " " + item1.dataName + "-----" + "程度:" + "无"
-                        }}</span>
-                      <span v-if="item.score == 1">
-                        {{
-                          " " + item1.dataName + "-----" + "程度:" + "轻"
-                        }}</span>
-                      <span v-if="item1.score == 2">
-                        {{
-                          " " + item1.dataName + "-----" + "程度:" + "重"
-                        }}</span>
-                    </h5>
-                  </h4>
-                  <!-- <span>{{ props.row.symptom }}</span> -->
-                </el-collapse-item>
-              </el-collapse>
-            </el-descriptions-item>
-            <el-descriptions-item label="门诊号">
-              <span>{{ props.row.outpatNum }}</span></el-descriptions-item>
-            <el-descriptions-item label="主述">
-              <span>{{ props.row.mainComplaint }}</span></el-descriptions-item>
-            <el-descriptions-item label="病例特点">
-              <span>{{ props.row.caseFeature }}</span></el-descriptions-item>
-            <el-descriptions-item label="其他">
-              <span>{{ props.row.otherFeature }}</span></el-descriptions-item>
-            <el-descriptions-item label="辅助检查">
-              <div>
-                <el-image class="block" :src="props.row.auxiliaryExamination"></el-image>
-              </div>
-              <!-- <span>
-                <img :src="props.row.auxiliaryExamination" class="img"
-              /></span> -->
-            </el-descriptions-item>
-            <el-descriptions-item label="其他资料">
-              <div>
-                <el-image class="block" :src="props.row.additionalInfo"></el-image>
-              </div>
-            </el-descriptions-item>
-            <el-descriptions-item label="舌象">
-              <div>
-                <el-image class="block" :src="props.row.tonguePattern"></el-image>
-              </div>
-            </el-descriptions-item>
-            <el-descriptions-item label="脉象">
-              <span>{{ props.row.pulsePattern }}</span></el-descriptions-item>
-            <el-descriptions-item label="基本查体">
-              <span>{{ props.row.bodyCheck }}</span></el-descriptions-item>
-            <el-descriptions-item label="腹诊">
-              <span>{{
-                props.row.abdominalExamination
-              }}</span></el-descriptions-item>
-            <el-descriptions-item label="治法">
-              <span>{{ props.row.treatment }}</span></el-descriptions-item>
-            <el-descriptions-item label="处方">
-              <span>{{ props.row.prescription }}</span></el-descriptions-item>
-            <el-descriptions-item label="其他治疗">
-              <span>{{ props.row.otherTreatment }}</span></el-descriptions-item>
-          </el-descriptions>
-          <!-- <el-form
-            label-position="left"
-            inline
-            class="demo-table-expand"
-            size="medium"
-          >
-          </el-form> -->
-        </template>
-      </el-table-column>
-      <el-table-column label="患者诊次" prop="consultNum"> </el-table-column>
-      <el-table-column label="门诊号" prop="outpatNum"> </el-table-column>
-      <el-table-column label="患者就诊时间" prop="consultTime">
-        <template slot-scope="scope">
-          <span>{{ scope.row.consultTime | formatDate3 }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <div>
-            <el-button type="danger" @click="deleteconsult(scope.row.id)">删除</el-button>
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <!-- 新增患者就诊的弹窗 -->
-    <!-- 注释掉了原来的新增患者就诊的弹窗,换为新的添加复诊页面 -->
-    <el-dialog v-if="0" title="添加患者就诊信息" top="5vh" :visible.sync="dialogFormVisible" width="1000px">
-      <!-- <TinymceEditor /> -->
-      <div class="dialog-content">
-        <el-form :model="addconsultform" class="medical-form" label-position="top" size="medium">
-          <!-- <el-form-item label="腹诊" :label-width="formLabelWidth">
-            <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addconsultform.abdominalExamination"
-              autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="舌象" :label-width="formLabelWidth">
-            <el-upload class="upload-demo" ref="upload3"
-              action="/consultation/fileUpload?picType=3" :file-list="files3"
-              :on-success="onSuccess3" :auto-upload="false">
-              <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-              <el-button style="margin-left: 10px" size="small" type="success" @click="submitUpload3">上传</el-button>
-              <div slot="tip" class="el-upload__tip">
-                只能上传jpg/png文件，且不超过500kb
-              </div>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="其他资料" :label-width="formLabelWidth">
-            <el-upload class="upload-demo" ref="upload2"
-              action="/consultation/fileUpload?picType=2" :file-list="files2"
-              :on-success="onSuccess2" :auto-upload="false">
-              <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-              <el-button style="margin-left: 10px" size="small" type="success" @click="submitUpload2">上传</el-button>
-              <div slot="tip" class="el-upload__tip">
-                只能上传jpg/png文件，且不超过500kb
-              </div>
-            </el-upload>
-          </el-form-item> -->
-          <el-row>
-            <el-col :span="8">
-              <el-form-item label="就诊地点" :label-width="formLabelWidth">
-                <el-select v-model="addconsultform.medicalLocId" style="width: 240px" filterable placeholder="请选择">
-                  <el-option v-for="item in locallist" :key="item.dataCode" :label="item.dataName" :value="item.id">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="就诊时间" :label-width="formLabelWidth">
-                <el-date-picker v-model="addconsultform.consultTime" style="width: 240px" type="date"
-                  placeholder="选择就诊日期">
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="门诊号" :label-width="formLabelWidth">
-                <el-input v-model="addconsultform.outpatNum" autocomplete="off"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item label="辅助检查" :label-width="formLabelWidth">
-            <el-upload class="upload-demo" ref="upload1" action="/consultation/fileUpload?picType=1" :file-list="files1"
-              :on-success="onSuccess1" :auto-upload="false">
-              <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-              <el-button style="margin-left: 10px" size="small" type="success" @click="submitUpload1">上传</el-button>
-              <div slot="tip" class="el-upload__tip">
-                只能上传jpg/png文件，且不超过500kb
-              </div>
-            </el-upload>
-            <!-- <el-input
-            v-model="addconsultform.auxiliaryExamination"
-            autocomplete="off"
-          ></el-input> -->
-          </el-form-item>
-          <el-form-item label="症状" :label-width="formLabelWidth">
-            <el-switch v-model="simpleSymtomHideStatus" style="margin-bottom: 8px" active-text="复杂模式"
-              inactive-text="简单模式">
-            </el-switch>
-            <div v-if="!simpleSymtomHideStatus" class="simple-symtom-type">
-              <el-card shadow="never">
-                <el-select v-model="simpleSymtomValue" filterable clearable>
-                  <el-option-group v-for="(symtom, index) in addconsultform.symptom.symtomList" :key="symtom.typeId"
-                    :label="typeNameList[symtom.typeId]">
-                    <el-option v-for="(subSymtom, subIndex) in symtom.children"
-                      :key="symtom.typeId + '-' + subSymtom.id" :label="subSymtom.dataName"
-                      :disabled="subSymtom.score === 0 ? false : true" :value="
-                        index +
-                        '-' +
-                        subIndex +
-                        '-' +
-                        symtom.typeId +
-                        '-' +
-                        subSymtom.id
-                      ">
-                    </el-option>
-                  </el-option-group>
-                </el-select>
-                <el-divider content-position="left">已选择症状</el-divider>
-                <div class="symtom-type">
-                  <div class="symtom-type-block">
-                    <template v-for="(symtom, index) in addconsultform.symptom
-                        .symtomList">
-                      <template v-for="(subSymtom, subIndex) in symtom.children">
-                        <div v-if="subSymtom.score" :key="symtom.typeId + '-' + subSymtom.id"
-                          class="symtom-type-block-item">
-                          <div class="symtom-type-block-item-title">
-                            {{ subSymtom.dataName }}
-                          </div>
-                          <el-select v-model="
-                              addconsultform.symptom.symtomList[index].children[
-                                subIndex
-                              ].score
-                            " class="symtom-type-block-item-select" @change="symtomSelectChange(index, subIndex)">
-                            <el-option :value="1" label="轻症"></el-option>
-                            <el-option :value="2" label="重症"></el-option>
-                          </el-select>
-                          <i class="
-                              icon
-                              el-icon-error
-                              symtom-type-block-item-delete
-                            " @click="symtomSelectChange(index, subIndex, 0)"></i>
-                        </div>
-                      </template>
-                    </template>
-                  </div>
-                </div>
-              </el-card>
-            </div>
-            <div v-else class="symtom-type">
-              <el-collapse v-model="symtomActiveNames">
-                <el-collapse-item v-for="(symtom, index) in addconsultform.symptom.symtomList" :key="symtom.typeId"
-                  :name="symtom.typeId">
-                  <template #title>
-                    <span style="padding-left: 12px">{{
-                      typeNameList[symtom.typeId]
-                    }}</span>
-                  </template>
-                  <div class="symtom-type-block">
-                    <div v-for="(subSymtom, subIndex) in symtom.children" :key="symtom.typeId + '-' + subSymtom.id"
-                      class="symtom-type-block-item">
-                      <div class="symtom-type-block-item-title">
-                        {{ subSymtom.dataName }}
-                      </div>
-                      <el-select v-model="
-                          addconsultform.symptom.symtomList[index].children[
-                            subIndex
-                          ].score
-                        " class="symtom-type-block-item-select" @change="symtomSelectChange(index, subIndex)">
-                        <el-option :value="0" label="无"></el-option>
-                        <el-option :value="1" label="轻症"></el-option>
-                        <el-option :value="2" label="重症"></el-option>
-                      </el-select>
-                    </div>
-                  </div>
-                </el-collapse-item>
-              </el-collapse>
-            </div>
-          </el-form-item>
-          <el-form-item label="医嘱" :label-width="formLabelWidth">
-            <el-checkbox-group v-model="addconsultform.doctorOrder">
-              <el-checkbox v-for="symtom in doctorcommonDataEntityList" :key="symtom.dataName" :label="symtom.dataName">
-              </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item label="合并用药" :label-width="formLabelWidth">
-            <el-input type="textarea" :rows="5" placeholder="请输入合并用药（格式为：化学名—剂量mg—频次）"
-              v-model="addconsultform.combinationTherapy" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="DM/CKD VAS评分" :label-width="formLabelWidth">
-            <el-card class="box-card" shadow="never">
-              <el-row :gutter="20">
-                <el-col :span="10">
-                  <div class="grid-content">
-                    <div class="grid1">
-                      <span class="block-title">最不适症状:</span>
-                      <el-input type="textarea" :rows="1" placeholder="请输入最不适症状"
-                        v-model="addconsultform.vasScore.worstSymptom" autocomplete="off"></el-input>
-                    </div>
-                  </div>
-                </el-col>
-                <el-col :span="10" :offset="3">
-                  <div class="grid-content">
-                    <span class="block-title">最不适症状程度:</span>
-                    <el-slider v-model="addconsultform.vasScore.degree"></el-slider>
-                  </div>
-                </el-col>
-              </el-row>
-              <span class="block-title">DM:</span>
-              <el-row :gutter="20">
-                <div v-for="item in newDMlist" :key="item.id">
-                  <el-col :span="8">
-                    <div class="grid-content">
-                      <span>{{ item.dataName }}程度:</span>
-                      <el-slider class="slider1" v-model="item.score"></el-slider>
-                    </div>
-                  </el-col>
-                </div>
-              </el-row>
-              <span class="block-title">CDK:</span>
-              <el-row :gutter="20">
-                <div v-for="item in newCKDlist" :key="item.id">
-                  <el-col :span="8">
-                    <span>{{ item.dataName }}程度:</span>
-                    <el-slider class="slider1" v-model="item.score"></el-slider>
-                  </el-col>
-                </div>
-              </el-row>
-              <el-row :gutter="20">
-                <el-col :span="8">
-                  <span class="block-title">生活质量:</span>
-                  <el-slider v-model="addconsultform.vasScore.lifeQuality" class="slider1"></el-slider>
-                </el-col>
-                <el-col :span="8">
-                  <span class="block-title">健康状况:</span>
-                  <el-slider v-model="addconsultform.vasScore.healthyStatus" class="slider1"></el-slider>
-                </el-col>
-              </el-row>
-            </el-card>
-          </el-form-item>
-          <el-form-item label="风邪" :label-width="formLabelWidth">
-            <el-card class="box-card" shadow="never">
-              <div class="symtom-type">
-                <div class="symtom-type-block">
-                  <el-divider content-position="left">风邪（肾病填写）:</el-divider>
-                  <div v-for="(item, index) in newfengxielist" :key="item.id" class="symtom-type-block-item">
-                    <div class="symtom-type-block-item-title">
-                      {{ item.dataName }}
-                    </div>
-                    <el-select v-model="newfengxielist[index].value" class="symtom-type-block-item-select">
-                      <el-option :value="0" label="无"></el-option>
-                      <el-option :value="1" label="轻症"></el-option>
-                      <el-option :value="2" label="重症"></el-option>
-                    </el-select>
-                  </div>
-                  <el-divider content-position="left">是否诊断为风邪证</el-divider>
-                  <el-radio v-model="addconsultform.windEvil.diagnosticResult" label="1">是</el-radio>
-                  <el-radio v-model="addconsultform.windEvil.diagnosticResult" label="0">否</el-radio>
-                </div>
-              </div>
-            </el-card>
-          </el-form-item>
-          <el-form-item label="辩证" :label-width="formLabelWidth">
-            <span class="block-title">虚：</span>
-            <el-checkbox-group v-model="addconsultform.symptomCategories.empty">
-              <el-checkbox v-for="symtom in xulist" :key="symtom.dataName" :label="symtom.dataName">
-              </el-checkbox>
-            </el-checkbox-group>
-            <span class="block-title">实：</span>
-            <el-checkbox-group v-model="addconsultform.symptomCategories.real">
-              <el-checkbox v-for="symtom in shilist" :key="symtom.dataName" :label="symtom.dataName">
-              </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item label="病位" :label-width="formLabelWidth">
-            <span class="block-title">脏腑：</span>
-            <el-checkbox-group v-model="addconsultform.diseaseLocation.viscera">
-              <el-checkbox v-for="symtom in zangfulist" :key="symtom.dataName" :label="symtom.dataName">
-              </el-checkbox>
-            </el-checkbox-group>
-            <span class="block-title">经脉：</span>
-            <el-checkbox-group v-model="addconsultform.diseaseLocation.meridian">
-              <el-checkbox v-for="symtom in jingmailist" :key="symtom.dataName" :label="symtom.dataName">
-              </el-checkbox>
-            </el-checkbox-group>
-            <span class="block-title">卫分：</span>
-            <el-checkbox-group v-model="addconsultform.diseaseLocation.defender">
-              <el-checkbox v-for="symtom in weifenlist" :key="symtom.dataName" :label="symtom.dataName">
-              </el-checkbox>
-            </el-checkbox-group>
-            <span class="block-title">三焦：</span>
-            <el-checkbox-group v-model="addconsultform.diseaseLocation.tripleFocus">
-              <el-checkbox v-for="symtom in sanjiaolist" :key="symtom.dataName" :label="symtom.dataName">
-              </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <!-- <el-form-item label="基本查体" :label-width="formLabelWidth">
-            <el-input type="textarea" :rows="5" placeholder="请输入基本查体" v-model="addconsultform.bodyCheck"
-              autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="病例特点" :label-width="formLabelWidth">
-            <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addconsultform.caseFeature"
-              autocomplete="off"></el-input>
-          </el-form-item> -->
-
-          <!-- <el-form-item label="主述" :label-width="formLabelWidth">
-            <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addconsultform.mainComplaint"
-              autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="主病诊断" :label-width="formLabelWidth">
-            <el-select v-model="addconsultform.mainDiseaseDiagnosisId" filterable placeholder="请选择">
-              <el-option v-for="item in impotantlist" :key="item.dataCode" :label="item.dataName" :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item> -->
-
-          <!-- <el-form-item label="其他诊断" :label-width="formLabelWidth">
-            <el-select v-model="addconsultform.otherDiagnosisId" filterable placeholder="请选择">
-              <el-option v-for="item in impotantlist" :key="item.dataCode" :label="item.dataName" :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="其他" :label-width="formLabelWidth">
-            <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addconsultform.otherFeature"
-              autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="其他治疗" :label-width="formLabelWidth">
-            <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addconsultform.otherTreatment"
-              autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="门诊号" :label-width="formLabelWidth">
-            <el-input v-model="addconsultform.outpatNum" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="处方" :label-width="formLabelWidth">
-            <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addconsultform.prescription"
-              autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="脉象" :label-width="formLabelWidth">
-            <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addconsultform.pulsePattern"
-              autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="治法" :label-width="formLabelWidth">
-            <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addconsultform.treatment"
-              autocomplete="off"></el-input>
-          </el-form-item> -->
-        </el-form>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addconsult">确 定</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 <script>
@@ -1034,7 +330,7 @@
     data() {
       return {
         size: "",
-        // 查询该患者第一次就诊信息列表
+        // 查询第一次就诊信息列表
         thisconsultationDto: {},
         // 查询该患者的基本信息列表
         thispatientDto: {},
@@ -1297,6 +593,37 @@
         files3: [],
         simpleSymtomValue: "",
         simpleSymtomHideStatus: false,
+        allTypeList: [],
+        symptomScoreList: [{
+          label: '无',
+          type: 'info',
+        }, {
+          label: '轻',
+          type: '',
+        }, {
+          label: '中',
+          type: 'warning',
+        }, {
+          label: '重',
+          type: 'danger',
+        }],
+        abdominalExaminationTypeList: {
+          abdominal_37: '全腹概况',
+          abdominal_31: '腹皮',
+          abdominal_32: '皮温',
+          abdominal_33: '腹力',
+          abdominal_34: '胸、心区腹证',
+          abdominal_35: '心下腹证',
+          abdominal_36: '腹部腹证'
+        },
+        physiqueTypeList: {
+          physique_25: '太阳体质',
+          physique_26: '阳明体质',
+          physique_27: '少阳体质',
+          physique_28: '太阴体质',
+          physique_29: '少阴体质',
+          physique_30: '厥阴体质',
+        }
       };
     },
     filters: {
@@ -1317,53 +644,18 @@
         return formatDate(date, "yyyy-MM-dd hh:mm:ss");
       },
     },
-    created() {
+    async created() {
+      await this.getAllTypeList();
       //获取患者个人信息和就诊信息
       this.getPatientInfo();
       // 存储患者id参数
       this.refid = this.$route.query.index;
       this.patienttotal = this.$route.query.total;
       this.queryInfo.pageSize = this.patienttotal;
-      // console.log("进入patientmation");
-      console.log("patienttotal", this.patienttotal);
-      // this.getPatientList();
-      // console.log("结束getIDlist");
       this.consultqueryInfo.patientId = this.$route.query.index;
       this.addconsultform.patientId = this.$route.query.index;
       // // 患者就诊信息函数
       this.getpationconsult();
-      // //拿到就诊地址
-      // this.getAllSameData0();
-      // //拿到主病诊断全部数据
-      // this.getAllSameData1();
-      // //拿到证候分类全部数据
-      // this.getAllSameData2();
-      // // 拿到所有的症状
-      // this.getsymtomlist();
-      // // 拿到所有的医嘱
-      // this.getdoctororder();
-      // // 拿到所有的DM
-      // this.getDM();
-      // // 拿到所有的CKD
-      // this.getCKD();
-      // // 拿到所有的风邪
-      // this.getfengxie();
-      // // 拿到所有的虚
-      // this.getxu();
-      // // 拿到所有的实
-      // this.getshi();
-      // // 拿到所有的脏腑
-      // this.getzangfu();
-      // // 拿到所有的经脉
-      // this.getjingmai();
-      // // 拿到所有的卫分
-      // this.getweifen();
-      // // 拿到所有的三焦
-      // this.getsanjiao();
-
-      // getcommonlist("").then((res) => {
-      //     console.log("aaaallll", res.data);
-      //   });
     },
     watch: {
       simpleSymtomValue(newVal, oldVal) {
@@ -1390,6 +682,46 @@
       },
     },
     methods: {
+      async getAllTypeList() {
+        const typeList = [];
+        for(let i = 0; i < 38; i ++) {
+          typeList.push(i);
+        }
+        const res = await getcommonlist(typeList.join(','));
+        this.allTypeList = res.data.commonDataEntityList;
+      },
+      changeListToName(list) {
+        if(!list || list.length === 0) {
+          return [];
+        }
+
+        const nameList = [];
+        list.forEach((item) => {
+          const nameItem = this.allTypeList.find((type) => type.dataCode === String(item));
+          if (nameItem) {
+            nameList.push(nameItem);
+          }
+        });
+
+        return nameList.map((item) => item.dataName);
+      },
+      changeObjectToName(obj, typeList) {
+        if(!obj || Object.keys(obj).length === 0) {
+          return [];
+        }
+
+        const list = [];
+        Object.keys(obj).forEach((key) => {
+          if(obj[key].length !== 0) {
+            list.push({
+              title: typeList[key],
+              children: this.changeListToName(obj[key]),
+            });
+          }
+        });
+
+        return list;
+      },
       // 跳转详情页面
       gotoDetail(id) {
         this.$router.push({
@@ -1453,264 +785,6 @@
           } catch (error) {
             console.log('error', error);
           }
-        });
-      },
-      // 拿到所有的卫分
-      getweifen() {
-        var typeList = [22];
-        var committypeList = typeList + "";
-        getcommonlist(committypeList).then((res) => {
-          console.log("获取卫分基本数据", res.data);
-          // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
-          //   this.$message({
-          //     message: "获取虚基本数据成功",
-          //     type: "success",
-          //   });
-          // }
-          this.weifenlist = res.data.commonDataEntityList;
-          console.log("this.weifenlist", this.weifenlist);
-        });
-      },
-      // 拿到所有的三焦
-      getsanjiao() {
-        var typeList = [23];
-        var committypeList = typeList + "";
-        getcommonlist(committypeList).then((res) => {
-          console.log("获取三焦基本数据", res.data);
-          // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
-          //   this.$message({
-          //     message: "获取虚基本数据成功",
-          //     type: "success",
-          //   });
-          // }
-          this.sanjiaolist = res.data.commonDataEntityList;
-          console.log("this.sanjiaolist", this.sanjiaolist);
-        });
-      },
-      // 拿到所有的脏腑
-      getzangfu() {
-        var typeList = [20];
-        var committypeList = typeList + "";
-        getcommonlist(committypeList).then((res) => {
-          console.log("获取脏腑基本数据", res.data);
-          // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
-          //   this.$message({
-          //     message: "获取虚基本数据成功",
-          //     type: "success",
-          //   });
-          // }
-          this.zangfulist = res.data.commonDataEntityList;
-          console.log("this.zangfulist", this.zangfulist);
-        });
-      },
-      // 拿到所有的经脉
-      getjingmai() {
-        var typeList = [21];
-        var committypeList = typeList + "";
-        getcommonlist(committypeList).then((res) => {
-          console.log("获取经脉基本数据", res.data);
-          // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
-          //   this.$message({
-          //     message: "获取虚基本数据成功",
-          //     type: "success",
-          //   });
-          // }
-          this.jingmailist = res.data.commonDataEntityList;
-          console.log("this.jingmailist", this.jingmailist);
-        });
-      },
-      // 拿到所有的虚
-      getxu() {
-        var typeList = [18];
-        var committypeList = typeList + "";
-        getcommonlist(committypeList).then((res) => {
-          console.log("获取虚基本数据", res.data);
-          // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
-          //   this.$message({
-          //     message: "获取虚基本数据成功",
-          //     type: "success",
-          //   });
-          // }
-          this.xulist = res.data.commonDataEntityList;
-          console.log("this.xulist", this.xulist);
-        });
-      },
-      // 拿到所有的实
-      getshi() {
-        var typeList = [19];
-        var committypeList = typeList + "";
-        getcommonlist(committypeList).then((res) => {
-          console.log("获取实基本数据", res.data);
-          // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
-          //   this.$message({
-          //     message: "获取实基本数据成功",
-          //     type: "success",
-          //   });
-          // }
-          this.shilist = res.data.commonDataEntityList;
-          console.log("this.shilist", this.shilist);
-        });
-      },
-      // 拿到所有的CKD
-      getCKD() {
-        var typeList = [16];
-        var committypeList = typeList + "";
-        getcommonlist(committypeList).then((res) => {
-          console.log("获取CKD基本数据", res.data);
-          // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
-          //   this.$message({
-          //     message: "获取风邪基本数据成功",
-          //     type: "success",
-          //   });
-          // }
-          this.CKDlist = res.data.commonDataEntityList;
-          var obj = {
-            score: 0,
-          };
-          this.newCKDlist = this.CKDlist.map((item) => {
-            return {
-              ...item,
-              ...obj,
-            };
-          });
-          console.log("newCKDlist", this.newCKDlist);
-        });
-      },
-      // 拿到所有的风邪
-      getfengxie() {
-        var typeList = [17];
-        var committypeList = typeList + "";
-        getcommonlist(committypeList).then((res) => {
-          console.log("获取风邪的基本数据", res.data);
-          // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
-          //   this.$message({
-          //     message: "获取CKD的基本数据成功",
-          //     type: "success",
-          //   });
-          // }
-          this.fengxielist = res.data.commonDataEntityList;
-          var obj = {
-            value: 0,
-          };
-          this.newfengxielist = this.fengxielist.map((item) => {
-            return {
-              ...item,
-              ...obj,
-            };
-          });
-          console.log("newfengxielist", this.newfengxielist);
-        });
-      },
-      // 拿到所有的DM症状
-      getDM() {
-        var typeList = [15];
-        var committypeList = typeList + "";
-        getcommonlist(committypeList).then((res) => {
-          console.log("获取DM的基本数据", res.data);
-          // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
-          //   this.$message({
-          //     message: "获取DM的基本数据成功",
-          //     type: "success",
-          //   });
-          // }
-          this.DMlist = res.data.commonDataEntityList;
-
-          var obj = {
-            score: 0,
-          };
-          this.newDMlist = this.DMlist.map((item) => {
-            return {
-              ...item,
-              ...obj,
-            };
-          });
-          console.log("newDMlist", this.newDMlist);
-        });
-      },
-      // 拿到所有的医嘱
-      getdoctororder() {
-        var typeList = [14];
-        var committypeList = typeList + "";
-        getcommonlist(committypeList).then((res) => {
-          console.log("获取医嘱的基本数据", res.data);
-          // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
-          //   this.$message({
-          //     message: "获取医嘱的基本数据成功",
-          //     type: "success",
-          //   });
-          // }
-          this.doctorcommonDataEntityList = res.data.commonDataEntityList;
-        });
-      },
-      // 拿到所有的症状
-      getsymtomlist() {
-        const symtomMap = {};
-        var typeList = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-        var committypeList = typeList + "";
-        console.log("this.typeList", typeList);
-        getcommonlist(committypeList).then((res) => {
-          console.log("获取类型数据的基本数据", res.data);
-          // if ((res.data.respCode == "0000") | (res.data.respCode == "0001")) {
-          //   this.$message({
-          //     message: "获取类型数据的基本数据成功",
-          //     type: "success",
-          //   });
-          // }
-          this.commonDataEntityList = res.data.commonDataEntityList;
-          typeList.forEach((type) => {
-            const sameTypeList =
-              this.commonDataEntityList.filter((dataEntity) => {
-                if (dataEntity.typeId.toString() === type.toString()) {
-                  return true;
-                }
-                return false;
-              }) || [];
-
-            // 设置默认分数为0
-            sameTypeList.forEach((item) => {
-              item.score = 0;
-            });
-
-            symtomMap[type] = sameTypeList;
-          });
-
-          typeList.forEach((type) => {
-            if (symtomMap[type] && symtomMap[type].length !== 0) {
-              // 给症状赋值
-              this.addconsultform.symptom.symtomList.push({
-                typeId: type,
-                typeName: symtomMap[type][0]["typeId"],
-                children: symtomMap[type], // 父子结构
-              });
-            }
-          });
-
-          console.log(this.addconsultform.symptom.symtomList);
-        });
-      },
-      // 拿到就诊基本数据表数据(就诊地址)
-      async getAllSameData0() {
-        await getAllSameData0().then((res) => {
-          console.log("获取就诊地址单一类型的全部数据", res.data);
-          // 放入list
-          this.locallist = res.data.commonDataEntities;
-          // console.log("获取就诊地址locallist", this.locallist);
-        });
-      },
-      // 拿到就诊基本数据表数据(主病诊断全部数据)
-      async getAllSameData1() {
-        await getAllSameData1().then((res) => {
-          console.log("获取主病诊断全部数据", res.data);
-          // 放入list
-          this.impotantlist = res.data.commonDataEntities;
-        });
-      },
-      // 拿到就诊基本数据表数据(证候分类全部数据)
-      async getAllSameData2() {
-        await getAllSameData2().then((res) => {
-          console.log("获取证候分类全部数据", res.data);
-          // 放入list
-          this.coultlist = res.data.commonDataEntities;
         });
       },
       // 图片上传成功后，后台返回图片的路径1

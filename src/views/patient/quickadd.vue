@@ -118,7 +118,7 @@
             <el-form class="medical-form" label-width="80px" label-position="top" size="medium" ref="addFormRef"
               :model="addForm">
               <el-form-item label="主述">
-                <el-input type="textarea" :rows="1" placeholder="请输入内容" v-model="addForm.mainComplaint"></el-input>
+                <el-input type="textarea" :rows="1" placeholder="请输入内容" v-model="addForm.mainlyComplaint"></el-input>
               </el-form-item>
               <el-form-item label="现病史">
                 <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="addForm.curMedicalRecord.currentText">
@@ -642,6 +642,10 @@
     },
     data() {
       const validatePhone = (rule, value, cb) => {
+        if (!value) {
+          return cb();
+        }
+        
         let regphone =
           /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
         if (regphone.test(value)) {
@@ -803,10 +807,10 @@
           doctorOrder: [],
           engravedDisease: "",
           familyHistoryList: [],
-          gender: "",
+          gender: "0",
           height: "",
           idCard: "",
-          mainComplaint: "",
+          mainlyComplaint: "",
           mainDiseaseDiagnosisId: "",
           medicalLocId: "",
           modifiedTime: "",
@@ -1020,8 +1024,12 @@
           allergyHistory: JSON.stringify(this.addForm.allergyHistory),
           physique: JSON.stringify(this.addForm.physique),
         }).then((res) => {
-          console.log("新增快速录入", res.data);
-          this.$router.push("/patient");
+
+          if(res.data.respCode === '0000') {
+            this.$router.push("/patient");
+          } else {
+            this.$message.error(res.data.respMsg)
+          }
         });
       },
       // 拿到所有的医嘱
