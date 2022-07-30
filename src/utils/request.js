@@ -13,9 +13,7 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   config => {
-    console.log(" do something before request is sent")
     // do something before request is sent
-    console.log("store.getters.token",store.getters.token, typeof config.data, config)
     if (store.getters.token) {
       // let each request carry token
       // ['X-Token'] is a custom headers key
@@ -23,13 +21,11 @@ service.interceptors.request.use(
 
       // console.log(getToken())
       config.headers['X-Access-Token'] = getToken()
-      
     }
     return config
   },
   error => {
     // do something with request error
-    console.log(error, 'request error') // for debug
     return Promise.reject(error)
   }
 )
@@ -46,10 +42,7 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    console.log(" do something before response")
     const res = response
-    console.log(res, 'response')
-
     // if the custom code is not 20000, it is judged as an error.
     // if (res.code !== 20000) {
     //   Message({

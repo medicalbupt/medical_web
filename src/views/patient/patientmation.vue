@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-tabs v-if="thispatientDto.patientName" v-model="activeName" type="border-card">
-      <el-tab-pane label="基本信息" name="1">
-        <el-descriptions title="基本信息" :size="size" :column="3" border direction="vertical">
+      <el-tab-pane :label="isComsultation ? '复诊-基本信息' : '基本信息'" name="1">
+        <el-descriptions :title="isComsultation ? '基本信息' : '基本信息'" :size="size" :column="3" border direction="vertical">
           <el-descriptions-item>
             <template slot="label">
               姓名
@@ -41,7 +41,7 @@
           </el-descriptions-item>
           <el-descriptions-item label="就诊地点">
             {{ thisconsultationDto.medicalLoc ? thisconsultationDto.medicalLoc.dataName : '-' }}</el-descriptions-item>
-          <el-descriptions-item label="初诊时间">
+          <el-descriptions-item label="就诊时间">
             {{ thisconsultationDto.consultTime | formatDate }}
           </el-descriptions-item>
         </el-descriptions>
@@ -49,7 +49,7 @@
       <el-tab-pane label="疾病资料" name="2">
         <el-descriptions title="疾病资料" :column="2" :size="size" border direction="vertical">
           <el-descriptions-item label="主述">
-            {{ thisconsultationDto.mainComplaint }}
+            {{ thisconsultationDto.mainlyComplaint }}
           </el-descriptions-item>
           <el-descriptions-item label="现病史">
             {{ thispatientDto.curMedicalRecord.currentText || '-' }}
@@ -115,22 +115,18 @@
       <el-tab-pane label="量表评分" name="5">
         <el-descriptions title="量表评分" :column="1" :size="size" border direction="vertical">
           <el-descriptions-item label="DM/CKD VAS评分">
-            <el-descriptions :column="1">
+            <el-descriptions :column="2">
               <el-descriptions-item label="最不适症状">{{
                 thisconsultationDto.vasScore.worstSymptom
               }}</el-descriptions-item>
               <el-descriptions-item label="程度">{{
                 thisconsultationDto.vasScore.degree
               }}</el-descriptions-item>
-              <el-descriptions-item label="DM">
-                <span v-for="(item, index) in thisconsultationDto.vasScore.DM" :key="index">
-                  {{ " " + item.dataName + "-----" + "程度" + item.score + "" }}
-                </span>
+              <el-descriptions-item :span="2" label="DM">
+                <el-tag v-for="(item, index) in thisconsultationDto.vasScore.DM" :key="index" type="info" class="medical-tag">{{item.dataName}}: {{item.score}}</el-tag>
               </el-descriptions-item>
-              <el-descriptions-item label="CDK">
-                <span v-for="(item, index) in thisconsultationDto.vasScore.CKD" :key="index">
-                  {{ " " + item.dataName + "-----" + "程度" + item.score + "" }}
-                </span>
+              <el-descriptions-item :span="2" label="CDK">
+                <el-tag v-for="(item, index) in thisconsultationDto.vasScore.CKD" :key="index" type="info" class="medical-tag">{{item.dataName}}: {{item.score}}</el-tag>
               </el-descriptions-item>
               <el-descriptions-item label="生活质量评分">{{
                 thisconsultationDto.vasScore.healthyStatus
@@ -146,14 +142,7 @@
                 <span v-if="thisconsultationDto.windEvil.diagnosticResult == 1">是</span>
                 <span v-if="thisconsultationDto.windEvil.diagnosticResult == 0">否</span></el-descriptions-item>
               <el-descriptions-item label="风邪">
-                <span v-for="(item, index) in thisconsultationDto.windEvil.fengxie" :key="index">
-                  <span v-if="item.value == 0">
-                    {{ " " + item.dataName + "-----" + "程度:" + "无" }}</span>
-                  <span v-if="item.value == 1">
-                    {{ " " + item.dataName + "-----" + "程度:" + "轻" }}</span>
-                  <span v-if="item.value == 2">
-                    {{ " " + item.dataName + "-----" + "程度:" + "重" }}</span>
-                </span>
+                <el-tag v-for="(item, index) in thisconsultationDto.windEvil.fengxie" :key="index" :type="fengxieScoreList[Number(item.value)].type" class="medical-tag">{{item.dataName}}: {{fengxieScoreList[Number(item.value)].label}}</el-tag>
               </el-descriptions-item>
             </el-descriptions>
           </el-descriptions-item>
@@ -223,64 +212,16 @@
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
-      <el-tab-pane label="复诊信息" name="8">
-        <!-- <el-descriptions title="复诊信息" :column="2" :size="size" border direction="vertical">
-          <el-descriptions-item label="其他资料">
-            {{ thisconsultationDto.additionalInfo }}
-          </el-descriptions-item>
-          <el-descriptions-item label="病例特点">
-            {{ thisconsultationDto.caseFeature }}
-          </el-descriptions-item>
-          <el-descriptions-item label="合并用药">
-            {{ thisconsultationDto.combinationTherapy }}
-          </el-descriptions-item>
-          <el-descriptions-item label="医嘱">
-            {{ thisconsultationDto.doctorOrder }}
-          </el-descriptions-item>
-          <el-descriptions-item label="其他诊断">
-            {{ thisconsultationDto.otherDiagnosisId }}
-          </el-descriptions-item>
-          <el-descriptions-item label="主病诊断">
-            {{ thisconsultationDto.mainDiseaseDiagnosisId }}
-          </el-descriptions-item>
-          <el-descriptions-item label="门诊号">
-            {{ thisconsultationDto.outpatNum }}
-          </el-descriptions-item>
-          <el-descriptions-item label="其他">
-            {{ thisconsultationDto.otherFeature }}
-          </el-descriptions-item>
-          <el-descriptions-item label="治法">
-            {{ thisconsultationDto.treatment }}
-          </el-descriptions-item>
-        </el-descriptions>
-        <el-divider></el-divider> -->
-        <el-button class="but1" round type="primary" size="small" @click="gopage">添加复诊</el-button>
-
-        <!-- 展示患者诊断信息 -->
-        <!-- <el-descriptions
-      class="margin-top"
-      title="无边框列表"
-      :column=3"
-      :size="size"
-    >
-      <template slot="extra">
-        <el-button type="primary" size="small">操作</el-button>
-      </template>
-      <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-      <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-      <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
-      <el-descriptions-item label="备注">
-        <el-tag size="small">学校</el-tag>
-      </el-descriptions-item>
-      <el-descriptions-item label="联系地址"
-        >江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item
-      >
-    </el-descriptions> -->
-        <el-table :data="patientconsultData.patientconsultList" class="table1" stripe style="width: 90%">
-          <el-table-column prop="consultNum" label="患者诊次" width="180">
+      <el-tab-pane v-if="!isComsultation" label="复诊信息" name="8">
+        <el-button type="primary" size="medium" @click="gopage">添加复诊</el-button>
+        <el-table :data="patientconsultData.patientconsultList" class="table1" stripe>
+          <el-table-column label="就诊地点" width="180">
+            <template slot-scope="scope">
+              {{scope.row.medicalLoc ? scope.row.medicalLoc.dataName : '-'}}
+            </template>
           </el-table-column>
-          <el-table-column prop="outpatNum" label="门诊号" width="180">
-          </el-table-column>
+          <!-- <el-table-column prop="outpatNum" label="门诊号" width="180">
+          </el-table-column> -->
           <el-table-column prop="consultTime" label="患者就诊时间">
             <template slot-scope="scope">
               <span>{{ scope.row.consultTime | formatDate3 }}</span>
@@ -289,15 +230,13 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <div>
-                <el-button type="primary" size="small" @click="gotoDetail(scope.row.id)">详情</el-button>
-                <el-button type="danger" size="small" @click="deleteconsult(scope.row.id)">删除</el-button>
+                <el-button type="primary" size="medium" @click="gotoDetail(scope.row.id)">详情</el-button>
+                <el-button type="danger" size="medium" @click="deleteconsult(scope.row.id)">删除</el-button>
               </div>
             </template>
           </el-table-column>
         </el-table>
-
         <!-- 分页 -->
-
         <el-pagination @current-change="handleCurrentChange" :current-page="consultqueryInfo.currentPage"
           @size-change="handleSizeChange" :page-size="consultqueryInfo.pageSize" :page-sizes="[10, 20, 50]"
           layout="total,sizes, prev, pager, next, jumper" :total="patientconsultData.total" class="pagination">
@@ -315,12 +254,10 @@
     getPatientList,
     getpationconsult,
     addconsult,
-    getAllSameData0,
-    getAllSameData1,
-    getAllSameData2,
     getcommonlist,
     deleteconsult,
     getPatientInfo,
+    getConsultationInfo,
   } from "@/api/patient";
   export default {
     name: "patientmation",
@@ -623,7 +560,19 @@
           physique_28: '太阴体质',
           physique_29: '少阴体质',
           physique_30: '厥阴体质',
-        }
+        },
+        fengxieScoreList: [{
+          label: '无',
+          type: 'info',
+        }, {
+          label: '轻',
+          type: '',
+        }, {
+          label: '重',
+          type: 'danger',
+        }],
+        isComsultation: false,
+        consultationId: '',
       };
     },
     filters: {
@@ -646,16 +595,24 @@
     },
     async created() {
       await this.getAllTypeList();
-      //获取患者个人信息和就诊信息
-      this.getPatientInfo();
       // 存储患者id参数
-      this.refid = this.$route.query.index;
-      this.patienttotal = this.$route.query.total;
-      this.queryInfo.pageSize = this.patienttotal;
-      this.consultqueryInfo.patientId = this.$route.query.index;
-      this.addconsultform.patientId = this.$route.query.index;
-      // // 患者就诊信息函数
-      this.getpationconsult();
+      this.refid = this.$route.query.index || this.$route.query.patientId;
+      this.patienttotal = 10;
+      this.queryInfo.pageSize = 10;
+      this.consultqueryInfo.patientId = this.refid;
+      this.addconsultform.patientId = this.refid;
+
+      this.isComsultation = Boolean(this.$route.query.consultationId);
+
+      if(!this.isComsultation) {
+        //获取患者个人信息和就诊信息
+        this.getPatientInfo();
+        // 患者就诊信息函数
+        this.getpationconsult();
+      } else {
+        this.consultationId = this.$route.query.consultationId;
+        this.getConsultationInfo();
+      }
     },
     watch: {
       simpleSymtomValue(newVal, oldVal) {
@@ -725,7 +682,7 @@
       // 跳转详情页面
       gotoDetail(id) {
         this.$router.push({
-          name: "consultmation",
+          name: "consultmationnew",
           query: {
             consultationId: id,
             patientId: this.refid
@@ -735,9 +692,10 @@
       // 跳转新增就诊页面
       gopage() {
         this.$router.push({
-          name: "addconsultation",
+          name: "addconsultationnew",
           query: {
-            patientId: this.refid
+            patientId: this.refid,
+            isAddComsultation: true,
           },
         });
       },
@@ -782,6 +740,43 @@
                 list: [],
               },
             };
+
+            this.$nextTick(() => {
+              this.activeName = this.$route.query.tab || '1';
+            });
+          } catch (error) {
+            console.log('error', error);
+          }
+        });
+      },
+      // 获取患者复诊信息
+      getConsultationInfo() {
+        getConsultationInfo(this.consultationId, this.refid).then((res) => {
+          this.thisconsultationDto = res.data.consultationDto;
+          this.thispatientDto = res.data.patientDto;
+          try {
+            this.thispatientDto.allergyHistory = this.thispatientDto.allergyHistory ? JSON.parse(this.thispatientDto.allergyHistory) : '-';
+            this.thispatientDto.physique = this.thispatientDto.physique ? JSON.parse(this.thispatientDto.physique) : '-';
+            this.thisconsultationDto.abdominalExamination = this.thisconsultationDto.abdominalExamination ? JSON.parse(this.thisconsultationDto.abdominalExamination) : '-';
+            this.thispatientDto.curMedicalRecord = this.thispatientDto.curMedicalRecord || {
+              currentText: '',
+              Westernmedicine: {
+                list: [],
+              },
+              confirmTime: {
+                time: "",
+              },
+              DMcomplications: {
+                list: [],
+              },
+              CKDreason: {
+                list: [],
+              },
+            };
+
+            this.$nextTick(() => {
+              this.activeName = this.$route.query.tab || '1';
+            });
           } catch (error) {
             console.log('error', error);
           }
@@ -1024,7 +1019,7 @@
   }
 
   .table1 {
-    margin: 20px 30px 40px 50px;
+    margin: 20px 0 40px 0;
   }
 
   .h3 {
