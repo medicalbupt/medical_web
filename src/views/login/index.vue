@@ -205,9 +205,8 @@ export default {
             .then(() => {
               // .push({ path: "/" });
               this.$router.push({
-                path: "/patient",
+                path: "/dashboard",
               });
-              console.log("this.$router");
 
               this.loading = false;
             })
