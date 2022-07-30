@@ -1661,6 +1661,10 @@
               ...patientInfo,
               ...consulationInfo,
             }
+
+            this.newDMlist = this.addForm.vasScore.DM;
+            this.newCKDlist = this.addForm.vasScore.CKD;
+            this.newfengxielist = this.addForm.windEvil.fengxie;
           } catch (error) {
             console.log('error', error);
           }
