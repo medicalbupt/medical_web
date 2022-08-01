@@ -203,7 +203,7 @@ export function getPatientInfo(id) {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
     params: {
-      id: id,
+      id: id
     }
   })
 }

@@ -26,6 +26,7 @@ html {
   height: 100%;
   letter-spacing: -0.1px;
   font-size: $fontSize;
+  color: $fontColor;
 
   // &.en-us-app {
   //     letter-spacing: -0.2px;
@@ -366,5 +367,36 @@ th.table-header {
 
 .tox-tinymce-aux {
   z-index: 3300 !important;
+}
+
+.medical-tag {
+  margin-right: 8px;
+  margin-bottom: 8px;
+  font-size: 15px;
+
+  &.el-tag--info {
+    color: $fontColor;
+  }
+}
+
+
+.block-title {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  display: block;
+  color: $fontColor;
+  font-weight: bold;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.el-descriptions__body {
+  color: $fontColor;
+
+  .el-descriptions-item__cell {
+    vertical-align: top;
+  }
 }
 

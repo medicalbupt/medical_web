@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="submit-footer">
-      <el-button type="primary" @click="addquick">提交录入</el-button>
+      <el-button type="primary" :loading="loading || submiting" @click="save">提交录入</el-button>
     </div>
-    <el-tabs v-model="activeName" class="border-card" type="border-card">
+    <el-tabs v-model="activeName" v-loading="loading" class="border-card" type="border-card">
       <el-tab-pane label="基本信息" name="1">
         <el-card class="box-card">
           <div class="dialog-content">
@@ -13,7 +13,7 @@
                 <el-col :span="7">
                   <div class="grid-content">
                     <el-form-item label="患者姓名" prop="patientName">
-                      <el-input class="input-style" v-model="addForm.patientName"></el-input>
+                      <el-input class="input-style readonly" :disabled="isAddComsultation" v-model="addForm.patientName"></el-input>
                     </el-form-item>
                   </div>
                 </el-col>
@@ -21,7 +21,7 @@
                 <el-col :span="7">
                   <div class="grid-content">
                     <el-form-item label="患者手机号" prop="telephone">
-                      <el-input class="input-style" v-model="addForm.telephone"></el-input>
+                      <el-input class="input-style readonly" :disabled="isAddComsultation" v-model="addForm.telephone"></el-input>
                     </el-form-item>
                   </div>
                 </el-col>
@@ -29,9 +29,9 @@
                 <el-col :span="7">
                   <div class="grid-content">
                     <el-form-item label="性别">
-                      <el-select class="input-style" v-model="addForm.gender" placeholder="请选择性别">
-                        <el-option label="男" value="0"></el-option>
-                        <el-option label="女" value="1"></el-option>
+                      <el-select class="input-style readonly" :disabled="isAddComsultation" v-model="addForm.gender" placeholder="请选择性别">
+                        <el-option label="男" :value="0"></el-option>
+                        <el-option label="女" :value="1"></el-option>
                       </el-select>
                     </el-form-item>
                   </div>
@@ -39,7 +39,7 @@
                 <el-col :span="7">
                   <div class="grid-content">
                     <el-form-item label="出生日期">
-                      <el-date-picker class="input-style" v-model="addForm.birthday" type="date" placeholder="选择日期">
+                      <el-date-picker class="input-style readonly" :disabled="isAddComsultation" v-model="addForm.birthday" type="date" placeholder="选择日期">
                       </el-date-picker>
                     </el-form-item>
                   </div>
@@ -48,7 +48,7 @@
               <div class="grid-content">
                 <el-form-item label="ID号">
                   <el-input
-                    class="input-style"
+                    class="input-style readonly" :disabled="isAddComsultation"
                     v-model="addForm.outpatientId"
                   ></el-input>
                 </el-form-item>
@@ -57,21 +57,21 @@
                 <el-col :span="7">
                   <div class="grid-content">
                     <el-form-item label="门诊id" prop="outpatientId">
-                      <el-input class="input-style" v-model="addForm.outpatientId"></el-input>
+                      <el-input class="input-style readonly" :disabled="isAddComsultation" v-model="addForm.outpatientId"></el-input>
                     </el-form-item>
                   </div>
                 </el-col>
                 <el-col :span="7">
                   <div class="grid-content">
                     <el-form-item label="身份证号">
-                      <el-input class="input-style" v-model="addForm.idCard"></el-input>
+                      <el-input class="input-style readonly" :disabled="isAddComsultation" v-model="addForm.idCard"></el-input>
                     </el-form-item>
                   </div>
                 </el-col>
                 <el-col :span="7">
                   <div class="grid-content">
                     <el-form-item label="身高">
-                      <el-input class="input-style" type="number" v-model="addForm.height" placeholder="单位：cm">
+                      <el-input class="input-style readonly" :disabled="isAddComsultation" type="number" v-model="addForm.height" placeholder="单位：cm">
                       </el-input>
                     </el-form-item>
                   </div>
@@ -79,7 +79,7 @@
                 <el-col :span="7">
                   <div class="grid-content">
                     <el-form-item label="体重">
-                      <el-input class="input-style" type="number" v-model="addForm.weight" placeholder="单位：kg"
+                      <el-input class="input-style readonly" :disabled="isAddComsultation" type="number" v-model="addForm.weight" placeholder="单位：kg"
                         @change="bmishow">
                       </el-input>
                     </el-form-item>
@@ -88,7 +88,7 @@
                 <el-col :span="7">
                   <div class="grid-content">
                     <el-form-item label="患者bmi指数">
-                      <el-input class="input-style" disabled v-model="bmidata">
+                      <el-input class="input-style readonly" :disabled="true" v-model="bmidata">
                       </el-input>
                     </el-form-item>
                   </div>
@@ -118,35 +118,11 @@
             <el-form class="medical-form" label-width="80px" label-position="top" size="medium" ref="addFormRef"
               :model="addForm">
               <el-form-item label="主述">
-                <el-input type="textarea" :rows="1" placeholder="请输入内容" v-model="addForm.mainComplaint"></el-input>
+                <el-input type="textarea" :rows="1" placeholder="请输入内容" v-model="addForm.mainlyComplaint"></el-input>
               </el-form-item>
               <el-form-item label="现病史">
                 <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="addForm.curMedicalRecord.currentText">
                 </el-input>
-                <!-- <el-card shadow="never">
-                  <span class="block-title">糖尿病并发症</span>
-                  <el-checkbox-group
-                    v-model="addForm.curMedicalRecord.DMcomplications.list"
-                  >
-                    <el-checkbox
-                      v-for="item in DMcomplicationsOptions"
-                      :key="item.id"
-                      :label="item.id"
-                      >{{ item.dataName }}
-                    </el-checkbox>
-                  </el-checkbox-group>
-                  <span class="block-title">慢性肾脏病病因</span>
-                  <el-checkbox-group
-                    v-model="addForm.curMedicalRecord.CKDreason.list"
-                  >
-                    <el-checkbox
-                      v-for="item in CKDreasonOptions"
-                      :label="item.id"
-                      :key="item.id"
-                      >{{ item.dataName }}
-                    </el-checkbox>
-                  </el-checkbox-group>
-                </el-card> -->
               </el-form-item>
               <el-form-item label="刻下症" :label-width="formLabelWidth">
                 <el-switch v-model="simpleSymtomHideStatus" style="margin-bottom: 8px" active-text="复杂模式"
@@ -235,7 +211,7 @@
                 </div>
               </el-form-item>
               <el-form-item label="既往史">
-                <el-checkbox-group v-model="addForm.pastHistoryList">
+                <el-checkbox-group v-model="addForm.pastHistoryList" :disabled="isAddComsultation">
                   <el-checkbox v-for="item in pastHistoryListOptions" :label="item.dataCode" :key="item.dataCode">
                     {{ item.dataName }}
                   </el-checkbox>
@@ -246,22 +222,22 @@
                   <el-col :span="8">
                     <div class="block-title">吸烟数量（支/天）</div>
                     <el-input-number v-model="addForm.personalHistory.smoke.amount" :max="50" :min="0"
-                      controls-position="right"></el-input-number>
+                      controls-position="right" class="readonly" :disabled="isAddComsultation"></el-input-number>
                   </el-col>
                   <el-col :span="8">
                     <div class="block-title">啤酒数量（瓶/天）</div>
                     <el-input-number v-model="addForm.personalHistory.beer.amount" :max="50" :min="0"
-                      controls-position="right"></el-input-number>
+                      controls-position="right" class="readonly" :disabled="isAddComsultation"></el-input-number>
                   </el-col>
                   <el-col :span="8">
                     <div class="block-title">白酒数量（两/天）</div>
                     <el-input-number v-model="addForm.personalHistory.whiteWine.amount" :max="50" :min="0"
-                      controls-position="right"></el-input-number>
+                      controls-position="right" class="readonly" :disabled="isAddComsultation"></el-input-number>
                   </el-col>
                 </el-row>
               </el-form-item>
               <el-form-item label="家族史">
-                <el-checkbox-group v-model="addForm.familyHistoryList">
+                <el-checkbox-group v-model="addForm.familyHistoryList" :disabled="isAddComsultation">
                   <el-checkbox v-for="item in familyHistoryListOptions" :label="item.dataCode" :key="item.dataCode">
                     {{ item.dataName }}
                   </el-checkbox>
@@ -269,11 +245,11 @@
               </el-form-item>
               <el-form-item label="过敏史">
                 <div>
-                  <el-radio v-model="addForm.allergyHistory.has" :label="false">无</el-radio>
-                  <el-radio v-model="addForm.allergyHistory.has" :label="true">有</el-radio>
+                  <el-radio v-model="addForm.allergyHistory.has" :label="false" :disabled="isAddComsultation">无</el-radio>
+                  <el-radio v-model="addForm.allergyHistory.has" :label="true" :disabled="isAddComsultation">有</el-radio>
                 </div>
                 <div v-if="addForm.allergyHistory.has">
-                  <el-input :rows="3" placeholder="请输入内容" v-model="addForm.allergyHistory.desc" type="textarea">
+                  <el-input :rows="3" placeholder="请输入内容" v-model="addForm.allergyHistory.desc" type="textarea" class="readonly" :disabled="isAddComsultation">
                   </el-input>
                 </div>
               </el-form-item>
@@ -622,18 +598,11 @@
 </template>
 <script>
   import {
-    getPatientList,
-    addPatient,
-    getpationconsult,
-    addconsult,
-    patientDelete,
     getAllSameData0,
-    getAllSameData1,
-    getAllSameData2,
     getcommonlist,
-    patientUpdate,
-    deleteconsult,
     addquick,
+    getPatientInfo,
+    addconsult
   } from "@/api/patient";
   import TinymceEditor from "@/components/Tinymce";
   export default {
@@ -642,6 +611,10 @@
     },
     data() {
       const validatePhone = (rule, value, cb) => {
+        if (!value) {
+          return cb();
+        }
+        
         let regphone =
           /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
         if (regphone.test(value)) {
@@ -765,7 +738,7 @@
           // 辅助检查
           auxiliaryExamination: "",
           // 出生日期
-          birthday: "",
+          birthday: '',
           // 基本查体
           bodyCheck: "",
           // 病例特点
@@ -773,7 +746,7 @@
           // 合并用药
           combinationTherapy: "",
           // 就诊时间
-          consultTime: "",
+          consultTime: new Date(),
           // 创建时间
           createTinme: "",
           // 现病史
@@ -783,7 +756,7 @@
               list: [],
             },
             confirmTime: {
-              time: "",
+              time: '',
             },
             DMcomplications: {
               list: [],
@@ -803,10 +776,10 @@
           doctorOrder: [],
           engravedDisease: "",
           familyHistoryList: [],
-          gender: "",
+          gender: "0",
           height: "",
           idCard: "",
-          mainComplaint: "",
+          mainlyComplaint: "",
           mainDiseaseDiagnosisId: "",
           medicalLocId: "",
           modifiedTime: "",
@@ -889,10 +862,25 @@
           physique_28: '太阴体质',
           physique_29: '少阴体质',
           physique_30: '厥阴体质',
-        }
+        },
+        // 是否是添加复诊
+        isAddComsultation: false,
+        patientId: '',
+        loading: false,
+        submiting: false,
       };
     },
     created() {
+      this.isAddComsultation = Boolean(this.$route.query.isAddComsultation);
+      this.patientId = this.$route.query.patientId;
+      if(this.patientId) {
+        this.loading = true;
+        //获取患者个人信息和就诊信息
+        setTimeout(() => {
+          this.getPatientInfo();
+        }, 1000)
+      }
+      
       // 拿到所有的虚
       this.getxu();
       // 拿到所有的实
@@ -1009,20 +997,71 @@
       },
     },
     methods: {
-      addquick() {
-        this.addForm.vasScore.DM = this.newDMlist;
-        this.addForm.vasScore.CKD = this.newCKDlist;
-        this.addForm.windEvil.fengxie = this.newfengxielist;
-        console.log("this.addForm", this.addForm);
-        addquick({
-          ...this.addForm,
-          abdominalExamination: JSON.stringify(this.addForm.abdominalExamination),
-          allergyHistory: JSON.stringify(this.addForm.allergyHistory),
-          physique: JSON.stringify(this.addForm.physique),
-        }).then((res) => {
-          console.log("新增快速录入", res.data);
-          this.$router.push("/patient");
-        });
+      async save() {
+        this.submiting = true;
+
+        if(this.isAddComsultation) {
+          await this.addconsult();
+        } else {
+          await this.addquick();
+        }
+
+        this.submiting = false;
+      },
+      async addquick() {
+        try {
+          this.addForm.vasScore.DM = this.newDMlist;
+          this.addForm.vasScore.CKD = this.newCKDlist;
+          this.addForm.windEvil.fengxie = this.newfengxielist;
+          const res = await addquick({
+            ...this.addForm,
+            abdominalExamination: JSON.stringify(this.addForm.abdominalExamination),
+            allergyHistory: JSON.stringify(this.addForm.allergyHistory),
+            physique: JSON.stringify(this.addForm.physique),
+          });
+
+          if(res.data.respCode === '0000') {
+            this.$router.push("/patient");
+          } else {
+            this.$message.error(res.data.respMsg)
+          }
+        } catch (error) {
+          
+        }
+      },
+      // 提交复诊
+      async addconsult() {
+        try {
+          this.addForm.vasScore.DM = this.newDMlist;
+          this.addForm.vasScore.CKD = this.newCKDlist;
+          this.addForm.windEvil.fengxie = this.newfengxielist;
+          const res = await addconsult({
+            ...this.addForm,
+            abdominalExamination: JSON.stringify(this.addForm.abdominalExamination),
+            allergyHistory: JSON.stringify(this.addForm.allergyHistory),
+            physique: JSON.stringify(this.addForm.physique),
+            patientId: this.patientId,
+          });
+
+          if ((res.data.respCode == "0000")) {
+            this.$message({
+              message: "提交复诊成功",
+              type: "success",
+            });
+
+            this.$router.push({
+              name: "patientmation",
+              query: { index: this.patientId, tab: 8 },
+            });
+          } else {
+            this.$message({
+              message: res.data.respMsg,
+              type: "error",
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
       },
       // 拿到所有的医嘱
       getdoctororder() {
@@ -1572,11 +1611,66 @@
       bmishow() {
         if (this.addForm.weight && this.addForm.height) {
           this.bmidata =
-            this.addForm.weight /
-            ((this.addForm.height / 100) * (this.addForm.height / 100));
+            Number((this.addForm.weight /
+            ((this.addForm.height / 100) * (this.addForm.height / 100))).toFixed(4));
         } else {
           this.bmidata = 0;
         }
+      },
+      // 拿到该患者第一次就诊信息和他的基本信息
+      getPatientInfo() {
+        this.loading = true;
+        getPatientInfo(this.patientId).then((res) => {
+          const consulationInfo = res.data.consultationDto;
+          const patientInfo = res.data.patientDto;
+          try {
+            patientInfo.allergyHistory = patientInfo.allergyHistory ? JSON.parse(patientInfo.allergyHistory) : '-';
+            patientInfo.physique = patientInfo.physique ? JSON.parse(patientInfo.physique) : '-';
+            consulationInfo.abdominalExamination = consulationInfo.abdominalExamination ? JSON.parse(consulationInfo.abdominalExamination) : '-';
+            patientInfo.curMedicalRecord = patientInfo.curMedicalRecord || {
+              currentText: '',
+              Westernmedicine: {
+                list: [],
+              },
+              confirmTime: {
+                time: "",
+              },
+              DMcomplications: {
+                list: [],
+              },
+              CKDreason: {
+                list: [],
+              },
+            };
+
+            consulationInfo.medicalLocId = consulationInfo.medicalLoc?.id;
+            consulationInfo.consultTime = new Date();
+
+            if (patientInfo.pastHistoryList && patientInfo.pastHistoryList.length !== 0) {
+              patientInfo.pastHistoryList = patientInfo.pastHistoryList.map((item) => String(item));
+            }
+
+            if (patientInfo.familyHistoryList && patientInfo.familyHistoryList.length !== 0) {
+              patientInfo.familyHistoryList = patientInfo.familyHistoryList.map((item) => String(item));
+            }
+
+            this.bmidata = patientInfo.bmiIndex;
+
+            this.addForm = {
+              ...this.addForm,
+              ...patientInfo,
+              ...consulationInfo,
+            }
+
+            this.newDMlist = this.addForm.vasScore.DM;
+            this.newCKDlist = this.addForm.vasScore.CKD;
+            this.newfengxielist = this.addForm.windEvil.fengxie;
+          } catch (error) {
+            console.log('error', error);
+          }
+
+          this.loading = false;
+        });
       },
     },
   };

@@ -48,7 +48,7 @@
       <el-tab-pane label="疾病资料" name="2">
         <el-descriptions title="疾病资料" :column="2">
           <el-descriptions-item label="主述">
-            {{ thisconsultationDto.mainComplaint }}
+            {{ thisconsultationDto.mainlyComplaint }}
           </el-descriptions-item>
           <el-descriptions-item label="现病史">
             <el-descriptions :column="1">
