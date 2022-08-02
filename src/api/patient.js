@@ -195,7 +195,7 @@ export function getConsultationInfo(consultationId, patientId) {
 }
 
 // 获取患者个人信息和就诊信息
-export function getPatientInfo(id) {
+export function getPatientInfo(id, isFirst = true) {
   return request({
     url: '/patient/getPatientInfo',
     method: 'get',
@@ -203,7 +203,8 @@ export function getPatientInfo(id) {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
     params: {
-      id: id
+      id: id,
+      isFirst: isFirst
     }
   })
 }

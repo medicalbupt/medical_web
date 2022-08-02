@@ -1620,7 +1620,7 @@
       // 拿到该患者第一次就诊信息和他的基本信息
       getPatientInfo() {
         this.loading = true;
-        getPatientInfo(this.patientId).then((res) => {
+        getPatientInfo(this.patientId, false).then((res) => {
           const consulationInfo = res.data.consultationDto;
           const patientInfo = res.data.patientDto;
           try {
