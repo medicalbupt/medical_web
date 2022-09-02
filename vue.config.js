@@ -36,6 +36,7 @@ module.exports = {
         changeOrigin: true
       }
     },
+    disableHostCheck: true,
     port: port,
     open: true,
     overlay: {

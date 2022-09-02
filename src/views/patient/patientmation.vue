@@ -56,6 +56,7 @@
           </el-descriptions-item>
           <el-descriptions-item label="既往史">
             <el-tag v-for="item in changeListToName(thispatientDto.pastHistoryList)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
+            <el-tag v-if="pastHistoryList99999"  type="info" class="medical-tag">其他：{{pastHistoryList99999}}</el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="个人史">
             <el-descriptions :column="2">
@@ -74,6 +75,7 @@
           </el-descriptions-item>
           <el-descriptions-item label="家族史">
             <el-tag v-for="item in changeListToName(thispatientDto.pastHistoryList)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
+            <el-tag v-if="familyHistoryList99999"  type="info" class="medical-tag">其他：{{familyHistoryList99999}}</el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="过敏史">
             {{ thispatientDto.allergyHistory.has ? thispatientDto.allergyHistory.desc : '无' }}
@@ -92,6 +94,15 @@
                 <el-tag v-if="item1.score !== 0" :key="item1.id" :type="symptomScoreList[Number(item1.score)].type" class="medical-tag">{{item1.dataName}}: {{symptomScoreList[Number(item1.score)].label}}</el-tag>
               </template>
             </div>
+            <div class="image-list">
+              <el-image
+                v-for="(item, index) in tonguePatternPicList"
+                :key="index"
+                :src="item"
+                :preview-src-list="tonguePatternPicList"
+                class="image-item"
+                fit="cover"></el-image>
+            </div>
           </el-descriptions-item>
           <el-descriptions-item label="脉象">
             <div v-for="(item) in thisconsultationDto.symptom.symtomList3" :key="item.typeId">
@@ -100,15 +111,36 @@
               </template>
             </div>
           </el-descriptions-item>
-          <el-descriptions-item label="基本查体" :span="2">{{
+          <el-descriptions-item label="基本查体" :span="2">
+          {{
             thisconsultationDto.bodyCheck
-          }}</el-descriptions-item>
+          }}
+          <div class="image-list">
+            <el-image
+                v-for="(item, index) in bodyCheckPicList"
+                :key="index"
+                :src="item"
+                :preview-src-list="bodyCheckPicList"
+                class="image-item"
+                fit="cover"></el-image>
+          </div>
+          </el-descriptions-item>
           <el-descriptions-item label="腹证">
             <el-descriptions :column="1">
               <el-descriptions-item v-for="(item, index) in changeObjectToName(thisconsultationDto.abdominalExamination, abdominalExaminationTypeList)" :key="index" :label="item.title">
                 <el-tag v-for="name in item.children" :key="name" type="info" class="medical-tag">{{name}}</el-tag>
               </el-descriptions-item>
             </el-descriptions>
+
+            <div class="image-list">
+              <el-image
+                v-for="(item, index) in abdominalExaminationPicList"
+                :key="index"
+                :src="item"
+                :preview-src-list="abdominalExaminationPicList"
+                class="image-item"
+                fit="cover"></el-image>
+            </div>
           </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
@@ -151,7 +183,8 @@
       <el-tab-pane label="诊断记录" name="6">
         <el-descriptions title="诊断记录" :column="2" :size="size" border direction="vertical">
           <el-descriptions-item label="西医诊断及病程">
-            <el-tag v-for="item in changeListToName(thispatientDto.pastHistoryList)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
+            <el-tag v-for="item in changeListToName(thispatientDto.curMedicalRecord.Westernmedicine.list)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
+             <el-tag v-if="westernmedicineList99999"  type="info" class="medical-tag">其他：{{westernmedicineList99999}}</el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="确诊时间">{{thispatientDto.curMedicalRecord.confirmTime.time | formatDate}}</el-descriptions-item>
           <el-descriptions-item label="症状">
@@ -202,7 +235,8 @@
       <el-tab-pane label="治疗信息" name="7">
         <el-descriptions title="治疗信息" :column="2" :size="size" border direction="vertical">
           <el-descriptions-item label="医嘱">
-            <el-tag v-for="item in changeListToName(thisconsultationDto.diseaseLocation.tripleFocus)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
+            <el-tag v-for="item in changeListToName(thisconsultationDto.doctorOrder)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
+            <el-tag v-if="doctorOrder99999"  type="info" class="medical-tag">其他：{{doctorOrder99999}}</el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="处方">
             {{ thisconsultationDto.prescription }}
@@ -573,6 +607,11 @@
         }],
         isComsultation: false,
         consultationId: '',
+
+        pastHistoryList99999: '',
+        familyHistoryList99999: '',
+        westernmedicineList99999: '',
+        doctorOrder99999: '',
       };
     },
     filters: {
@@ -654,13 +693,18 @@
 
         const nameList = [];
         list.forEach((item) => {
-          const nameItem = this.allTypeList.find((type) => type.dataCode === String(item));
+          const itemCode = item.split(':');
+          console.log(itemCode);
+          const nameItem = this.allTypeList.find((type) => type.dataCode === String(itemCode[0]));
           if (nameItem) {
-            nameList.push(nameItem);
+            nameList.push({
+              ...nameItem,
+              desc: itemCode[1],
+            });
           }
         });
 
-        return nameList.map((item) => item.dataName);
+        return nameList.map((item) => (item.dataName + (item.desc ? `: ${item.desc}` : '')));
       },
       changeObjectToName(obj, typeList) {
         if(!obj || Object.keys(obj).length === 0) {
@@ -720,12 +764,13 @@
       getPatientInfo() {
         getPatientInfo(this.$route.query.index).then((res) => {
           this.thisconsultationDto = res.data.consultationDto;
-          this.thispatientDto = res.data.patientDto;
+          const patientInfo = res.data.patientDto;
+
           try {
-            this.thispatientDto.allergyHistory = this.thispatientDto.allergyHistory ? JSON.parse(this.thispatientDto.allergyHistory) : '-';
-            this.thispatientDto.physique = this.thispatientDto.physique ? JSON.parse(this.thispatientDto.physique) : '-';
+            patientInfo.allergyHistory = patientInfo.allergyHistory ? JSON.parse(patientInfo.allergyHistory) : '-';
+            patientInfo.physique = patientInfo.physique ? JSON.parse(patientInfo.physique) : '-';
             this.thisconsultationDto.abdominalExamination = this.thisconsultationDto.abdominalExamination ? JSON.parse(this.thisconsultationDto.abdominalExamination) : '-';
-            this.thispatientDto.curMedicalRecord = this.thispatientDto.curMedicalRecord || {
+            patientInfo.curMedicalRecord = patientInfo.curMedicalRecord || {
               currentText: '',
               Westernmedicine: {
                 list: [],
@@ -741,8 +786,12 @@
               },
             };
 
+            this.dealCheckListBeforeDetail(patientInfo);
+
+            this.thispatientDto= patientInfo;
+
             this.$nextTick(() => {
-              this.activeName = this.$route.query.tab || '1';
+              this.activeName = this.$route.query.tab?.toString() || '1';
             });
           } catch (error) {
             console.log('error', error);
@@ -775,7 +824,7 @@
             };
 
             this.$nextTick(() => {
-              this.activeName = this.$route.query.tab || '1';
+              this.activeName = this.$route.query.tab?.toString() || '1';
             });
           } catch (error) {
             console.log('error', error);
@@ -947,6 +996,61 @@
           }
         }
       },
+      // 获取信息后处理
+      dealCheckListBeforeDetail(patientInfo) {
+        // 获取既往史处理
+        let pastHistoryList = patientInfo.pastHistoryList || [];
+        pastHistoryList.forEach((item) => {
+          const itemArray = item.split(':') || [];
+          const code = itemArray[0];
+          const desc = itemArray[1];
+
+          if(code === '99999') {
+            this.pastHistoryList99999 = desc;
+          }
+        });
+        patientInfo.pastHistoryList = pastHistoryList;
+        
+
+        // 对家族史发布前处理
+        let familyHistoryList = patientInfo.familyHistoryList || [];
+        familyHistoryList.forEach((item) => {
+          const itemArray = item.split(':') || [];
+          const code = itemArray[0];
+          const desc = itemArray[1];
+
+          if(code === '99999') {
+            this.familyHistoryList99999 = desc;
+          }
+        });
+        patientInfo.familyHistoryList = familyHistoryList;
+
+        // 对西医诊断发布前处理
+        let westernmedicineList = patientInfo.curMedicalRecord.Westernmedicine.list || [];
+        westernmedicineList.forEach((item) => {
+          const itemArray = item.split(':') || [];
+          const code = itemArray[0];
+          const desc = itemArray[1];
+
+          if(code === '99999') {
+            this.westernmedicineList99999 = desc;
+          }
+        });
+        patientInfo.curMedicalRecord.Westernmedicine.list = westernmedicineList;
+
+        // 对医嘱的发布前处理
+        let doctorOrder = this.thisconsultationDto.doctorOrder || [];
+        doctorOrder.forEach((item) => {
+          const itemArray = item.split(':') || [];
+          const code = itemArray[0];
+          const desc = itemArray[1];
+
+          if(code === '99999') {
+            this.doctorOrder99999 = desc;
+          }
+        });
+        this.thisconsultationDto.doctorOrder = doctorOrder;
+      },
 
       // //DM展示
       // DMotext(list) {
@@ -985,6 +1089,19 @@
           return vaiue3;
         }
       },
+
+      tonguePatternPicList() {
+        const picList = this.thisconsultationDto.tonguePatternInfo?.split(';') || [];
+        return picList;
+      },
+      abdominalExaminationPicList() {
+        const picList = this.thisconsultationDto.abdominalExaminationInfo?.split(';') || [];
+        return picList;
+      },
+      bodyCheckPicList() {
+        const picList = this.thisconsultationDto.bodyCheckInfo?.split(';') || [];
+        return picList;
+      }
     },
   };
 
@@ -1119,6 +1236,15 @@
       .el-descriptions-item__cell {
         width: 33%;
       }
+    }
+  }
+
+  .image-list {
+    .image-item {
+      margin-top: 8px;
+      margin-right: 4px;
+      width: 150px;
+      height: 150px;
     }
   }
 

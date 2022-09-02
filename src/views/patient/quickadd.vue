@@ -212,8 +212,14 @@
               </el-form-item>
               <el-form-item label="既往史">
                 <el-checkbox-group v-model="addForm.pastHistoryList" :disabled="isAddComsultation">
-                  <el-checkbox v-for="item in pastHistoryListOptions" :label="item.dataCode" :key="item.dataCode">
+                  <!-- code:year/msg -->
+                  <el-checkbox v-for="(item, index) in pastHistoryListOptions" :label="item.dataCode" :key="item.dataCode">
                     {{ item.dataName }}
+                    <el-input v-if="addForm.pastHistoryList.indexOf(item.dataCode) !== -1" v-model="pastHistoryListYearList[index]" :key="item.dataCode" style="width: 70px;" size="mini" placeholder="年份"  :disabled="isAddComsultation"></el-input>
+                  </el-checkbox>
+                  <el-checkbox label="99999">
+                    其他
+                    <el-input v-if="addForm.pastHistoryList.indexOf('99999') !== -1" v-model="addForm.pastHistoryList99999" :disabled="isAddComsultation"></el-input>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
@@ -240,6 +246,10 @@
                 <el-checkbox-group v-model="addForm.familyHistoryList" :disabled="isAddComsultation">
                   <el-checkbox v-for="item in familyHistoryListOptions" :label="item.dataCode" :key="item.dataCode">
                     {{ item.dataName }}
+                  </el-checkbox>
+                  <el-checkbox label="99999">
+                    其他
+                    <el-input v-if="addForm.familyHistoryList.indexOf('99999') !== -1" v-model="addForm.familyHistoryList99999"></el-input>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
@@ -272,13 +282,6 @@
             <el-form class="medical-form" label-width="80px" label-position="top" size="medium" ref="addFormRef"
               :model="addForm">
               <el-form-item label="舌象" :label-width="formLabelWidth">
-                <!-- <el-switch
-              v-model="simpleSymtomHideStatus2"
-              style="margin-bottom: 8px"
-              active-text="复杂模式"
-              inactive-text="简单模式"
-            >
-            </el-switch> -->
                 <div v-if="!simpleSymtomHideStatus2" class="simple-symtom-type">
                   <el-card shadow="never">
                     <el-select v-model="simpleSymtomValue2" filterable clearable>
@@ -330,6 +333,22 @@
                     </div>
                   </el-card>
                 </div>
+                <div style="margin-top: 15px;"></div>
+                <el-upload 
+                  class="upload-demo"
+                  action="/ZUNren/consultation/fileUpload?picType=2"
+                  :file-list="fileList1"
+                  :on-success="onSuccess1"
+                  :on-remove="onRemove1"
+                  list-type="picture"
+                  multiple
+                  :limit="10"
+                  :auto-upload="true">
+                  <el-button size="mini" type="primary">选择舌象图片</el-button>
+                  <div slot="tip" class="el-upload__tip">
+                    只能上传jpg/png文件，且不超过10张
+                  </div>
+                </el-upload>
               </el-form-item>
               <el-form-item label="脉象" :label-width="formLabelWidth">
                 <div v-if="!simpleSymtomHideStatus3" class="simple-symtom-type">
@@ -387,6 +406,22 @@
               <el-form-item label="基本查体" :label-width="formLabelWidth">
                 <el-input type="textarea" :rows="5" placeholder="请输入基本查体" v-model="addForm.bodyCheck"
                   autocomplete="off"></el-input>
+                <div style="margin-top: 15px;"></div>
+                <el-upload 
+                  class="upload-demo"
+                  action="/ZUNren/consultation/fileUpload?picType=2"
+                  :file-list="fileList2"
+                  :on-success="onSuccess2"
+                  :on-remove="onRemove2"
+                  list-type="picture"
+                  multiple
+                  :limit="10"
+                  :auto-upload="true">
+                  <el-button size="mini" type="primary">选择基本查体图片</el-button>
+                  <div slot="tip" class="el-upload__tip">
+                    只能上传jpg/png文件，且不超过10张
+                  </div>
+                </el-upload>
               </el-form-item>
               <el-form-item label="腹诊" :label-width="formLabelWidth">
                 <div v-for="abdominalExaminationItem in abdominalExaminationList" :key="abdominalExaminationItem.key">
@@ -398,6 +433,22 @@
                     </el-checkbox>
                   </el-checkbox-group>
                 </div>
+                <div style="margin-top: 15px;"></div>
+                <el-upload 
+                  class="upload-demo"
+                  action="/ZUNren/consultation/fileUpload?picType=2"
+                  :file-list="fileList3"
+                  :on-success="onSuccess3"
+                  :on-remove="onRemove3"
+                  list-type="picture"
+                  multiple
+                  :limit="10"
+                  :auto-upload="true">
+                  <el-button size="mini" type="primary">选择基本腹诊图片</el-button>
+                  <div slot="tip" class="el-upload__tip">
+                    只能上传jpg/png文件，且不超过10张
+                  </div>
+                </el-upload>
               </el-form-item>
             </el-form>
           </div>
@@ -493,8 +544,13 @@
               :model="addForm">
               <el-form-item label="西医诊断及病程诊断">
                 <el-checkbox-group v-model="addForm.curMedicalRecord.Westernmedicine.list">
-                  <el-checkbox v-for="item in WesternmedicineOptions" :label="item.dataCode" :key="item.dataCode">
+                  <el-checkbox v-for="(item, index) in WesternmedicineOptions" :label="item.dataCode" :key="item.dataCode">
                     {{ item.dataName }}
+                    <el-input v-if="addForm.curMedicalRecord.Westernmedicine.list.indexOf(item.dataCode) !== -1" v-model="westernmedicineOptionsYearList[index]" :key="item.dataCode" style="width: 70px;" size="mini" placeholder="年份"></el-input>
+                  </el-checkbox>
+                  <el-checkbox label="99999">
+                    其他
+                    <el-input v-if="addForm.curMedicalRecord.Westernmedicine.list.indexOf('99999') !== -1" v-model="addForm.westernmedicineList99999"></el-input>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
@@ -570,6 +626,10 @@
                   <el-checkbox v-for="symtom in doctorcommonDataEntityList" :key="symtom.dataCode"
                     :label="symtom.dataCode">
                     {{ symtom.dataName }}
+                  </el-checkbox>
+                  <el-checkbox label="99999">
+                    其他
+                    <el-input v-if="addForm.doctorOrder.indexOf('99999') !== -1" v-model="addForm.doctorOrder99999"></el-input>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
@@ -709,11 +769,13 @@
         familyHistoryListOptions: [],
         //既往史选择的数据
         pastHistoryListOptions: [],
+        pastHistoryListYearList: [],
         formLabelWidth: "120px",
         activeName: "1",
         //现病史选择的数据
         //curMedicalRecordListOptions: [],
         WesternmedicineOptions: [],
+        westernmedicineOptionsYearList: [],
         DMcomplicationsOptions: [],
         CKDreasonOptions: [],
         //   快速增加患者表单
@@ -736,15 +798,16 @@
             desc: '',
           },
           // 辅助检查
-          auxiliaryExamination: "",
+          auxiliaryExamination: "<p><strong>血常规</strong></p>\n<table style=\"border-collapse: collapse; width: 100%;\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>白细胞</p>\n</td>\n<td style=\"width: 25%;\">WBC</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&times;10^9/L</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>淋巴细胞百分比</p>\n</td>\n<td style=\"width: 25%;\">LYMPH%</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">%</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>中性粒细胞</p>\n</td>\n<td style=\"width: 25%;\">NEUT%</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">%</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>红细胞</p>\n</td>\n<td style=\"width: 25%;\">RBC</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&times;10^12/L</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>血小板</p>\n</td>\n<td style=\"width: 25%;\">PLT</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&times;10^9/L</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>血红蛋白</p>\n</td>\n<td style=\"width: 25%;\">HGB</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">g/L</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>C-反应蛋白</p>\n</td>\n<td style=\"width: 25%;\">CRP</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">mg/L</td>\n</tr>\n</tbody>\n</table>\n<p><strong>生化</strong></p>\n<table style=\"border-collapse: collapse; width: 100%;\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width: 25%;\">糖化血红蛋白</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>HBAC</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>%</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿素</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>UREA</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>肌酐</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>CREA</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&mu;mol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿酸</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>UA</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&mu;mol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>血糖</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>GLU</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>胆固醇</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>CHOL</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>甘油三酯</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>TRIG</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>高密度脂蛋白胆固醇</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>HDL-C</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>低密度脂蛋白胆固醇</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>LDL-C</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>谷丙转氨酶</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>ALT</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>U/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>谷草转氨酶</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>AST</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>U/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>总蛋白</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>TP</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>g/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>白蛋白</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>ALB</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>g/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>球蛋白</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>G</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>g/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>钾</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>K+</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>钠</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>Na+</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>氯</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>CL-</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n</tbody>\n</table>\n<p><strong>尿液分析</strong></p>\n<table style=\"border-collapse: collapse; width: 100%;\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿蛋白定性</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿红细胞定性</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿白细胞定性</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>24h尿蛋白</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mg/24h</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿微量白蛋白</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mg/24h</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿肌酐</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿蛋白/尿肌酐</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿红细胞（HPF）</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿红细胞计数</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>白细胞（HPF）</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿白细胞计数</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿酮体</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>细菌</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>管型</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>正常红细胞</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>%</p>\n</td>\n</tr>\n</tbody>\n</table>\n<p><strong>甲状腺功能</strong></p>\n<table style=\"border-collapse: collapse; width: 100%;\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>三碘甲腺原氨酸</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>T3</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>nmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>甲状腺素</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>T4</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>nmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>游离三碘甲腺原氨酸</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>FT3</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>pmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>游离甲状腺素</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>FT4</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>pmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>促甲状腺素</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>TSH</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>IU/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>甲状腺球蛋白抗体</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>TGAb</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>IU/ml</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>甲状腺过氧化物酶抗体</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>TPOAb</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>IU/ml</p>\n</td>\n</tr>\n</tbody>\n</table>",
           // 出生日期
           birthday: '',
           // 基本查体
           bodyCheck: "",
+          bodyCheckInfo: "", // 基本查体图片
           // 病例特点
           caseFeature: "",
           // 合并用药
-          combinationTherapy: "",
+          combinationTherapy: "<table style=\"height: 30px; width: 100%; border-collapse: collapse; margin-left: auto; margin-right: auto;\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width: 25%; text-align: center;\">药物</td>\n<td style=\"width: 25%; text-align: center;\">剂量</td>\n<td style=\"width: 25%; text-align: center;\">用量</td>\n<td style=\"width: 25%; text-align: center;\">频次</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n</tr>\n</tbody>\n</table>",
           // 就诊时间
           consultTime: new Date(),
           // 创建时间
@@ -776,7 +839,7 @@
           doctorOrder: [],
           engravedDisease: "",
           familyHistoryList: [],
-          gender: "0",
+          gender: 0,
           height: "",
           idCard: "",
           mainlyComplaint: "",
@@ -868,6 +931,10 @@
         patientId: '',
         loading: false,
         submiting: false,
+
+        fileList1: [],
+        fileList2: [],
+        fileList3: [],
       };
     },
     created() {
@@ -1008,17 +1075,194 @@
 
         this.submiting = false;
       },
+      // 发布前处理
+      dealCheckListBeforeSubmit() {
+        // 对既往史发布前处理
+        let pastHistoryList = [];
+        if (this.addForm.pastHistoryList.length !== 0) {
+          this.addForm.pastHistoryList.forEach((item) => {
+            if (item === '99999') {
+              pastHistoryList.push(`${item}:${this.addForm.pastHistoryList99999 || ''}`)
+            } else {
+              const index = this.pastHistoryListOptions.findIndex((option) => option.dataCode === item);
+              if(index !== -1) {
+                pastHistoryList.push(`${item}:${this.pastHistoryListYearList[index] || ''}`);
+              }
+            }
+          });
+        }
+
+        // 对家族史发布前处理
+        let familyHistoryList = [];
+        if (this.addForm.familyHistoryList.length !== 0) {
+          this.addForm.familyHistoryList.forEach((item) => {
+            if (item === '99999') {
+              familyHistoryList.push(`${item}:${this.addForm.familyHistoryList99999 || ''}`)
+            } else {
+              familyHistoryList.push(`${item}`);
+            }
+          });
+        }
+
+        // 对西医诊断发布前处理
+        let westernmedicineList = [];
+        if (this.addForm.curMedicalRecord.Westernmedicine.list !== 0) {
+          this.addForm.curMedicalRecord.Westernmedicine.list.forEach((item) => {
+            if (item === '99999') {
+              westernmedicineList.push(`${item}:${this.addForm.westernmedicineList99999 || ''}`)
+            } else {
+              const index = this.WesternmedicineOptions.findIndex((option) => option.dataCode === item);
+              if(index !== -1) {
+                pastHistoryList.push(`${item}:${this.westernmedicineOptionsYearList[index] || ''}`);
+              }
+            }
+          });
+        }
+
+        // 对医嘱的发布前处理
+        let doctorOrder = [];
+        if (this.addForm.doctorOrder.length !== 0) {
+          this.addForm.doctorOrder.forEach((item) => {
+            if (item === '99999') {
+              doctorOrder.push(`${item}:${this.addForm.doctorOrder99999 || ''}`)
+            } else {
+              doctorOrder.push(`${item}`);
+            }
+          });
+        }
+
+        return {
+          pastHistoryList: pastHistoryList,
+          familyHistoryList: familyHistoryList,
+          westernmedicineList: westernmedicineList,
+          doctorOrder: doctorOrder,
+        };
+      },
+      // 获取信息后处理
+      dealCheckListBeforeDetail(patientInfo, consulationInfo) {
+        // 获取既往史处理
+        let pastHistoryList = patientInfo.pastHistoryList || [];
+        const pastHistoryListCode = [];
+        pastHistoryList.forEach((item) => {
+          const itemArray = item.split(':') || [];
+          const code = itemArray[0];
+          const desc = itemArray[1];
+
+          pastHistoryListCode.push(code);
+          if(code === '99999') {
+            this.addForm.pastHistoryList99999 = desc;
+          } else {
+            const index = this.pastHistoryListOptions.findIndex((option) => option.dataCode === code);
+            if(index !== -1) {
+              this.pastHistoryListYearList[index] = desc;
+            }
+          }
+        });
+        patientInfo.pastHistoryList = pastHistoryListCode;
+        
+
+        // 获取家族史处理
+        let familyHistoryList = patientInfo.familyHistoryList || [];
+        const familyHistoryListCode = [];
+        familyHistoryList.forEach((item) => {
+          const itemArray = item.split(':') || [];
+          const code = itemArray[0];
+          const desc = itemArray[1];
+
+          familyHistoryListCode.push(code);
+
+          if(code === '99999') {
+            this.addForm.familyHistoryList99999 = desc;
+          }
+        });
+        patientInfo.familyHistoryList = familyHistoryListCode;
+
+        // 获取西医诊断处理
+        let westernmedicineList = patientInfo.curMedicalRecord.Westernmedicine.list || [];
+        const westernmedicineListCode = [];
+        westernmedicineList.forEach((item) => {
+          const itemArray = item.split(':') || [];
+          const code = itemArray[0];
+          const desc = itemArray[1];
+
+          westernmedicineListCode.push(code);
+          if(code === '99999') {
+            this.addForm.westernmedicineList99999 = desc;
+          } else {
+            const index = this.WesternmedicineOptions.findIndex((option) => option.dataCode === code);
+            if(index !== -1) {
+              this.westernmedicineOptionsYearList[index] = desc;
+            }
+          }
+        });
+        patientInfo.curMedicalRecord.Westernmedicine.list = westernmedicineListCode;
+
+        // 获取医嘱处理
+        let doctorOrder = consulationInfo.doctorOrder || [];
+        const doctorOrderCode = [];
+        doctorOrder.forEach((item) => {
+          const itemArray = item.split(':') || [];
+          const code = itemArray[0];
+          const desc = itemArray[1];
+
+          doctorOrderCode.push(code);
+
+          if(code === '99999') {
+            this.addForm.doctorOrder99999 = desc;
+          }
+        });
+        consulationInfo.doctorOrder = doctorOrderCode;
+        
+        // 舌象、查体、腹诊图片处理
+        if(consulationInfo.tonguePatternInfo) {
+          this.fileList1 = consulationInfo.tonguePatternInfo.split(';').map((url, index) => {
+            return {
+              name: index,
+              url
+            }
+          })
+        }
+
+        if(consulationInfo.bodyCheckInfo) {
+          this.fileList2 = consulationInfo.bodyCheckInfo.split(';').map((url, index) => {
+            return {
+              name: index,
+              url
+            }
+          })
+        }
+
+        if(consulationInfo.abdominalExaminationInfo) {
+          this.fileList3 = consulationInfo.abdominalExaminationInfo.split(';').map((url, index) => {
+            return {
+              name: index,
+              url
+            }
+          })
+        }
+      },
       async addquick() {
         try {
           this.addForm.vasScore.DM = this.newDMlist;
           this.addForm.vasScore.CKD = this.newCKDlist;
           this.addForm.windEvil.fengxie = this.newfengxielist;
-          const res = await addquick({
+          
+          const {pastHistoryList, familyHistoryList, westernmedicineList, doctorOrder} = this.dealCheckListBeforeSubmit();
+          const curMedicalRecord = JSON.parse(JSON.stringify(this.addForm.curMedicalRecord));
+          curMedicalRecord.Westernmedicine.list = westernmedicineList;
+
+          const params = {
             ...this.addForm,
             abdominalExamination: JSON.stringify(this.addForm.abdominalExamination),
             allergyHistory: JSON.stringify(this.addForm.allergyHistory),
             physique: JSON.stringify(this.addForm.physique),
-          });
+            curMedicalRecord,
+            pastHistoryList,
+            familyHistoryList,
+            doctorOrder
+          };
+
+          const res = await addquick(params);
 
           if(res.data.respCode === '0000') {
             this.$router.push("/patient");
@@ -1035,13 +1279,24 @@
           this.addForm.vasScore.DM = this.newDMlist;
           this.addForm.vasScore.CKD = this.newCKDlist;
           this.addForm.windEvil.fengxie = this.newfengxielist;
-          const res = await addconsult({
+
+          const {pastHistoryList, familyHistoryList, westernmedicineList, doctorOrder} = this.dealCheckListBeforeSubmit();
+          const curMedicalRecord = JSON.parse(JSON.stringify(this.addForm.curMedicalRecord));
+          curMedicalRecord.Westernmedicine.list = westernmedicineList;
+
+          const params = {
             ...this.addForm,
             abdominalExamination: JSON.stringify(this.addForm.abdominalExamination),
             allergyHistory: JSON.stringify(this.addForm.allergyHistory),
             physique: JSON.stringify(this.addForm.physique),
+            curMedicalRecord,
+            pastHistoryList,
+            familyHistoryList,
+            doctorOrder,
             patientId: this.patientId,
-          });
+          };
+
+          const res = await addconsult(params);
 
           if ((res.data.respCode == "0000")) {
             this.$message({
@@ -1283,7 +1538,6 @@
           );
         });
       },
-
       // 拿到所有的症状12
       getsymtomlist2() {
         const symtomMap = {};
@@ -1332,7 +1586,6 @@
           );
         });
       },
-
       // 拿到所有的症状13
       getsymtomlist3() {
         const symtomMap = {};
@@ -1505,6 +1758,7 @@
           //   });
           // }
           this.pastHistoryListOptions = res.data.commonDataEntityList;
+          this.pastHistoryListYearList = new Array(res.data.commonDataEntityList.length).fill('');
         });
       },
       // 拿到就诊基本数据表数据(就诊地址)
@@ -1530,6 +1784,7 @@
           // }
           // this.curMedicalRecordListOptions = res.data.commonDataEntityList;
           this.WesternmedicineOptions = res.data.commonDataEntityList;
+          this.westernmedicineOptionsYearList = new Array(res.data.commonDataEntityList.length).fill('');
         });
       },
       // 拿到所有的现病史糖尿病并发症选项
@@ -1643,6 +1898,8 @@
               },
             };
 
+            this.dealCheckListBeforeDetail(patientInfo, consulationInfo);
+
             consulationInfo.medicalLocId = consulationInfo.medicalLoc?.id;
             consulationInfo.consultTime = new Date();
 
@@ -1672,6 +1929,72 @@
           this.loading = false;
         });
       },
+      onSuccess2(response, file, fileList) {
+        this.addForm.bodyCheckInfo = fileList.map((item) => {
+          if (item.response && item.response.picUrls && item.response.picUrls[0]) {
+            return item.response.picUrls[0];
+          } else if (item.url) {
+            return item.url;
+          } else {
+            return '';
+          }
+        }).join(';');
+      },
+      onRemove2(file, fileList) {
+        this.addForm.bodyCheckInfo = fileList.map((item) => {
+          if (item.response && item.response.picUrls && item.response.picUrls[0]) {
+            return item.response.picUrls[0];
+          } else if (item.url) {
+            return item.url;
+          } else {
+            return '';
+          }
+        }).join(';');
+      },
+      onSuccess1(response, file, fileList) {
+        this.addForm.tonguePatternInfo = fileList.map((item) => {
+          if (item.response && item.response.picUrls && item.response.picUrls[0]) {
+            return item.response.picUrls[0];
+          } else if (item.url) {
+            return item.url;
+          } else {
+            return '';
+          }
+        }).join(';');
+      },
+      onRemove1(file, fileList) {
+        this.addForm.tonguePatternInfo = fileList.map((item) => {
+          if (item.response && item.response.picUrls && item.response.picUrls[0]) {
+            return item.response.picUrls[0];
+          } else if (item.url) {
+            return item.url;
+          } else {
+            return '';
+          }
+        }).join(';');
+      },
+      onSuccess3(response, file, fileList) {
+        this.addForm.abdominalExaminationInfo = fileList.map((item) => {
+          if (item.response && item.response.picUrls && item.response.picUrls[0]) {
+            return item.response.picUrls[0];
+          } else if (item.url) {
+            return item.url;
+          } else {
+            return '';
+          }
+        }).join(';');
+      },
+      onRemove3(file, fileList) {
+        this.addForm.abdominalExaminationInfo = fileList.map((item) => {
+          if (item.response && item.response.picUrls && item.response.picUrls[0]) {
+            return item.response.picUrls[0];
+          } else if (item.url) {
+            return item.url;
+          } else {
+            return '';
+          }
+        }).join(';');
+      }
     },
   };
 
