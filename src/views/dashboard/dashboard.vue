@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="info-container">
-      <span class="display_name">尊仁欢迎您！</span>
+      <span class="display_name">内分泌代谢病医案系统欢迎您！</span>
     </div>
   </div>
 </template>

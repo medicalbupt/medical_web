@@ -59,17 +59,27 @@
             <el-tag v-if="pastHistoryList99999"  type="info" class="medical-tag">其他：{{pastHistoryList99999}}</el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="个人史">
-            <el-descriptions :column="2">
-              <el-descriptions-item label=" 吸烟数量（支/天）">
-                {{
-                  thispatientDto.personalHistory.smoke.amount
-                }}</el-descriptions-item>
-              <el-descriptions-item label="啤酒数量（瓶/天）">
-                {{
-                  thispatientDto.personalHistory.beer.amount
-                }}</el-descriptions-item>
-              <el-descriptions-item label="白酒数量（两/天）">
-                {{ thispatientDto.personalHistory.whiteWine.amount }}
+            <el-descriptions :column="1">
+              <el-descriptions-item label="吸烟">
+                <div>
+                  {{ thispatientDto.personalHistory.smoke.amount }}（支/天）
+                  <div style="margin-top: 4px;">
+                    {{thispatientDto.personalHistory.smoke.dropSmoke ? '已戒烟 ' + thispatientDto.personalHistory.smoke.dropYear + ' 年' : '未戒烟'}}
+                  </div>
+                </div>
+              </el-descriptions-item>
+              <el-descriptions-item label="饮酒">
+                <div>
+                  <div style="margin-bottom: 4px;">
+                    啤酒：{{ thispatientDto.personalHistory.beer.amount}}（瓶/天）
+                  </div>
+                  <div style="margin-bottom: 4px;">
+                    白酒：{{ thispatientDto.personalHistory.whiteWine.amount }}（两/天）
+                  </div>
+                  <div>
+                    {{thispatientDto.personalHistory.smoke.dropSmoke ? '已戒酒 ' + thispatientDto.personalHistory.smoke.dropYear + ' 年' : '未戒酒'}}
+                  </div>
+                </div>
               </el-descriptions-item>
             </el-descriptions>
           </el-descriptions-item>
@@ -205,7 +215,7 @@
               </el-descriptions-item>
             </el-descriptions>
           </el-descriptions-item>
-          <el-descriptions-item label="辩证">
+          <el-descriptions-item label="辨证">
             <el-descriptions :column="1">
               <el-descriptions-item label="实">
                 <el-tag v-for="item in changeListToName(thisconsultationDto.symptomCategories.real)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
