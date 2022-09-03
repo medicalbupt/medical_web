@@ -227,17 +227,34 @@
                 <el-row>
                   <el-col :span="8">
                     <div class="block-title">吸烟数量（支/天）</div>
-                    <el-input-number v-model="addForm.personalHistory.smoke.amount" :max="50" :min="0"
+                    <div>
+                      <el-input-number v-model="addForm.personalHistory.smoke.amount" :max="50" :min="0"
+                      controls-position="right" class="readonly" :disabled="isAddComsultation"></el-input-number>
+                      <el-checkbox v-model="addForm.personalHistory.smoke.dropSmoke" style="margin-left: 12px">已戒烟</el-checkbox>
+                    </div>
+                  </el-col>
+                  <el-col v-if="addForm.personalHistory.smoke.dropSmoke" :span="8">
+                    <div class="block-title">已戒烟（年）</div>
+                    <el-input-number v-model="addForm.personalHistory.smoke.dropYear" :max="50" :min="0"
                       controls-position="right" class="readonly" :disabled="isAddComsultation"></el-input-number>
                   </el-col>
+                </el-row>
+                <br />
+                <el-row>
                   <el-col :span="8">
                     <div class="block-title">啤酒数量（瓶/天）</div>
-                    <el-input-number v-model="addForm.personalHistory.beer.amount" :max="50" :min="0"
+                    <div>
+                      <el-input-number v-model="addForm.personalHistory.beer.amount" :max="50" :min="0"
                       controls-position="right" class="readonly" :disabled="isAddComsultation"></el-input-number>
-                  </el-col>
-                  <el-col :span="8">
+                      <el-checkbox v-model="addForm.personalHistory.whiteWine.dropDrink" style="margin-left: 12px">已戒酒</el-checkbox>
+                    </div>
                     <div class="block-title">白酒数量（两/天）</div>
                     <el-input-number v-model="addForm.personalHistory.whiteWine.amount" :max="50" :min="0"
+                      controls-position="right" class="readonly" :disabled="isAddComsultation"></el-input-number>
+                  </el-col>
+                  <el-col v-if="addForm.personalHistory.whiteWine.dropDrink" :span="8">
+                    <div class="block-title">已戒酒（年）</div>
+                    <el-input-number v-model="addForm.personalHistory.whiteWine.dropYear" :max="50" :min="0"
                       controls-position="right" class="readonly" :disabled="isAddComsultation"></el-input-number>
                   </el-col>
                 </el-row>
@@ -572,7 +589,7 @@
                 </div>
               </el-form-item>
 
-              <el-form-item label="辩证诊断" :label-width="formLabelWidth">
+              <el-form-item label="辨证诊断" :label-width="formLabelWidth">
                 <span class="block-title">虚：</span>
                 <el-checkbox-group v-model="addForm.symptomCategories.empty">
                   <el-checkbox v-for="symtom in xulist" :key="symtom.dataCode" :label="symtom.dataCode">
@@ -856,9 +873,13 @@
           patientName: "",
           personalHistory: {
             smoke: {
+              dropSmoke: false,
+              dropYear: 0,
               amount: 0,
             },
             whiteWine: {
+              dropDrink: false,
+              dropYear: 0,
               amount: 0,
             },
             beer: {
