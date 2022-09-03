@@ -790,7 +790,7 @@
         pastHistoryListOptions: [],
         pastHistoryListYearList: [],
         formLabelWidth: "120px",
-        activeName: "7",
+        activeName: "1",
         //现病史选择的数据
         //curMedicalRecordListOptions: [],
         WesternmedicineOptions: [],
