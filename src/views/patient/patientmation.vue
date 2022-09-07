@@ -62,14 +62,20 @@
             <el-descriptions :column="1">
               <el-descriptions-item label="吸烟">
                 <div>
-                  {{ thispatientDto.personalHistory.smoke.amount }}（支/天）
+                  <div style="margin-bottom: 4px;">
+                    吸烟 {{ thispatientDto.personalHistory.smoke.smokeYear || '-' }} 年
+                  </div>
+                    {{ thispatientDto.personalHistory.smoke.amount }}（支/天）
                   <div style="margin-top: 4px;">
-                    {{thispatientDto.personalHistory.smoke.dropSmoke ? '已戒烟 ' + thispatientDto.personalHistory.smoke.dropYear + ' 年' : '未戒烟'}}
+                    {{ thispatientDto.personalHistory.smoke.dropSmoke ? '已戒烟 ' + thispatientDto.personalHistory.smoke.dropYear + ' 年' : '未戒烟' }}
                   </div>
                 </div>
               </el-descriptions-item>
               <el-descriptions-item label="饮酒">
                 <div>
+                  <div style="margin-bottom: 4px;">
+                    饮酒 {{ thispatientDto.personalHistory.whiteWine.smokeYear  || '-' }} 年
+                  </div>
                   <div style="margin-bottom: 4px;">
                     啤酒：{{ thispatientDto.personalHistory.beer.amount}}（瓶/天）
                   </div>
@@ -77,7 +83,7 @@
                     白酒：{{ thispatientDto.personalHistory.whiteWine.amount }}（两/天）
                   </div>
                   <div>
-                    {{thispatientDto.personalHistory.smoke.dropSmoke ? '已戒酒 ' + thispatientDto.personalHistory.smoke.dropYear + ' 年' : '未戒酒'}}
+                    {{ thispatientDto.personalHistory.smoke.dropSmoke ? '已戒酒 ' + thispatientDto.personalHistory.smoke.dropYear + ' 年' : '未戒酒' }}
                   </div>
                 </div>
               </el-descriptions-item>

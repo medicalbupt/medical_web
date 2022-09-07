@@ -219,12 +219,19 @@
                   </el-checkbox>
                   <el-checkbox label="99999">
                     其他
-                    <el-input v-if="addForm.pastHistoryList.indexOf('99999') !== -1" v-model="addForm.pastHistoryList99999" :disabled="isAddComsultation"></el-input>
+                    <el-input v-if="addForm.pastHistoryList.indexOf('99999') !== -1" v-model="addForm.pastHistoryList99999" :disabled="isAddComsultation" autosize type="textarea" resize="none" style="vertical-align: middle;"></el-input>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
               <el-form-item label="个人史">
                 <el-row>
+                  <el-col :span="6">
+                    <div class="block-title">吸烟史（年）</div>
+                    <div>
+                      <el-input-number v-model="addForm.personalHistory.smoke.smokeYear" :max="50" :min="0"
+                      controls-position="right" class="readonly" :disabled="isAddComsultation"></el-input-number>
+                    </div>
+                  </el-col>
                   <el-col :span="8">
                     <div class="block-title">吸烟数量（支/天）</div>
                     <div>
@@ -241,6 +248,13 @@
                 </el-row>
                 <br />
                 <el-row>
+                  <el-col :span="6">
+                    <div class="block-title">饮酒史（年）</div>
+                    <div>
+                      <el-input-number v-model="addForm.personalHistory.whiteWine.drinkYear" :max="50" :min="0"
+                      controls-position="right" class="readonly" :disabled="isAddComsultation"></el-input-number>
+                    </div>
+                  </el-col>
                   <el-col :span="8">
                     <div class="block-title">啤酒数量（瓶/天）</div>
                     <div>
@@ -266,7 +280,7 @@
                   </el-checkbox>
                   <el-checkbox label="99999">
                     其他
-                    <el-input v-if="addForm.familyHistoryList.indexOf('99999') !== -1" v-model="addForm.familyHistoryList99999"></el-input>
+                    <el-input v-if="addForm.familyHistoryList.indexOf('99999') !== -1" v-model="addForm.familyHistoryList99999" autosize type="textarea" resize="none" style="vertical-align: middle;"></el-input>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
@@ -567,7 +581,7 @@
                   </el-checkbox>
                   <el-checkbox label="99999">
                     其他
-                    <el-input v-if="addForm.curMedicalRecord.Westernmedicine.list.indexOf('99999') !== -1" v-model="addForm.westernmedicineList99999"></el-input>
+                    <el-input v-if="addForm.curMedicalRecord.Westernmedicine.list.indexOf('99999') !== -1" v-model="addForm.westernmedicineList99999" autosize type="textarea" resize="none" style="vertical-align: middle;"></el-input>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
@@ -646,7 +660,7 @@
                   </el-checkbox>
                   <el-checkbox label="99999">
                     其他
-                    <el-input v-if="addForm.doctorOrder.indexOf('99999') !== -1" v-model="addForm.doctorOrder99999"></el-input>
+                    <el-input v-if="addForm.doctorOrder.indexOf('99999') !== -1" v-model="addForm.doctorOrder99999" autosize type="textarea" resize="none" style="vertical-align: middle;"></el-input>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
@@ -875,11 +889,13 @@
           patientName: "",
           personalHistory: {
             smoke: {
+              smokeYear: 0,
               dropSmoke: false,
               dropYear: 0,
               amount: 0,
             },
             whiteWine: {
+              drinkYear: 0,
               dropDrink: false,
               dropYear: 0,
               amount: 0,
