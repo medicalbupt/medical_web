@@ -249,7 +249,11 @@
             <el-tag v-if="doctorOrder99999"  type="info" class="medical-tag">其他：{{doctorOrder99999}}</el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="处方">
-            {{ thisconsultationDto.prescription }}
+            <el-descriptions :column="3">
+              <el-descriptions-item v-for="(prescription, index) in thisconsultationDto.prescription" :key="index" :label="prescription.name">
+                {{prescription.value}}g
+              </el-descriptions-item>
+            </el-descriptions>
           </el-descriptions-item>
           <el-descriptions-item label="合并用药">
             <div v-html="thisconsultationDto.combinationTherapy"></div>
@@ -1060,6 +1064,8 @@
           }
         });
         this.thisconsultationDto.doctorOrder = doctorOrder;
+
+        this.thisconsultationDto.prescription = this.thisconsultationDto.prescription ? JSON.parse(this.thisconsultationDto.prescription) : [];
       },
 
       // //DM展示

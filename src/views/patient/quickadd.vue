@@ -651,8 +651,7 @@
                 </el-checkbox-group>
               </el-form-item>
               <el-form-item label="处方" :label-width="formLabelWidth">
-                <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="addForm.prescription"
-                  autocomplete="off"></el-input>
+                <prescription v-model="addForm.prescription"></prescription>
               </el-form-item>
               <el-form-item label="合并用药">
                 <TinymceEditor v-model="addForm.combinationTherapy" style="width: 800px" />
@@ -682,10 +681,13 @@
     addconsult
   } from "@/api/patient";
   import TinymceEditor from "@/components/Tinymce";
+  import Prescription from "@/components/Prescription/index.vue";
+
   export default {
     components: {
       TinymceEditor,
-    },
+      Prescription
+  },
     data() {
       const validatePhone = (rule, value, cb) => {
         if (!value) {
@@ -894,7 +896,7 @@
             physique_29: [],
             physique_30: [],
           },
-          prescription: "",
+          prescription: [],
           pulsePattern: "",
           status: 1,
           symptom: {
@@ -1152,11 +1154,16 @@
           });
         }
 
+        // 处方处理
+        let prescription = '';
+        prescription = JSON.stringify(this.addForm.prescription);
+
         return {
           pastHistoryList: pastHistoryList,
           familyHistoryList: familyHistoryList,
           westernmedicineList: westernmedicineList,
           doctorOrder: doctorOrder,
+          prescription,
         };
       },
       // 获取信息后处理
@@ -1233,6 +1240,9 @@
           }
         });
         consulationInfo.doctorOrder = doctorOrderCode;
+
+        // 处方处理
+        consulationInfo.prescription = consulationInfo.prescription ? JSON.parse(consulationInfo.prescription) : [];
         
         // 舌象、查体、腹诊图片处理
         if(consulationInfo.tonguePatternInfo) {
@@ -1268,7 +1278,7 @@
           this.addForm.vasScore.CKD = this.newCKDlist;
           this.addForm.windEvil.fengxie = this.newfengxielist;
           
-          const {pastHistoryList, familyHistoryList, westernmedicineList, doctorOrder} = this.dealCheckListBeforeSubmit();
+          const {pastHistoryList, familyHistoryList, westernmedicineList, doctorOrder, prescription} = this.dealCheckListBeforeSubmit();
           const curMedicalRecord = JSON.parse(JSON.stringify(this.addForm.curMedicalRecord));
           curMedicalRecord.Westernmedicine.list = westernmedicineList;
 
@@ -1280,7 +1290,8 @@
             curMedicalRecord,
             pastHistoryList,
             familyHistoryList,
-            doctorOrder
+            doctorOrder,
+            prescription
           };
 
           const res = await addquick(params);

@@ -280,15 +280,19 @@ $light_gray: #eee;
   width: 100%;
   background-color: $bg;
   overflow: hidden;
-  background-image: url("./os.jpg");
+  background-image: url("https://zunren.oss-cn-beijing.aliyuncs.com/additionalInfo/os.jpg");
+  background-size: cover;
 
   .login-form {
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding: 25px;
     margin: 0 auto;
+    margin-top: 120px;
     overflow: hidden;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 25px;
   }
 
   .tips {
@@ -334,9 +338,12 @@ $light_gray: #eee;
   }
 }
 .imgse {
-  width: 110px;
-  height: 40px;
+  width: 120px;
+  height: 46px;
   margin-right: 0px;
+  position: absolute;
+  top: 0px;
+  right: 10px;
 }
 // .fillWidth {
 //   width: 100%;
