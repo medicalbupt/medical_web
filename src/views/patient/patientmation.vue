@@ -63,7 +63,7 @@
               <el-descriptions-item label="吸烟">
                 <div>
                   <div style="margin-bottom: 4px;">
-                    吸烟 {{ thispatientDto.personalHistory.smoke.smokeYear || '-' }} 年
+                    {{ thispatientDto.personalHistory.smoke.smokeYear || '-' }} 年
                   </div>
                     {{ thispatientDto.personalHistory.smoke.amount }}（支/天）
                   <div style="margin-top: 4px;">
@@ -74,7 +74,7 @@
               <el-descriptions-item label="饮酒">
                 <div>
                   <div style="margin-bottom: 4px;">
-                    饮酒 {{ thispatientDto.personalHistory.whiteWine.smokeYear  || '-' }} 年
+                    {{ thispatientDto.personalHistory.whiteWine.drinkYear  || '-' }} 年
                   </div>
                   <div style="margin-bottom: 4px;">
                     啤酒：{{ thispatientDto.personalHistory.beer.amount}}（瓶/天）
