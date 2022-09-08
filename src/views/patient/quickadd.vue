@@ -1328,7 +1328,7 @@
           this.addForm.vasScore.CKD = this.newCKDlist;
           this.addForm.windEvil.fengxie = this.newfengxielist;
 
-          const {pastHistoryList, familyHistoryList, westernmedicineList, doctorOrder} = this.dealCheckListBeforeSubmit();
+          const {pastHistoryList, familyHistoryList, westernmedicineList, doctorOrder, prescription} = this.dealCheckListBeforeSubmit();
           const curMedicalRecord = JSON.parse(JSON.stringify(this.addForm.curMedicalRecord));
           curMedicalRecord.Westernmedicine.list = westernmedicineList;
 
@@ -1341,6 +1341,7 @@
             pastHistoryList,
             familyHistoryList,
             doctorOrder,
+            prescription,
             patientId: this.patientId,
           };
 
