@@ -1237,14 +1237,13 @@ export default {
       patientDelete(this.patientdeleteform).then((response) => {
         console.log("patientdeleteform的response", response);
         if (response.data.respCode == "0000") {
+          // 删除后更新列表
+          this.getPatientList();
           return this.$message.success("删除患者成功！");
         } else {
           this.$message.error("删除患者失败！");
         }
       });
-      // console.log("删除");
-      // 删除后更新列表
-      this.getPatientList();
     },
     // 监听修改用户对话框的关闭事件
     editDialogClosed() {

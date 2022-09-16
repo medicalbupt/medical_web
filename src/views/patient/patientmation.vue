@@ -99,7 +99,8 @@
         </el-descriptions>
       </el-tab-pane>
       <el-tab-pane label="辅助检查" name="3">
-        <el-descriptions title="辅助检查" v-html="thisconsultationDto.auxiliaryExamination" :column="2" :size="size" border
+        <div style="font-weight: bold;">检查时间: {{ thisconsultationDto.auxiliaryExamination.time }}</div>
+        <el-descriptions title="辅助检查" v-html="thisconsultationDto.auxiliaryExamination.content" :column="2" :size="size" border
           direction="vertical"></el-descriptions>
       </el-tab-pane>
       <el-tab-pane label="中医四诊" name="4">
@@ -256,10 +257,18 @@
           </el-descriptions-item>
           <el-descriptions-item label="处方">
             <el-descriptions :column="3">
-              <el-descriptions-item v-for="(prescription, index) in thisconsultationDto.prescription" :key="index" :label="prescription.name">
+              <el-descriptions-item v-for="(prescription, index) in thisconsultationDto.prescription.prescriptions" :key="index" :label="prescription.name">
                 {{prescription.value}}g
               </el-descriptions-item>
             </el-descriptions>
+            <el-descriptions :column="1">
+              <el-descriptions-item label="用量">
+                {{thisconsultationDto.prescription.mark.value || '-'}}剂，{{thisconsultationDto.prescription.mark.type || '-'}}
+              </el-descriptions-item>
+            </el-descriptions>
+          </el-descriptions-item>
+          <el-descriptions-item label="调护" :span="2">
+            <div>{{ thisconsultationDto.prescription.tiaohu }}</div>
           </el-descriptions-item>
           <el-descriptions-item label="合并用药">
             <div v-html="thisconsultationDto.combinationTherapy"></div>
@@ -1072,6 +1081,12 @@
         this.thisconsultationDto.doctorOrder = doctorOrder;
 
         this.thisconsultationDto.prescription = this.thisconsultationDto.prescription ? JSON.parse(this.thisconsultationDto.prescription) : [];
+
+        // 辅助检查处理
+        this.thisconsultationDto.auxiliaryExamination = this.thisconsultationDto.auxiliaryExamination ? JSON.parse(this.thisconsultationDto.auxiliaryExamination) : {
+          content: '',
+          time: '',
+        };
       },
 
       // //DM展示

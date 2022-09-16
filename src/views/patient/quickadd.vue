@@ -301,8 +301,17 @@
       <el-tab-pane label="辅助检查" name="3">
         <el-card class="box-card">
           <el-form class="medical-form" label-width="80px" label-position="top" size="medium">
+            <el-form-item label="检查日期">
+              <el-date-picker
+                v-model="addForm.auxiliaryExamination.time"
+                type="date"
+                style="width: 240px;"
+                value-format="yyyy-MM-dd"
+                placeholder="选择日期">
+              </el-date-picker>
+            </el-form-item>
             <el-form-item label="辅助检查">
-              <TinymceEditor v-model="addForm.auxiliaryExamination" style="width: 800px" />
+              <TinymceEditor v-model="addForm.auxiliaryExamination.content" style="width: 800px" />
             </el-form-item>
           </el-form>
         </el-card>
@@ -665,7 +674,26 @@
                 </el-checkbox-group>
               </el-form-item>
               <el-form-item label="处方" :label-width="formLabelWidth">
-                <prescription v-model="addForm.prescription"></prescription>
+                <prescription v-model="addForm.prescription.prescriptions"></prescription>
+                <div style="margin-top: 2px;">
+                  <el-input v-model="addForm.prescription.mark.value" style="width: 80px;">
+                    <span class="el-input__icon" slot="suffix">剂</span>
+                  </el-input>
+                  <el-select v-model="addForm.prescription.mark.type" placeholder="方式" style="width: 80px; margin-left: 4px;">
+                    <el-option value="颗粒" label="颗粒"></el-option>
+                    <el-option value="代煎" label="代煎"></el-option>
+                    <el-option value="自煎" label="自煎"></el-option>
+                  </el-select>
+                </div>
+              </el-form-item>
+              <el-form-item label="调护" :label-width="formLabelWidth">
+                <el-input
+                  type="textarea"
+                  :rows="2"
+                  placeholder="请输入调护内容"
+                  v-model="addForm.prescription.tiaohu"
+                  autocomplete="off"
+                ></el-input>
               </el-form-item>
               <el-form-item label="合并用药">
                 <TinymceEditor v-model="addForm.combinationTherapy" style="width: 800px" />
@@ -831,7 +859,10 @@
             desc: '',
           },
           // 辅助检查
-          auxiliaryExamination: "<p><strong>血常规</strong></p>\n<table style=\"border-collapse: collapse; width: 100%;\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>白细胞</p>\n</td>\n<td style=\"width: 25%;\">WBC</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&times;10^9/L</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>淋巴细胞百分比</p>\n</td>\n<td style=\"width: 25%;\">LYMPH%</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">%</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>中性粒细胞</p>\n</td>\n<td style=\"width: 25%;\">NEUT%</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">%</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>红细胞</p>\n</td>\n<td style=\"width: 25%;\">RBC</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&times;10^12/L</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>血小板</p>\n</td>\n<td style=\"width: 25%;\">PLT</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&times;10^9/L</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>血红蛋白</p>\n</td>\n<td style=\"width: 25%;\">HGB</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">g/L</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>C-反应蛋白</p>\n</td>\n<td style=\"width: 25%;\">CRP</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">mg/L</td>\n</tr>\n</tbody>\n</table>\n<p><strong>生化</strong></p>\n<table style=\"border-collapse: collapse; width: 100%;\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width: 25%;\">糖化血红蛋白</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>HBAC</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>%</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿素</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>UREA</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>肌酐</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>CREA</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&mu;mol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿酸</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>UA</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&mu;mol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>血糖</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>GLU</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>胆固醇</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>CHOL</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>甘油三酯</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>TRIG</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>高密度脂蛋白胆固醇</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>HDL-C</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>低密度脂蛋白胆固醇</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>LDL-C</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>谷丙转氨酶</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>ALT</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>U/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>谷草转氨酶</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>AST</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>U/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>总蛋白</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>TP</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>g/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>白蛋白</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>ALB</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>g/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>球蛋白</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>G</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>g/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>钾</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>K+</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>钠</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>Na+</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>氯</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>CL-</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n</tbody>\n</table>\n<p><strong>尿液分析</strong></p>\n<table style=\"border-collapse: collapse; width: 100%;\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿蛋白定性</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿红细胞定性</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿白细胞定性</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>24h尿蛋白</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mg/24h</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿微量白蛋白</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mg/24h</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿肌酐</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿蛋白/尿肌酐</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿红细胞（HPF）</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿红细胞计数</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>白细胞（HPF）</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿白细胞计数</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿酮体</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>细菌</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>管型</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>正常红细胞</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>%</p>\n</td>\n</tr>\n</tbody>\n</table>\n<p><strong>甲状腺功能</strong></p>\n<table style=\"border-collapse: collapse; width: 100%;\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>三碘甲腺原氨酸</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>T3</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>nmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>甲状腺素</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>T4</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>nmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>游离三碘甲腺原氨酸</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>FT3</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>pmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>游离甲状腺素</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>FT4</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>pmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>促甲状腺素</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>TSH</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>IU/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>甲状腺球蛋白抗体</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>TGAb</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>IU/ml</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>甲状腺过氧化物酶抗体</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>TPOAb</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>IU/ml</p>\n</td>\n</tr>\n</tbody>\n</table>",
+          auxiliaryExamination: {
+            time: '',
+            content: "<p><strong>血常规</strong></p>\n<table style=\"border-collapse: collapse; width: 100%;\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>白细胞</p>\n</td>\n<td style=\"width: 25%;\">WBC</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&times;10^9/L</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>淋巴细胞百分比</p>\n</td>\n<td style=\"width: 25%;\">LYMPH%</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">%</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>中性粒细胞</p>\n</td>\n<td style=\"width: 25%;\">NEUT%</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">%</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>红细胞</p>\n</td>\n<td style=\"width: 25%;\">RBC</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&times;10^12/L</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>血小板</p>\n</td>\n<td style=\"width: 25%;\">PLT</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&times;10^9/L</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>血红蛋白</p>\n</td>\n<td style=\"width: 25%;\">HGB</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">g/L</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>C-反应蛋白</p>\n</td>\n<td style=\"width: 25%;\">CRP</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">mg/L</td>\n</tr>\n</tbody>\n</table>\n<p><strong>生化</strong></p>\n<table style=\"border-collapse: collapse; width: 100%;\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width: 25%;\">糖化血红蛋白</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>HBAC</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>%</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿素</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>UREA</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>肌酐</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>CREA</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&mu;mol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿酸</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>UA</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&mu;mol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>血糖</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>GLU</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>胆固醇</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>CHOL</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>甘油三酯</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>TRIG</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>高密度脂蛋白胆固醇</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>HDL-C</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>低密度脂蛋白胆固醇</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>LDL-C</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>谷丙转氨酶</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>ALT</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>U/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>谷草转氨酶</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>AST</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>U/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>总蛋白</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>TP</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>g/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>白蛋白</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>ALB</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>g/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>球蛋白</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>G</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>g/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>钾</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>K+</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>钠</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>Na+</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>氯</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>CL-</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n</tbody>\n</table>\n<p><strong>尿液分析</strong></p>\n<table style=\"border-collapse: collapse; width: 100%;\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿蛋白定性</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿红细胞定性</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿白细胞定性</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>24h尿蛋白</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mg/24h</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿微量白蛋白</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mg/24h</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿肌酐</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿蛋白/尿肌酐</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿红细胞（HPF）</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿红细胞计数</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>白细胞（HPF）</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿白细胞计数</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>尿酮体</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>mmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>细菌</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>管型</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>&nbsp;</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>正常红细胞</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>%</p>\n</td>\n</tr>\n</tbody>\n</table>\n<p><strong>甲状腺功能</strong></p>\n<table style=\"border-collapse: collapse; width: 100%;\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>三碘甲腺原氨酸</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>T3</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>nmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>甲状腺素</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>T4</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>nmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>游离三碘甲腺原氨酸</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>FT3</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>pmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>游离甲状腺素</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>FT4</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>pmol/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>促甲状腺素</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>TSH</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>IU/L</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>甲状腺球蛋白抗体</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>TGAb</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>IU/ml</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 25%;\" width=\"148\">\n<p>甲状腺过氧化物酶抗体</p>\n</td>\n<td style=\"width: 25%;\" width=\"99\">\n<p>TPOAb</p>\n</td>\n<td style=\"width: 25%;\">&nbsp;</td>\n<td style=\"width: 25%;\" width=\"114\">\n<p>IU/ml</p>\n</td>\n</tr>\n</tbody>\n</table>"
+          },
           // 出生日期
           birthday: '',
           // 基本查体
@@ -912,7 +943,14 @@
             physique_29: [],
             physique_30: [],
           },
-          prescription: [],
+          prescription: {
+            tiaohu: '',
+            prescriptions: [],
+            mark: {
+              value: '',
+              type: '', // 颗粒、代煎、自煎
+            }
+          },
           pulsePattern: "",
           status: 1,
           symptom: {
@@ -1174,12 +1212,17 @@
         let prescription = '';
         prescription = JSON.stringify(this.addForm.prescription);
 
+        // 辅助检查处理
+        let auxiliaryExamination = '';
+        auxiliaryExamination = JSON.stringify(this.addForm.auxiliaryExamination);
+
         return {
           pastHistoryList: pastHistoryList,
           familyHistoryList: familyHistoryList,
           westernmedicineList: westernmedicineList,
           doctorOrder: doctorOrder,
           prescription,
+          auxiliaryExamination,
         };
       },
       // 获取信息后处理
@@ -1258,7 +1301,20 @@
         consulationInfo.doctorOrder = doctorOrderCode;
 
         // 处方处理
-        consulationInfo.prescription = consulationInfo.prescription ? JSON.parse(consulationInfo.prescription) : [];
+        consulationInfo.prescription = consulationInfo.prescription ? JSON.parse(consulationInfo.prescription) : {
+          tiaohu: '',
+          prescriptions: [],
+          mark: {
+            value: '',
+            type: '', // 颗粒、代煎、自煎
+          }
+        };
+
+        // 辅助检查处理
+        consulationInfo.auxiliaryExamination = consulationInfo.auxiliaryExamination ? JSON.parse(consulationInfo.auxiliaryExamination) : {
+          content: '',
+          time: '',
+        };
         
         // 舌象、查体、腹诊图片处理
         if(consulationInfo.tonguePatternInfo) {
@@ -1294,7 +1350,7 @@
           this.addForm.vasScore.CKD = this.newCKDlist;
           this.addForm.windEvil.fengxie = this.newfengxielist;
           
-          const {pastHistoryList, familyHistoryList, westernmedicineList, doctorOrder, prescription} = this.dealCheckListBeforeSubmit();
+          const {pastHistoryList, familyHistoryList, westernmedicineList, doctorOrder, prescription, auxiliaryExamination} = this.dealCheckListBeforeSubmit();
           const curMedicalRecord = JSON.parse(JSON.stringify(this.addForm.curMedicalRecord));
           curMedicalRecord.Westernmedicine.list = westernmedicineList;
 
@@ -1307,7 +1363,8 @@
             pastHistoryList,
             familyHistoryList,
             doctorOrder,
-            prescription
+            prescription,
+            auxiliaryExamination
           };
 
           const res = await addquick(params);
@@ -1328,7 +1385,7 @@
           this.addForm.vasScore.CKD = this.newCKDlist;
           this.addForm.windEvil.fengxie = this.newfengxielist;
 
-          const {pastHistoryList, familyHistoryList, westernmedicineList, doctorOrder, prescription} = this.dealCheckListBeforeSubmit();
+          const {pastHistoryList, familyHistoryList, westernmedicineList, doctorOrder, prescription, auxiliaryExamination} = this.dealCheckListBeforeSubmit();
           const curMedicalRecord = JSON.parse(JSON.stringify(this.addForm.curMedicalRecord));
           curMedicalRecord.Westernmedicine.list = westernmedicineList;
 
@@ -1343,6 +1400,7 @@
             doctorOrder,
             prescription,
             patientId: this.patientId,
+            auxiliaryExamination,
           };
 
           const res = await addconsult(params);
