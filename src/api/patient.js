@@ -162,7 +162,6 @@ export function deleteconsult(data) {
   })
 }
 
-
 // 新增快速录入
 export function addquick(data) {
   // console.log('params', params)
@@ -206,5 +205,29 @@ export function getPatientInfo(id, isFirst = true) {
       id: id,
       isFirst: isFirst
     }
+  })
+}
+
+// 提交患者信息编辑
+export function editPatientInfo(data) {
+  return request({
+    url: '/patient/update',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: data
+  })
+}
+
+// 提交患者复诊信息编辑
+export function editConsultationInfo(data) {
+  return request({
+    url: '/consultation/update',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: data
   })
 }

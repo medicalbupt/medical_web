@@ -94,7 +94,7 @@
             <el-button
               type="primary"
               size="small"
-              @click="showpatientEditDialog(scope.row.id)"
+              @click="gotoEditPatientInfo(scope.row.id, patientData.total)"
               >编辑</el-button
             >
             <el-button
@@ -1250,15 +1250,11 @@ export default {
       this.$refs.editFormRef.resetFields();
     },
     // 展示编辑患者的对话框
-    showpatientEditDialog(constid) {
-      for (var i = 0; i < this.patientData.patientList.length; i++) {
-        if (this.patientData.patientList[i].id == constid) {
-          this.patinenteditform.id = this.patientData.patientList[i].id;
-          this.patinenteditform = this.patientData.patientList[i];
-          console.log("该id为", this.patinenteditform);
-          this.editDialogVisible = true;
-        }
-      }
+    gotoEditPatientInfo(id, total) {
+      this.$router.push({
+        name: "patientinfoedit",
+        query: { patientId: id, total: total, isEdit: 1 },
+      });
     },
     gotoDetail(id, total) {
       this.$router.push({

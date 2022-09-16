@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="submit-footer">
-      <el-button type="primary" :loading="loading || submiting" @click="save">提交录入</el-button>
+      <el-button v-if="isEdit === 0" type="primary" :loading="loading || submiting" @click="save">提交录入</el-button>
+      <el-button v-if="isEdit === 1" type="primary" :loading="loading || submiting" @click="submitEdit()">保存</el-button>
+      <el-button v-if="isEdit === 2" type="primary" :loading="loading || submiting" @click="submitEdit()">保存复诊</el-button>
     </div>
     <el-tabs v-model="activeName" v-loading="loading" class="border-card" type="border-card">
       <el-tab-pane label="基本信息" name="1">
@@ -720,7 +722,10 @@
     getcommonlist,
     addquick,
     getPatientInfo,
-    addconsult
+    getConsultationInfo,
+    addconsult,
+    editPatientInfo,
+    editConsultationInfo,
   } from "@/api/patient";
   import TinymceEditor from "@/components/Tinymce";
   import Prescription from "@/components/Prescription/index.vue";
@@ -1012,17 +1017,32 @@
         fileList1: [],
         fileList2: [],
         fileList3: [],
+
+        isEdit: 0, // 0 - 非edit 1 - 编辑基础 2 - 编辑复诊
+        consultationId: '',
+
+        // 基本信息的key
+        basicInfoKeys: [],
+        // 复诊信息key
+        consultationKeys: [], 
       };
     },
     created() {
       this.isAddComsultation = Boolean(this.$route.query.isAddComsultation);
+      this.isEdit = Number(this.$route.query.isEdit || 0);
       this.patientId = this.$route.query.patientId;
-      if(this.patientId) {
+      this.consultationId = this.$route.query.consultationId;
+      if(this.patientId && !this.consultationId) {
         this.loading = true;
         //获取患者个人信息和就诊信息
         setTimeout(() => {
-          this.getPatientInfo();
-        }, 1000)
+          const isFirst = Boolean(this.isEdit && this.patientId)
+          this.getPatientInfo(isFirst);
+        }, 1000);
+      } else if (this.patientId && this.consultationId) {
+        setTimeout(() => {
+          this.getConsultationInfo();
+        }, 1000);
       }
       
       // 拿到所有的虚
@@ -1980,11 +2000,76 @@
         }
       },
       // 拿到该患者第一次就诊信息和他的基本信息
-      getPatientInfo() {
+      getPatientInfo(isFirst = false) {
         this.loading = true;
-        getPatientInfo(this.patientId, false).then((res) => {
+        getPatientInfo(this.patientId, isFirst).then((res) => {
           const consulationInfo = res.data.consultationDto;
           const patientInfo = res.data.patientDto;
+
+          this.basicInfoKeys = Object.keys(patientInfo);
+          this.consultationKeys = Object.keys(consulationInfo);
+          this.consultationId = consulationInfo.id;
+          try {
+            patientInfo.allergyHistory = patientInfo.allergyHistory ? JSON.parse(patientInfo.allergyHistory) : '-';
+            patientInfo.physique = patientInfo.physique ? JSON.parse(patientInfo.physique) : '-';
+            consulationInfo.abdominalExamination = consulationInfo.abdominalExamination ? JSON.parse(consulationInfo.abdominalExamination) : '-';
+            patientInfo.curMedicalRecord = patientInfo.curMedicalRecord || {
+              currentText: '',
+              Westernmedicine: {
+                list: [],
+              },
+              confirmTime: {
+                time: "",
+              },
+              DMcomplications: {
+                list: [],
+              },
+              CKDreason: {
+                list: [],
+              },
+            };
+
+            this.dealCheckListBeforeDetail(patientInfo, consulationInfo);
+
+            consulationInfo.medicalLocId = consulationInfo.medicalLoc?.id;
+            consulationInfo.consultTime = new Date();
+
+            if (patientInfo.pastHistoryList && patientInfo.pastHistoryList.length !== 0) {
+              patientInfo.pastHistoryList = patientInfo.pastHistoryList.map((item) => String(item));
+            }
+
+            if (patientInfo.familyHistoryList && patientInfo.familyHistoryList.length !== 0) {
+              patientInfo.familyHistoryList = patientInfo.familyHistoryList.map((item) => String(item));
+            }
+
+            this.bmidata = patientInfo.bmiIndex;
+
+            this.addForm = {
+              ...this.addForm,
+              ...patientInfo,
+              ...consulationInfo,
+            }
+
+            this.newDMlist = this.addForm.vasScore.DM;
+            this.newCKDlist = this.addForm.vasScore.CKD;
+            this.newfengxielist = this.addForm.windEvil.fengxie;
+          } catch (error) {
+            console.log('error', error);
+          }
+
+          this.loading = false;
+        });
+      },
+      // 获取患者复诊信息
+      getConsultationInfo() {
+        this.loading = true;
+        getConsultationInfo(this.consultationId, this.patientId).then((res) => {
+          const consulationInfo = res.data.consultationDto;
+          const patientInfo = res.data.patientDto;
+
+          this.basicInfoKeys = Object.keys(patientInfo);
+          this.consultationKeys = Object.keys(consulationInfo);
+          this.consultationId = consulationInfo.id;
           try {
             patientInfo.allergyHistory = patientInfo.allergyHistory ? JSON.parse(patientInfo.allergyHistory) : '-';
             patientInfo.physique = patientInfo.physique ? JSON.parse(patientInfo.physique) : '-';
@@ -2101,7 +2186,94 @@
             return '';
           }
         }).join(';');
-      }
+      },
+      // 提交编辑
+      submitEdit() {
+        Promise.all([this.updatePatient(), this.updateConsult()]);
+      },
+      async updatePatient() {
+        try {
+          this.addForm.vasScore.DM = this.newDMlist;
+          this.addForm.vasScore.CKD = this.newCKDlist;
+          this.addForm.windEvil.fengxie = this.newfengxielist;
+          
+          const {pastHistoryList, familyHistoryList, westernmedicineList, doctorOrder, prescription, auxiliaryExamination} = this.dealCheckListBeforeSubmit();
+          const curMedicalRecord = JSON.parse(JSON.stringify(this.addForm.curMedicalRecord));
+          curMedicalRecord.Westernmedicine.list = westernmedicineList;
+
+          const params = {
+            ...this.addForm,
+            abdominalExamination: JSON.stringify(this.addForm.abdominalExamination),
+            allergyHistory: JSON.stringify(this.addForm.allergyHistory),
+            physique: JSON.stringify(this.addForm.physique),
+            curMedicalRecord,
+            pastHistoryList,
+            familyHistoryList,
+            doctorOrder,
+            prescription,
+            auxiliaryExamination
+          };
+
+          const params_ = {};
+
+          this.basicInfoKeys.forEach((key) => {
+            params_[key] = params[key];
+          })
+
+          const res = await editPatientInfo(params_);
+
+          if(res.data.respCode === '0000') {
+            this.$message.success('保存患者基础信息成功')
+          } else {
+            this.$message.error(res.data.respMsg)
+          }
+
+        } catch (error) {
+          
+        }
+      },
+      // 提交复诊
+      async updateConsult() {
+        try {
+          this.addForm.vasScore.DM = this.newDMlist;
+          this.addForm.vasScore.CKD = this.newCKDlist;
+          this.addForm.windEvil.fengxie = this.newfengxielist;
+
+          const {pastHistoryList, familyHistoryList, westernmedicineList, doctorOrder, prescription, auxiliaryExamination} = this.dealCheckListBeforeSubmit();
+          const curMedicalRecord = JSON.parse(JSON.stringify(this.addForm.curMedicalRecord));
+          curMedicalRecord.Westernmedicine.list = westernmedicineList;
+
+          const params = {
+            ...this.addForm,
+            abdominalExamination: JSON.stringify(this.addForm.abdominalExamination),
+            allergyHistory: JSON.stringify(this.addForm.allergyHistory),
+            physique: JSON.stringify(this.addForm.physique),
+            curMedicalRecord,
+            pastHistoryList,
+            familyHistoryList,
+            doctorOrder,
+            prescription,
+            patientId: this.patientId,
+            auxiliaryExamination,
+          };
+
+          const res = await editConsultationInfo(params);
+
+          if ((res.data.respCode == "0000")) {
+            this.$message({
+              message: "保存就诊信息成功",
+              type: "success",
+            });
+          } else {
+            this.$message({
+              message: res.data.respMsg,
+              type: "error",
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
     },
   };
 

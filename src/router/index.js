@@ -117,12 +117,28 @@ export const constantRoutes = [{
             meta: { title: "快速录入", icon: "form" },
         },
         {
+            path: 'patientinfoedit',
+            component: () =>
+                import("@/views/patient/quickadd.vue"),
+            name: "patientinfoedit",
+            hidden: true,
+            meta: { title: "编辑患者信息", icon: "form" },
+        },
+        {
             path: 'addconsultationnew',
             component: () =>
                 import("@/views/patient/quickadd.vue"),
             name: "addconsultationnew",
             hidden: true,
             meta: { title: "添加复诊", icon: "form" },
+        },
+        {
+            path: 'editconsultationnew',
+            component: () =>
+                import("@/views/patient/quickadd.vue"),
+            name: "editconsultationnew",
+            hidden: true,
+            meta: { title: "编辑复诊信息", icon: "form" },
         },
         {
             path: 'addconsultation',

@@ -278,6 +278,12 @@
       <el-tab-pane v-if="!isComsultation" label="复诊信息" name="8">
         <el-button type="primary" size="medium" @click="gopage">添加复诊</el-button>
         <el-table :data="patientconsultData.patientconsultList" class="table1" stripe>
+          consultNum
+          <el-table-column label="诊次" width="80">
+            <template slot-scope="scope">
+              {{scope.row.consultNum}}
+            </template>
+          </el-table-column>
           <el-table-column label="就诊地点" width="180">
             <template slot-scope="scope">
               {{scope.row.medicalLoc ? scope.row.medicalLoc.dataName : '-'}}
@@ -293,7 +299,8 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <div>
-                <el-button type="primary" size="medium" @click="gotoDetail(scope.row.id)">详情</el-button>
+                <el-button type="warning" size="medium" @click="gotoDetail(scope.row.id)">详情</el-button>
+                <el-button type="primary" size="medium" @click="gotoEdit(scope.row.id)">编辑</el-button>
                 <el-button type="danger" size="medium" @click="deleteconsult(scope.row.id)">删除</el-button>
               </div>
             </template>
@@ -762,6 +769,16 @@
           },
         });
       },
+      gotoEdit(id) {
+        this.$router.push({
+          name: "editconsultationnew",
+          query: {
+            consultationId: id,
+            patientId: this.refid,
+            isEdit: 2,
+          },
+        });
+      },
       // 跳转新增就诊页面
       gopage() {
         this.$router.push({
@@ -831,12 +848,13 @@
       getConsultationInfo() {
         getConsultationInfo(this.consultationId, this.refid).then((res) => {
           this.thisconsultationDto = res.data.consultationDto;
-          this.thispatientDto = res.data.patientDto;
+          const patientInfo = res.data.patientDto;
+
           try {
-            this.thispatientDto.allergyHistory = this.thispatientDto.allergyHistory ? JSON.parse(this.thispatientDto.allergyHistory) : '-';
-            this.thispatientDto.physique = this.thispatientDto.physique ? JSON.parse(this.thispatientDto.physique) : '-';
+            patientInfo.allergyHistory = patientInfo.allergyHistory ? JSON.parse(patientInfo.allergyHistory) : '-';
+            patientInfo.physique = patientInfo.physique ? JSON.parse(patientInfo.physique) : '-';
             this.thisconsultationDto.abdominalExamination = this.thisconsultationDto.abdominalExamination ? JSON.parse(this.thisconsultationDto.abdominalExamination) : '-';
-            this.thispatientDto.curMedicalRecord = this.thispatientDto.curMedicalRecord || {
+            patientInfo.curMedicalRecord = patientInfo.curMedicalRecord || {
               currentText: '',
               Westernmedicine: {
                 list: [],
@@ -851,6 +869,10 @@
                 list: [],
               },
             };
+
+            this.dealCheckListBeforeDetail(patientInfo);
+
+            this.thispatientDto= patientInfo;
 
             this.$nextTick(() => {
               this.activeName = this.$route.query.tab?.toString() || '1';
