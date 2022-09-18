@@ -179,6 +179,9 @@
                         </template>
                       </div>
                     </div>
+                    <el-divider content-position="left">其他症状</el-divider>
+                    <el-input type="textarea" placeholder="请输入其他症状" v-model="addForm.symptom.symtomOther" autosize>
+                    </el-input>
                   </el-card>
                 </div>
                 <div v-else class="symtom-type">
@@ -210,6 +213,9 @@
                       </div>
                     </el-collapse-item>
                   </el-collapse>
+                  <el-divider content-position="left">其他症状</el-divider>
+                  <el-input type="textarea" placeholder="请输入其他症状" v-model="addForm.symptom.symtomOther" autosize>
+                  </el-input>
                 </div>
               </el-form-item>
               <el-form-item label="既往史">
@@ -373,6 +379,9 @@
                         </template>
                       </div>
                     </div>
+                    <el-divider content-position="left">其他症状</el-divider>
+                    <el-input type="textarea" placeholder="请输入其他症状" v-model="addForm.symptom.symtomOther2" autosize>
+                    </el-input>
                   </el-card>
                 </div>
                 <div style="margin-top: 15px;"></div>
@@ -442,6 +451,9 @@
                         </template>
                       </div>
                     </div>
+                    <el-divider content-position="left">其他症状</el-divider>
+                    <el-input type="textarea" placeholder="请输入其他症状" v-model="addForm.symptom.symtomOther3" autosize>
+                    </el-input>
                   </el-card>
                 </div>
               </el-form-item>
@@ -959,6 +971,9 @@
           pulsePattern: "",
           status: 1,
           symptom: {
+            symtomOther: '',
+            symtomOther2: '',
+            symtomOther2: '',
             symtomList: [],
             symtomList2: [],
             symtomList3: [],
@@ -2211,7 +2226,8 @@
             familyHistoryList,
             doctorOrder,
             prescription,
-            auxiliaryExamination
+            auxiliaryExamination,
+            id: this.patientId
           };
 
           const params_ = {};

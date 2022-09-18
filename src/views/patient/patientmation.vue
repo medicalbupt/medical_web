@@ -54,6 +54,20 @@
           <el-descriptions-item label="现病史">
             {{ thispatientDto.curMedicalRecord.currentText || '-' }}
           </el-descriptions-item>
+          <el-descriptions-item label="刻下症">
+            <el-descriptions :column="1">
+              <template v-for="item in thisconsultationDto.symptom.symtomList">
+                <el-descriptions-item v-if="item.children" :key="item.typeId" :label="typeNameList[item.typeName]">
+                  <template v-for="item1 in item.children">
+                    <el-tag v-if="item1.score !== 0" :key="item1.id" :type="symptomScoreList[Number(item1.score)].type" class="medical-tag">{{item1.dataName}}: {{symptomScoreList[Number(item1.score)].label}}</el-tag>
+                  </template>
+                </el-descriptions-item>
+              </template>
+              <el-descriptions-item label="其他症状">
+                {{ thisconsultationDto.symptom.symtomOther || '-' }}
+              </el-descriptions-item>
+            </el-descriptions>
+          </el-descriptions-item>
           <el-descriptions-item label="既往史">
             <el-tag v-for="item in changeListToName(thispatientDto.pastHistoryList)" :key="item" type="info" class="medical-tag">{{item}}</el-tag>
             <el-tag v-if="pastHistoryList99999"  type="info" class="medical-tag">其他：{{pastHistoryList99999}}</el-tag>
@@ -111,6 +125,12 @@
                 <el-tag v-if="item1.score !== 0" :key="item1.id" :type="symptomScoreList[Number(item1.score)].type" class="medical-tag">{{item1.dataName}}: {{symptomScoreList[Number(item1.score)].label}}</el-tag>
               </template>
             </div>
+            <el-descriptions v-if="thisconsultationDto.symptom.symtomOther2" :column="1">
+              <el-descriptions-item label="其他症状">
+                {{thisconsultationDto.symptom.symtomOther2}}
+              </el-descriptions-item>
+            </el-descriptions>
+
             <div class="image-list">
               <el-image
                 v-for="(item, index) in tonguePatternPicList"
@@ -127,6 +147,11 @@
                 <el-tag v-if="item1.score !== 0" :key="item1.id" :type="symptomScoreList[Number(item1.score)].type" class="medical-tag">{{item1.dataName}}: {{symptomScoreList[Number(item1.score)].label}}</el-tag>
               </template>
             </div>
+            <el-descriptions v-if="thisconsultationDto.symptom.symtomOther3" :column="1">
+              <el-descriptions-item label="其他症状">
+                {{thisconsultationDto.symptom.symtomOther3}}
+              </el-descriptions-item>
+            </el-descriptions>
           </el-descriptions-item>
           <el-descriptions-item label="基本查体" :span="2">
           {{
@@ -204,17 +229,6 @@
              <el-tag v-if="westernmedicineList99999"  type="info" class="medical-tag">其他：{{westernmedicineList99999}}</el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="确诊时间">{{thispatientDto.curMedicalRecord.confirmTime.time | formatDate}}</el-descriptions-item>
-          <el-descriptions-item label="症状">
-            <el-descriptions :column="1">
-              <template v-for="item in thisconsultationDto.symptom.symtomList">
-                <el-descriptions-item v-if="item.children" :key="item.typeId" :label="typeNameList[item.typeName]">
-                  <template v-for="item1 in item.children">
-                    <el-tag v-if="item1.score !== 0" :key="item1.id" :type="symptomScoreList[Number(item1.score)].type" class="medical-tag">{{item1.dataName}}: {{symptomScoreList[Number(item1.score)].label}}</el-tag>
-                  </template>
-                </el-descriptions-item>
-              </template>
-            </el-descriptions>
-          </el-descriptions-item>
           <el-descriptions-item label="体质诊断">
             <el-descriptions :column="1">
               <el-descriptions-item v-for="(item, index) in changeObjectToName(thispatientDto.physique, physiqueTypeList)" :key="index" :label="item.title">

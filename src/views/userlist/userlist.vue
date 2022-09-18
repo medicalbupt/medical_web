@@ -380,6 +380,7 @@ export default {
       userdelete(this.userdeleteform).then((response) => {
         console.log("userdeleteform的response", response);
         if (response.data.respCode == "0000") {
+          this.getUserList();
           return this.$message.success("删除用户成功！");
         } else {
           this.$message.error("删除用户失败！");
