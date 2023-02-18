@@ -70,6 +70,11 @@
             <span>{{ scope.row.birthday | formatDate }}</span>
           </template>
         </el-table-column>
+        <el-table-column prop="age" label="年龄" width="120">
+          <template slot-scope="scope">
+            <span>{{ scope.row.age }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="telephone" label="手机号" width="140"></el-table-column>
         <el-table-column prop="height" label="身高"></el-table-column>
         <el-table-column prop="weight" label="体重"></el-table-column>

@@ -46,6 +46,13 @@
                     </el-form-item>
                   </div>
                 </el-col>
+                <el-col :span="7">
+                  <div class="grid-content">
+                    <el-form-item label="年龄">
+                      <el-input class="input-style readonly" :disabled="isAddComsultation" v-model="addForm.age"></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
                 <!-- <el-col :span="18">
               <div class="grid-content">
                 <el-form-item label="ID号">
@@ -882,6 +889,7 @@
           },
           // 出生日期
           birthday: '',
+          age: '',
           // 基本查体
           bodyCheck: "",
           bodyCheckInfo: "", // 基本查体图片

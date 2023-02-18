@@ -23,6 +23,12 @@
           </el-descriptions-item>
           <el-descriptions-item>
             <template slot="label">
+              年龄
+            </template>
+            {{ thispatientDto.age }}
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
               身份证号
             </template>
             {{ thispatientDto.idCard }}
@@ -466,6 +472,7 @@
         // 该患者的数组
         patinentform: {
           birthday: "",
+          age: '',
           createTinme: "",
           curMedicalRecord: {
             currentText: '',
