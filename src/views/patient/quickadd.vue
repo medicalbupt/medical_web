@@ -1233,7 +1233,7 @@
             } else {
               const index = this.WesternmedicineOptions.findIndex((option) => option.dataCode === item);
               if(index !== -1) {
-                pastHistoryList.push(`${item}:${this.westernmedicineOptionsYearList[index] || ''}`);
+                westernmedicineList.push(`${item}:${this.westernmedicineOptionsYearList[index] || ''}`);
               }
             }
           });
@@ -2055,7 +2055,7 @@
             this.dealCheckListBeforeDetail(patientInfo, consulationInfo);
 
             consulationInfo.medicalLocId = consulationInfo.medicalLoc?.id;
-            consulationInfo.consultTime = new Date();
+            consulationInfo.consultTime = consulationInfo.consultTime;
 
             if (patientInfo.pastHistoryList && patientInfo.pastHistoryList.length !== 0) {
               patientInfo.pastHistoryList = patientInfo.pastHistoryList.map((item) => String(item));
@@ -2116,7 +2116,7 @@
             this.dealCheckListBeforeDetail(patientInfo, consulationInfo);
 
             consulationInfo.medicalLocId = consulationInfo.medicalLoc?.id;
-            consulationInfo.consultTime = new Date();
+            consulationInfo.consultTime = consulationInfo.consultTime;
 
             if (patientInfo.pastHistoryList && patientInfo.pastHistoryList.length !== 0) {
               patientInfo.pastHistoryList = patientInfo.pastHistoryList.map((item) => String(item));
