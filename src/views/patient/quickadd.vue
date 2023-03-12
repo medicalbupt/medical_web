@@ -116,6 +116,22 @@
                     </el-date-picker>
                   </el-form-item>
                 </el-col>
+                <el-col :span="7">
+                  <div class="grid-content">
+                    <el-form-item label="记录者">
+                      <el-input class="input-style readonly" v-model="addForm.recorder">
+                      </el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="7">
+                  <div class="grid-content">
+                    <el-form-item label="审核者">
+                      <el-input class="input-style readonly" v-model="addForm.auditor">
+                      </el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
               </el-row>
             </el-form>
           </div>
@@ -865,6 +881,8 @@
         CKDreasonOptions: [],
         //   快速增加患者表单
         addForm: {
+          recorder: '',
+          auditor: '',
           // 腹诊
           abdominalExamination: { // todo 需要改成json解析（前端）
             abdominal_37: [],

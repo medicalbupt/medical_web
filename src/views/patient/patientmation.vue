@@ -50,6 +50,12 @@
           <el-descriptions-item label="就诊时间">
             {{ thisconsultationDto.consultTime | formatDate }}
           </el-descriptions-item>
+          <el-descriptions-item label="记录者">
+            {{ thispatientDto.recorder }}
+          </el-descriptions-item>
+          <el-descriptions-item label="审核者">
+            {{ thispatientDto.auditor }}
+          </el-descriptions-item>
         </el-descriptions>
       </el-tab-pane>
       <el-tab-pane label="疾病资料" name="2">
