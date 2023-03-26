@@ -88,7 +88,7 @@
             <span>{{ scope.row.modifiedTime | formatDate3 }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="280" fixed="right">
+        <el-table-column label="操作" width="360" fixed="right">
           <template slot-scope="scope">
             <el-button
               type="warning"
@@ -101,6 +101,12 @@
               size="small"
               @click="gotoEditPatientInfo(scope.row.id, patientData.total)"
               >编辑</el-button
+            >
+            <el-button
+              type="success"
+              size="small"
+              @click="donwloadDoc(scope.row.id)"
+              >下载</el-button
             >
             <el-button
               type="danger"
@@ -620,6 +626,7 @@ import {
   patientUpdate,
   // getAllSameData,
   getcommonlist,
+  downloadInfo,
 } from "@/api/patient";
 
 export default {
@@ -1267,6 +1274,20 @@ export default {
         query: { index: id, total: total },
       });
     },
+    async donwloadDoc(id) {
+      this.$message.success("正在生成");
+      const formData = new FormData();
+      formData.append('patientId', id);
+      downloadInfo(formData).then((response) => {
+        console.log("donwloadDoc", response);
+        if (response.data.respCode == "0000") {
+          // 删除后更新列表
+          window.open(response.data.fileUrl, '_blank');
+        } else {
+          this.$message.error("下载失败");
+        }
+      });
+    }
   },
 };
 </script>

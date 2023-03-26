@@ -231,3 +231,13 @@ export function editConsultationInfo(data) {
     data: data
   })
 }
+
+// 下载患者信息
+export function downloadInfo(data) {
+  return request({
+    url: '/patient/exportMedicalRecord',
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data: data
+  })
+}
