@@ -764,6 +764,9 @@
   } from "@/api/patient";
   import TinymceEditor from "@/components/Tinymce";
   import Prescription from "@/components/Prescription/index.vue";
+  import {
+    initData
+  } from "@/common/date.js";
 
   export default {
     components: {
@@ -1202,6 +1205,15 @@
       },
     },
     methods: {
+      merge(a, b) {
+        Object.keys(a).forEach((key) => {
+          if(b[key] === null || b[key] === undefined) {
+            b[key] = a[key];
+          }
+        });
+
+        return JSON.parse(JSON.stringify(b));
+      },
       async save() {
         this.submiting = true;
 
@@ -2044,8 +2056,12 @@
       getPatientInfo(isFirst = false) {
         this.loading = true;
         getPatientInfo(this.patientId, isFirst).then((res) => {
-          const consulationInfo = res.data.consultationDto;
-          const patientInfo = res.data.patientDto;
+          const initConsulation = initData().consultationDto;
+          const consulationInfo = this.merge(initConsulation, res.data.consultationDto);
+
+          const initPatientInfo = initData().patientDto;
+          const patientInfo = this.merge(initPatientInfo, res.data.patientDto);
+
 
           this.basicInfoKeys = Object.keys(patientInfo);
           this.consultationKeys = Object.keys(consulationInfo);
@@ -2105,8 +2121,11 @@
       getConsultationInfo() {
         this.loading = true;
         getConsultationInfo(this.consultationId, this.patientId).then((res) => {
-          const consulationInfo = res.data.consultationDto;
-          const patientInfo = res.data.patientDto;
+          const initConsulation = initData().consultationDto;
+          const consulationInfo = this.merge(initConsulation, res.data.consultationDto);
+
+          const initPatientInfo = initData().patientDto;
+          const patientInfo = this.merge(initPatientInfo, res.data.patientDto);
 
           this.basicInfoKeys = Object.keys(patientInfo);
           this.consultationKeys = Object.keys(consulationInfo);

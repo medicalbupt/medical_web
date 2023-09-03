@@ -344,7 +344,7 @@
 <script>
   import TinymceEditor from "@/components/Tinymce";
   import {
-    formatDate
+    formatDate, initData
   } from "@/common/date.js";
   import {
     getPatientList,
@@ -750,11 +750,12 @@
         this.allTypeList = res.data.commonDataEntityList;
       },
       changeListToName(list) {
-        if(!list || list.length === 0) {
+        if(!list || list.length === 0 || !(list instanceof Array)) {
           return [];
         }
 
         const nameList = [];
+        console.log('list', list, )
         list.forEach((item) => {
           const itemCode = item.split(':');
           console.log(itemCode);
@@ -833,11 +834,23 @@
           });
         });
       },
+      merge(a, b) {
+        Object.keys(a).forEach((key) => {
+          if(b[key] === null || b[key] === undefined) {
+            b[key] = a[key];
+          }
+        });
+
+        return JSON.parse(JSON.stringify(b));
+      },
       // 拿到该患者第一次就诊信息和他的基本信息
       getPatientInfo() {
         getPatientInfo(this.$route.query.index).then((res) => {
-          this.thisconsultationDto = res.data.consultationDto;
-          const patientInfo = res.data.patientDto;
+          const initConsulation = initData().consultationDto;
+          this.thisconsultationDto = this.merge(initConsulation, res.data.consultationDto);
+
+          const initPatientInfo = initData().patientDto;
+          const patientInfo = this.merge(initPatientInfo, res.data.patientDto);
 
           try {
             patientInfo.allergyHistory = patientInfo.allergyHistory ? JSON.parse(patientInfo.allergyHistory) : '-';
@@ -874,8 +887,11 @@
       // 获取患者复诊信息
       getConsultationInfo() {
         getConsultationInfo(this.consultationId, this.refid).then((res) => {
-          this.thisconsultationDto = res.data.consultationDto;
-          const patientInfo = res.data.patientDto;
+          const initConsulation = initData().consultationDto;
+          this.thisconsultationDto = this.merge(initConsulation, res.data.consultationDto);
+
+          const initPatientInfo = initData().patientDto;
+          const patientInfo = this.merge(initPatientInfo, res.data.patientDto);
 
           try {
             patientInfo.allergyHistory = patientInfo.allergyHistory ? JSON.parse(patientInfo.allergyHistory) : '-';
