@@ -109,6 +109,12 @@
               >下载</el-button
             >
             <el-button
+              type="success"
+              size="small"
+              @click="downloadExcel(scope.row.id)"
+            >下载(excel)</el-button
+            >
+            <el-button
               type="danger"
               size="small"
               @click="removePatientById(scope.row.id)"
@@ -627,6 +633,7 @@ import {
   // getAllSameData,
   getcommonlist,
   downloadInfo,
+  downloadInfoExcel
 } from "@/api/patient";
 
 export default {
@@ -1280,6 +1287,20 @@ export default {
       formData.append('patientId', id);
       downloadInfo(formData).then((response) => {
         console.log("donwloadDoc", response);
+        if (response.data.respCode == "0000") {
+          // 删除后更新列表
+          window.open(response.data.fileUrl, '_blank');
+        } else {
+          this.$message.error("下载失败");
+        }
+      });
+    },
+    async downloadExcel(id) {
+      this.$message.success("正在生成excel");
+      const formData = new FormData();
+      formData.append('patientId', id);
+      downloadInfoExcel(formData).then((response) => {
+        console.log("downloadExcel", response);
         if (response.data.respCode == "0000") {
           // 删除后更新列表
           window.open(response.data.fileUrl, '_blank');
