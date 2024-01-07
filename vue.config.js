@@ -32,7 +32,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/ZUNren': {
-        target: 'https://admin.tcmvip.com',
+        target: 'https://123.56.65.171',
         changeOrigin: true
       }
     },
