@@ -251,3 +251,13 @@ export function downloadInfoExcel(data) {
     data: data
   })
 }
+
+// 下载全部患者信息Excel
+export function downloadAllExcel(data) {
+  return request({
+    url: '/patient/exportExcel',
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data: data
+  })
+}

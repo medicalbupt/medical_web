@@ -32,6 +32,7 @@
         <el-col :span="8">
           <el-button type="info" @click="getPatientList" :loading="searchLoading" size="medium">搜索</el-button>
           <el-button type="primary" @click="Topage" size="medium">快速录入</el-button>
+          <el-button type="warn" @click="downloadAllExcel" size="medium">导出全部</el-button>
         </el-col>
       </el-row>
       <!-- 展示患者信息 -->
@@ -633,7 +634,8 @@ import {
   // getAllSameData,
   getcommonlist,
   downloadInfo,
-  downloadInfoExcel
+  downloadInfoExcel,
+  downloadAllExcel
 } from "@/api/patient";
 
 export default {
@@ -927,6 +929,18 @@ export default {
     // 快速增加跳转页面
     Topage() {
       this.$router.push("/quickadd");
+    },
+    async downloadAllExcel() {
+      this.$message.success("正在生成excel");
+      downloadAllExcel().then((response) => {
+        console.log("downloadAllExcel", response);
+        if (response.data.respCode == "0000") {
+          // 删除后更新列表
+          window.open(response.data.fileUrl, '_blank');
+        } else {
+          this.$message.error("下载失败");
+        }
+      });
     },
     // 拿到所有的现病史西医诊断选项
     getWesternmedicineList() {
