@@ -1019,12 +1019,12 @@
           }
         });
       },
-      handleCurrentChange(newSize) {
-        this.consultqueryInfo.pageSize = newSize;
+      handleCurrentChange(newPage) {
+        this.consultqueryInfo.currentPage = newPage;
         this.getpationconsult();
       },
-      handleSizeChange(newPage) {
-        this.consultqueryInfo.currentPage = newPage;
+      handleSizeChange(newSize) {
+        this.consultqueryInfo.pageSize = newSize;
         this.getpationconsult();
       },
       // 患者列表
@@ -1104,7 +1104,7 @@
           }
         });
         patientInfo.pastHistoryList = pastHistoryList;
-        
+
 
         // 对家族史发布前处理
         let familyHistoryList = patientInfo.familyHistoryList || [];
